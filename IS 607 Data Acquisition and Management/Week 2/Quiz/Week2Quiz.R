@@ -1,27 +1,20 @@
 #Week 2 Quiz
+#Charley Ferrari
 
-#The answers to the following [21] questions should be placed in a single R script. 
-#Place your R script in a public repository on github and submitting a link to the script here. 
-#Label your answers using comments so that they can be clearly and quickly found within the script.
-#Week 2 quiz is due end of day on Friday September 5th. Solutions to all quiz exercises will 
-#be posted on Saturday September 6th. Your grade will be based on two randomly selected exercises.
-
-
-#1. Create a vector that contains 20 numbers. (You may choose whatever numbers you 
-#like, but make sure there are some duplicates.)
+##### Question 1 #####
 
 vec <- c(2, 4, 6, 8, 4, 6, 8, 3, 5, 8, 3, 6, 7, 3, 6, 8, 3, 5, 6, 8)
 
-#2. Use R to convert the vector from question 1 into a character vector.
+##### Question 2 #####
 
 vec <- as.character(vec)
 
-#3. Use R to convert the vector from question 1 into a vector of factors.
+##### Question 3 #####
 
 vec <- c(2, 4, 6, 8, 4, 6, 8, 3, 5, 8, 3, 6, 7, 3, 6, 8, 3, 5, 6, 8)
 vec <- as.factor(vec)
 
-#4. Use R to show how many levels the vector in the previous question has.
+##### Question 4 #####
 
 levels(vec)
 
@@ -32,14 +25,12 @@ length(levels(vec))
 #[1] 7
 #This displays the number of levels in this vector
 
-#5. Use R to create a vector that takes the vector from question 1 and performs on it the 
-#formula 3x^2 - 4x + 1
+##### Question 5 #####
 
 vec <- c(2, 4, 6, 8, 4, 6, 8, 3, 5, 8, 3, 6, 7, 3, 6, 8, 3, 5, 6, 8)
 question5.vec <- vec^2 - 4*vec + 1
 
-#6. Implement ordinary least-squares regression in matrix form:
-#B = (X^T X)X^T y
+##### Question 6 #####
 
 X <- matrix(c(1,1,1,1,1,1,1,1,
               5,4,6,2,3,2,7,8,
@@ -49,13 +40,11 @@ Y <- matrix(c(45.2, 46.9, 31, 35.3, 25, 43.1, 41, 35.1), nrow=8, ncol=1)
 b <- solve(t(X)%*%X) %*% t(X) %*% Y
 
 
-#7. Create a named list. That is, create a list with several elements that are 
-#each able to be referenced by name.
+##### Question 7 #####
 
 question7.list <- list(arthur=c(1, 2, 3), barry=c(4, 5, 6), carmine=c(7, 8, 9))
 
-#8. Create a data frame with four columns - one each character, factor (with three levels), 
-#numeric, and date.  Your data frame should have at least 10 observations (rows).
+##### Question 8 #####
 
 options(stringsAsFactors=FALSE)
 
@@ -71,9 +60,7 @@ Birthday <- strptime(Birthday, format = "%m-%d-%Y", tz="")
 
 df <- data.frame(Name, Fame.Claim, Age, Birthday)
 
-#9. Illustrate how to add a row with a value for the factor column 
-#that isn't already in the list of levels. (Note:You do not need to accomplish 
-#this with a single line of code.)
+##### Question 9 #####
 
 levels(df$Fame.Claim) <- c(levels(df$Fame.Claim), "The Doctor")
 
@@ -83,35 +70,30 @@ df <- rbind(df, c("Matt Smith", "The Doctor", 31, "10/28/1982"))
 
 df$Birthday <- strptime(df$Birthday, format = "%m-%d-%Y", tz="")
 
-#10. Show the code that would read in a CSV file called temperatures.csv from the current working
-#directory
+##### Question 10 #####
 
 workingDirectory <- "C:/Users/Charley/Downloads/Courses/CUNY/SPS/IS 607 Data Acquisition and Management/Week 2"
 setwd(workingDirectory)
 
 temperatures <- read.csv("temperatures.csv", header=TRUE)
 
-#11. Show the code that would read in a TSV file called measurements.txt from a directory 
-#other than the working directory on your local machine.
+##### Question 11 #####
 
 measurements <- read.table(file = "C:/Users/Charley/Desktop/measurements.txt", 
                      sep = "\t", header=TRUE)
 
-#12. Show the code that will read in a delimited file with a pipe separator (the "|" symbol) 
-#from a website location. (You may make up an appropriate URL.)
+##### Question 12 #####
 
 webfile <- read.table("http://fakewebsite.com/webfile.dat", sep = "|", header=TRUE)
 
-#13. Write a loop that calculates 12-factorial
+##### Question 13 #####
 
 count <- 1
 for(n in 1:12){
   count <- count*n
 }
 
-#14. Use a loop to calculate the final balance, rounded to the nearest cent, in 
-#an account that earns 3.24% interest compounded monthly after six years if the 
-#original balance is $1,500.
+##### Question 14 #####
 
 #Assuming the inerest rate is monthly
 count <- 1500
@@ -130,8 +112,7 @@ for(n in 1:72){
 
 count <- round(count, 2)
 
-#15. Create a numeric vector of length 20 and then write code to calculate the 
-#sum of every third element of the vector you have created.
+##### Question 15 #####
 
 vec <- c(2, 4, 6, 8, 4, 6, 8, 3, 5, 8, 3, 6, 7, 3, 6, 8, 3, 5, 6, 8)
 
@@ -142,7 +123,7 @@ for(n in 1:(length(vec)%/%3)){
   sum <- sum + as.numeric(vec[n*3])
 }
 
-#16. Use a for loop to calculate sum from i= 1 to 10 of x^i for x = 2
+##### Question 16 #####
 
 sum <- 0
 x <- 2
@@ -150,7 +131,7 @@ for(i in 1:10){
   sum <- sum + x^i
 }
 
-#17. Use a while loop to accomplish the same task as in the previous exercise.
+##### Question 17 #####
 
 sum <- 0
 x <- 2
@@ -160,20 +141,18 @@ while(i <= 10){
   i <- i + 1
 }
 
-#18. Solve the problem from the previous two exercises without using a loop.
+##### Question 18 #####
 
 x <- 2
 i <- 10
 
 sum <- 2*(2^i-1)
 
-#19. Show how to create a numeric vector that contains the sequence from 
-#20 to 50 by 5.
+##### Question 19 #####
 
 vec <- seq(from=20, to=50, by=5)
 
-#20. Show how to create a character vector of length 10 with the same word, 
-#"example", ten times.
+##### Question 20 #####
 
 vec <- rep("example", each=10)
 
@@ -183,7 +162,7 @@ df <- data.frame(c(1,2,3), c(4,5,6))
 colnames(df) <- c("x", "y")
 df$z <- "example"
 
-#21. Show how to take a trio of input numbers a, b, and c and implement the quadratic equation.
+##### Question 21 #####
 
 a <- 1
 b <- 8
