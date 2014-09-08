@@ -52,7 +52,7 @@ quadraticSolve <- function(a, b, c){
     if(x1 == x2){
       return(paste("This quadratic equation has one solution:", x1, sep=" "))
     } else {
-      return(paste("This quardatic equation has two solutions:", x1, "and", x2, sep=" "))
+      return(paste("This quadratic equation has two solutions:", x1, "and", x2, sep=" "))
     }
   }
   
