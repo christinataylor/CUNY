@@ -1,0 +1,244 @@
+---
+title: "Week4QuizMD"
+author: "Charley Ferrari"
+date: "Friday, September 19, 2014"
+output: html_document
+---
+
+```{r}
+
+library(ggplot2)
+library(ggthemes)
+library(GGally)
+
+workingDirectory <- "C:/Users/Charley/Downloads/Courses/CUNY/SPS/git/IS 607 Data Acquisition and Management/Week 4/quiz"
+setwd(workingDirectory)
+
+m <- read.table("movies.tab", sep="\t", header=TRUE, quote="", comment="")
+
+```
+
+##### Question 1 #####
+
+Show an appropriate visualization that displays the total number of movies for each decade.
+
+Trying to ween myself off of for loops! Originally I had the below code
+
+```{r}
+#####################
+#decade <- numeric()
+#for(year in m$year){
+#  year <- year - as.numeric(substr(as.character(year),4,4))
+#  decade <- c(decade, year)
+#}
+#
+#m$decade <- decade
+####################
+```
+
+I was able to pretty easily use tapply here:
+
+```{r}
+
+decadeMaker <- function(year){
+  return(year - as.numeric(substr(as.character(year),4,4)))
+}
+
+m$decade <- sapply(m$year, decadeMaker)
+
+ggplot(m, aes(x=decade)) + 
+  geom_bar(stat="bin") + 
+  scale_x_continuous(breaks=seq(from=1890, to=2000, by=10)) + 
+  theme_economist()
+
+```
+
+for some reason I got this error only after I started using the bins below... It looks like if you run stat_bin2d() it changes the stat argument in  your geom into "bin." You have to set that back to Identity. At least now all of my charts are executable, but I still get a weird error.
+
+##### Question 2 #####
+
+Show the average IMDB user rating for different genres of movies? Has this changed over time?
+
+First, averages per genre over time (for all movies):
+
+```{r}
+
+options(stringsAsFactors=FALSE)
+genreRatingAverages <- data.frame(genre = character(), average.rating = numeric())
+
+for(genre in c("Action", "Animation", "Comedy", "Drama", "Documentary", 
+               "Romance", "Short")){
+  genreRatingAverages[nrow(genreRatingAverages)+1,] <- c(genre, mean(m[m[,genre] == 1,"rating"]))
+  
+}
+
+ggplot(genreRatingAverages, aes(x=genre, y=as.numeric(average.rating))) + 
+  geom_bar(stat="identity") + 
+  theme_economist()
+
+```
+
+The averages are all pretty close together. Action movies look like they have the lowest while Documentaries look the highest.
+
+I could not find a way to do this without a for loop. Check out the discussion board where Ayite and I were talking about this data. I was finding it difficult to deal with this data. If each movie could only have one genre I could easily deal with genre as a categorical variable. But, it looks like this wasn't the case...
+
+Second part of thee question: How has this changed over time?
+
+The structure of this data makes it difficult to work with. I can't just add genre as a variable, since some movies belong toMultiple genres. I can't color by or facet by this quality simply. So, I'll create a few different graphs as output using a loop
+
+First a scatter plot containing all movies of year vs rating:
+
+```{r}
+
+ggplot(m, aes(x=year, y=rating)) + 
+  geom_point() + 
+  stat_smooth(method=lm)
+
+```
+
+Too many datapoints... Lets try binning the data into rectangles.
+
+```{r}
+
+ggplot(m, aes(x=year, y=rating)) + 
+  #geom_point() + 
+  stat_bin2d() + 
+  scale_fill_gradient(low="orange", high="yellow") + 
+  stat_smooth(method=lm) + 
+  theme_tufte()
+
+```
+
+Looks like a weak negative correlation.
+
+```{r}
+
+summary(lm(year ~ rating, data=m))
+
+```
+
+Now to look at each genre individually.
+
+```{r}
+
+lmlist <- list()
+
+for(genre in c("Action", "Animation", "Comedy", "Drama", "Documentary", 
+               "Romance", "Short")){
+  genreDF <- m[m[,genre] == 1,]
+  
+  print(ggplot(genreDF, aes(x=year, y=rating)) + 
+    #geom_point() + 
+    stat_bin2d() + 
+    scale_fill_gradient(low="orange", high="yellow") + 
+    stat_smooth(method=lm) + 
+    ggtitle(genre) +
+    theme_tufte())
+  
+  lmlist[[length(lmlist)+1]] <- summary(lm(year ~ rating, data=genreDF))
+  names(lmlist)[length(lmlist)] <- genre
+}  
+
+lmlist
+
+```
+
+
+##### Question 3 #####
+
+Is there a relationship between length of movie and movie rating?
+
+```{r}
+
+ggplot(m, aes(x=length, y=rating)) +
+  geom_point()
+
+```
+
+Outliers...
+
+```{r}
+
+ggplot(m, aes(x=length, y=rating)) +
+  geom_point() +
+  xlim(0,mean(m$length) + 2*sd(m$length))
+
+```
+
+I just used 2 * standard deviation here, but I imagine with the 0 bound this data isn't normally distributed. I ended up with a good result using it for this particular choice:
+
+```{r}
+
+length(m$length[m$length < (mean(m$length) + 2*sd(m$length))])/length(m$length)
+
+```
+
+Now to solve the issue of too many points:
+
+```{r}
+
+ggplot(m, aes(x=length, y=rating)) + 
+  #geom_point() + 
+  stat_bin2d() + 
+  scale_fill_gradient(low="orange", high="yellow") + 
+  stat_smooth(method=lm) + 
+  xlim(0,mean(m$length) + 2*sd(m$length)) +
+  theme_tufte()
+
+```
+
+Once again it looks like a weak negative correlation:
+
+```{r}
+
+summary(lm(length ~ rating, data=m))
+
+```
+
+##### Question 4 #####
+
+Is there a relationship between length of movie and genre?
+
+Once again the nature of the genre columns make this a bit difficult... I can't just aggregate by genre, but rather calcualte the length of the move for each genre.
+
+```{r}
+
+options(stringsAsFactors=FALSE)
+genreLengthAverages <- data.frame(genre = character(), average.length = numeric())
+
+for(genre in c("Action", "Animation", "Comedy", "Drama", "Documentary", 
+               "Romance", "Short")){
+  genreDF <- m[m[,genre] == 1,]
+  genreLengthAverages[nrow(genreLengthAverages)+1,] <- c(genre, mean(m[m[,genre] == 1,"length"]))
+  
+  }
+
+ggplot(genreLengthAverages, aes(x=genre, y=as.numeric(average.length))) + 
+  geom_bar(stat="identity") + 
+  theme_economist()
+
+```
+
+Looks like Animations and Shorts are both significantly shorter than the averages for other genres. Action movies seem to the longest.
+
+##### Question 5 #####
+
+Which other variable best predicts total number of votes that a movie received.
+
+First, lets facet scatterplots with different variables.
+
+I'll have to treat genre differently here too, so first I'll remove it:
+
+```{r}
+
+ggpairs(m[m$length < mean(m$length)+2*sd(m$length) & 
+            m$votes < mean(m$votes)+2*sd(m$votes),
+              colnames(m) %in% c("votes", "year", "length", "budget", "rating")])
+
+```
+
+I still couldn't find out how to change the views of ggplot (it would have helped to have a sta_bin2d here!)
+
+I gave votes the same treatment I gave length, by attempting to remove outliers and using a max of the mean + 2sd. In both cases I ended up saving >98% of my datapoints, which is in line with taking two SDs.
+
+The highest correlation appears to be with budget. The relationship isn't very clear. I tried to remove the outliers with budget but seemed to be unable to... The correlation number suggests positive correlation, so higher budget movies get more votes. This makes some intuitive sense, as budget is probably correlated with popularity.
