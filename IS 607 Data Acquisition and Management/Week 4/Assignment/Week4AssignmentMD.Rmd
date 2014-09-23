@@ -1,0 +1,112 @@
+---
+title: "Week4AssignmentMD"
+author: "Charley Ferrari"
+date: "Saturday, September 20, 2014"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+library(ggthemes)
+library(GGally)
+library(plyr)
+
+workingDirectory <- "C:/Users/Charley/Downloads/Courses/CUNY/SPS/git/IS 607 Data Acquisition and Management/Week 4/Assignment"
+setwd(workingDirectory)
+
+m <- read.table("movies.tab", sep="\t", header=TRUE, quote="", comment="")
+```
+
+##### Main Question #####
+
+Your job is to look at the data, and answer the question, "Which year were the best popular movies made?" This question as worded allows for various interpretations-make (and document!) your reasonable assumptions about "best" and "popular" and include the  R code that you use to support your argument. 
+
+##### My Solution #####
+
+Ultimately the goal will be to calculate an average rating per year and then find out which year contained the movies with the highest ratings. The first thing I wanted to control for was number of votes. One would expect that films with lower numbers of votes will have a wider distribution, meaning there could be some false high and low ratings. First lets look at the distribution of number of votes:
+
+```{r}
+
+quantile(m$votes)
+
+```
+
+It looks like there are a large number of movies with relatively few votes. To test out what happens, I'll split the dataset in half, and find out the distribution of ratings in both of these halves:
+
+```{r}
+
+quantile(m[m$votes > median(m$votes),"rating"])
+
+quantile(m[m$votes < median(m$votes),"rating"])
+
+```
+
+These look remarkably similar, and this backs up the low correlation we see:
+
+```{r}
+
+ggpairs(m[,colnames(m) %in% c("rating", "votes")])
+
+```
+
+So, I'm going to assume I don't have to take number of votes into account.
+
+Next, I'd want to see if the number of movies per year have the same effect. Similarly to number of votes, the number of movies might have an effect on the rating. I'll aggregate the ratings by year and see what happens.
+
+```{r}
+
+countMovies <- function(data){
+  c(movies = length(data$rating))
+}
+
+meanRatings <- function(data){
+  c(rating = mean(data$rating))
+}
+
+
+mYearCount <- ddply(m, .variables = "year", .fun = countMovies)
+mRatingAverage <- ddply(m, .variables = "year", .fun = meanRatings)
+
+mYear <- merge(mYearCount, mRatingAverage, by="year")
+
+ggplot(mYear, aes(x=movies, y=rating)) + 
+  geom_point() + 
+  stat_smooth(method=lm)
+
+
+```
+
+Looks like ratings stay pretty consistent depending on the number of movies released. But, I'm finding a higher range of average ratings as counts get lower. Lets try to find out what's happening there.
+
+I'm not sure of the exact statistical test one could run to try to adjust for weight (the closest I could think of is somehow creating a moving SD that "moves" along the count.) 
+
+Visually however, two points stick out. There is a clear point of the highest rating. This point, however, has a low count, and is surrounded by similar ratings also of lower counts. The outlier high rating with a count between 1750 and 2000 is more interesting to me. It's obvious that the higher the count, the lower the variability of the ratings. The fact that there is a year with such a high rating and count leads me to believe that it was a particularly good year. Lets find these two points.
+
+```{r}
+
+#Point 1
+
+mYear[order(mYear$rating, decreasing=T),][1,]
+
+#Point 2
+
+mYear[mYear$rating == max(mYear[mYear$movies > 1500,"rating"]),]
+
+
+```
+
+
+If one were to pick the year that absolutely has the highest rating, 1928 would be it. Because it has a low count however, the ratings are expected to have a higher standard deviation. It's easier for one of these years to have a high rating (it's also easier for one of these years to have a lowe rating.)
+
+If we were to adjust for the count of movies, I'd imagine we'd end up with 2004 as the best year for movies.
+
+This relationship is more clearly seen when graphing the ratings over time, and coloring the line by the count of movies:
+
+```{r}
+
+ggplot(mYear, aes(x=year, y=rating, color=movies)) + 
+  geom_line()
+
+```
+
+In order to truly say which year had the best movies, I'd like to look more into what's going on in the last couple of years in the database. I think it would help to look at previous years pulls from the databases. It could be random, but there could also be a tendency for more recent movies to have higher ratings, and for those ratings to fall as time goes on.
