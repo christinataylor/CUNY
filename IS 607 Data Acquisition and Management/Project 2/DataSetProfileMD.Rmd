@@ -18,6 +18,7 @@ library(ggplot2)
 #library(forecast)
 library(reshape2)
 library(dplyr)
+library(tidyr)
 
 setwd("C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Project 2")
 sourcefile <- "Train.csv"
@@ -194,7 +195,7 @@ monthvariablesstacked <- monthvariables %>% select(datetime, registered, casual)
 
 monthvariablesstacked$datetime <- as.character(monthvariablesstacked$datetime)
 
-monthvariablesstacked <- melt(monthvariablesstacked, id.vars="datetime", variable.name="RiderType", value.name="count")
+monthvariablesstacked <- monthvariablesstacked %>% gather(RiderType, count, registered:casual)
 
 monthvariablesstacked$datetime <- strptime(monthvariablesstacked$datetime, format = "%Y-%m-%d", tz="")
 
