@@ -3,21 +3,6 @@ library(tidyr)
 
 
   
-  messy <- data.frame(
-    name = c("Wilbur", "Petunia", "Gregory"),
-    a = c(67, 80, 64),
-    b = c(56, 90, 50), 
-    c = c(34, 34, 34)
-  )
-
-
-messy <- data.frame(
-  city = c("Edinburgh", "Glasgow"), 
-  age = c("16-24", "25+"),
-  yes = c(80100, 143000, 99400, 150400),
-  no = c(35900, 214800, 43000, 207000)
-)
-
 messy <- data.frame(
   c("Edinburgh", "16-24", 80100, 35900),
   c("Edinburgh", "25+", 143000, 214800),
