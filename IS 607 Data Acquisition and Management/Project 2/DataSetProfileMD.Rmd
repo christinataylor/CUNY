@@ -19,6 +19,7 @@ library(ggplot2)
 library(reshape2)
 library(dplyr)
 library(tidyr)
+library(GGally)
 
 setwd("C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Project 2")
 sourcefile <- "Train.csv"
@@ -101,10 +102,6 @@ These three variables give a weather profile of Washington DC. I'm curious of th
 
 ```{r}
 
-# I tried to do this with dplyr but was unable to get ranges to work with it!
-# Check the forum for the specifics of the issue I was having.
-#variablesws <- filter(variables, windspeed < 25)
-
 variablesws <- variables[(variables$windspeed > 15 & variables$windspeed < 25),]
 
 ggplot(variablesws, aes(x=windspeed)) + 
@@ -134,7 +131,7 @@ The histograms of casual vs. regular riders tell an interesting story. They foll
 
 ##### Looking at ride counts over time #####
 
-First I'll create a daily dataframe for easier analysis
+For this analysis I'll use a daily dataframe
 
 ```{r}
 
@@ -160,9 +157,7 @@ ggplot(dayvariables, aes(x=datetime, y=count)) +
 
 ```
 
-The daily rides data is pretty noisy, so lets try to see what's going on monthly to see a trend.
-
-If this were just time series analysis I'd probably use a moving average, in this case I'm just going to collapse the series to get a similar result.
+The daily rides data is pretty noisy, and it's hard to display as the data stops on the 19th of every month. I'll show the data on a monthly basis to get a clearer look at its trends
 
 
 ```{r}
@@ -208,45 +203,29 @@ ggplot(monthvariablesstacked, aes(x=datetime, y=count, fill=RiderType)) +
 
 ```
 
-Here we see the more general trend. Ridership seems to be increasing overall, with seasonal increases during the warmer months. There appears to be a large amount of registered riders as opposed to casual riders. Predictibly, a greater portion of the total riders are casual during the summer months, suggesting that the casual riders are more sensitive to changes in weather.
+Here we see the more general trend. Ridership seems to be increasing overall, with seasonal increases during the warmer months. There appears to be a large number of registered riders as opposed to casual riders. Predictibly, a greater portion of the total riders are casual during the summer months, suggesting that the casual riders are more sensitive to changes in weather.
 
-##### How Weather Affects Ridership #####
+##### How Weather Affects Ridership: Correlation of Variables #####
 
-We can get some broad pictures of this using scatter plots. Below is an example of different types of count and temperature:
+We can get some broad pictures of this using scatter plots. Below is the pairwise correlation analysis
+
 
 ```{r}
 
-ggplot(variables, aes(x=count, y=temp)) + 
-  geom_point() + 
-  stat_bin2d() + 
-  scale_fill_gradient(low="orange", high="yellow") +
-  stat_smooth(method=lm) + 
-  ggtitle("Count Vs Temperature")
+variablelist <- c("weather", "temp", "atemp", "humidity", "windspeed")
 
-ggplot(variables, aes(x=registered, y=temp)) + 
-  geom_point() + 
-  stat_bin2d() + 
-  scale_fill_gradient(low="orange", high="yellow") + 
-  stat_smooth(method=lm) + 
-  ggtitle("Registered Count Vs Temperature")
-
-ggplot(variables, aes(x=casual, y=temp)) + 
-  geom_point() + 
-  stat_bin2d() + 
-  scale_fill_gradient(low="orange", high="yellow") + 
-  stat_smooth(method=lm) + 
-  ggtitle("Casual Count Vs Temperature")
-  
+ggpairs(select(variables, weather, temp, atemp, humidity, windspeed, registered, casual, count))
 
 
 ```
 
+It looks like temperature (along with atemp) and humidity have the highest correlations (humidity is of course negative,) while windspeed and weather have a slightly lower one.
 
-This can give us some interesting views, for instance, casual users seem to be a bit more affected by temperature than registered users, which makes a bit of sense considering the nature of the rider.
+Casual usage is more heavily correlated to these weather variables than registered usage. This makes intuitive sense, since registered users are probably using this as a commuting option, while casual users are using the service for more fun optional activities.
 
 Because this is time series data however, it's better to view the data in that context.
 
-Using an example month we'll try to get an idea of how weather is affecting ridership.
+Using an example month one can get more of an idea of how weather is affecting ridership.
 
 I originally wanted to present this as a for loop for each month and cycling through count, registered, and casual, but that resulted in a large amount of pages. A single month gets the idea of what is occurring across.
 
