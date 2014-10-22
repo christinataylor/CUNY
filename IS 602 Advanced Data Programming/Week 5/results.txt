@@ -1,0 +1,1 @@
+the best fit equation for this data is: brainsize = 0.00430388094353*bodysize + 266.315772735
