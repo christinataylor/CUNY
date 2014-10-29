@@ -1,0 +1,2 @@
+federal_district	abbr	establishment_date	population	area_sq_miles	land_area_sq_miles	house_seats
+"Washington, D.C."	DC	7/16/1790	646449	68	61	1

@@ -1,0 +1,6 @@
+territory	abbr	capital	acquisition_year	territorial_status	population	area_sq_miles	land_area_sq_miles	house_seats
+American Samoa	AS	Pago Pago	1900	"Unincorporated, unorganized"	55519	581	76	1
+Guam	GU	Hagatna	1899	"Unincorporated, organized"	159358	571	210	1
+Northern Mariana Islands	MP	Saipan	1986	"Unincorporated, organized"	53883	1976	182	1
+Puerto Rico	PR	San Juan	1899	"Unincorporated, organized"	3725789	5325	3424	1
+U.S. Virgin Islands	VI	Charlotte Amalie	1917	"Unincorporated, organized"	106405	733	134	1
