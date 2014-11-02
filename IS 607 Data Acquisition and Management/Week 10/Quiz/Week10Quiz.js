@@ -1,28 +1,6 @@
 //mongoimport --db zips --type json --file "C:\Users\Charley\Downloads\Courses\CUNY\SPS\Git\IS 607 Data Acquisition and Management\Week 10\Quiz\zips.json"
 
-/*
-db.zips.aggregate( [ {
-	$match : { state : "NY" }
-}, {
-	$group : {
-		_id : "$state",
-		total : {
-			$sum : "$pop"
-		}
-	}
-}
-])
 
-db.zips.aggregate( [ {
-	$group : {
-		_id : "$state",
-		total : {
-			$sum : "$pop"
-		}
-	}
-}
-])
-*/
 
 // Question 1 : Which states have populations less than 8 million.
 
