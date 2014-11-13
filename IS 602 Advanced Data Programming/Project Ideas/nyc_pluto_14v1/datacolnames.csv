@@ -1,0 +1,83 @@
+Variable,Variable Name,Type
+Borough,Borough,ID
+Block,Tax Block,ID
+Lot,Tax Lot,ID
+CD,Community District,Geographic
+CT2010,Census Tract,Geographic
+CB2010,Census Block,Geographic
+SchoolDist,School District,Geographic
+Council,City Council District,Geographic
+ZipCode,Zip Code,Geographic
+FireComp,Fire Company,Geographic
+PolicePrct,Police Precinct,Geographic
+Address,Address,Geographic
+ZoneDist1,"Zoning, Zoning District 1",Zoning
+ZoneDist2,"Zoning, Zoning District 2",Zoning
+ZoneDist3,"Zoning, Zoning District 3",Zoning
+ZoneDist4,"Zoning, Zoning District 4",Zoning
+Overlay1,"Zoning, Commercial Overlay 1",Zoning
+Overlay2,"Zoning, Commercial Overlay 2",Zoning
+SPDist1,"Zoning, Special Purpose District 1",Zoning
+SPDist2,"Zoning, Special Purpose District 2",Zoning
+LtdHeight,"Zoning, Limited Height District",Zoning
+AllZoning1,"Zoning, All Components 1",Zoning
+AllZoning2,"Zoning, All Components 2",Zoning
+SplitZone,"Zoning, Split Boundary Indicator",Zoning
+BldgClass,Building Class,Building Info
+LandUse,Land Use Category,Building Info
+Easements,"Easements, Number Of",Building Info
+OwnerType,"Ownership, Type of Ownership Code",Building Info
+OwnerName,"Ownership, Owner Name",Building Info
+LotArea,Lot Area,Lot Info
+BldgArea,"Floor Area, Total Building",FAR
+ComArea,"Floor Area, Commercial",FAR
+ResArea,"Floor Area, Residential",FAR
+OfficeArea,"Floor Area, Office",FAR
+RetailArea,"Floor Area, Retail",FAR
+GarageArea,"Floor Area, Garage",FAR
+StrgeArea,"Floor Area, Storage",FAR
+FactryArea,"Floor Area, Factory",FAR
+OtherArea,"Floor Area, Other",FAR
+AreaSource,"Floor Area, Total Building Source Code",FAR
+NumBldgs,"Buildings, Number of",Building Info
+NumFloors,"Floors, Number of",Building Info
+UnitsRes,"Units, Residential",Building Info
+UnitsTotal,"Units, Residential and Non-Residential",Building Info
+LotFront,Lot Frontage,Building Info
+LotDepth,Lot Depth,Building Info
+BldgFront,Building Frontage,Building Info
+BldgDepth,Building Depth,Building Info
+Ext,Extension Code,Building Info
+ProxCode,Proximity Code,Building Info
+IrrLotCode,Irregular Lot Code,Lot Info
+LotType,Lot Type,Lot Info
+BsmtCode,Basement Type/Grade,Building Info
+AssessLand,"Assessed Value, Land",Lot Info
+AssessTot,"Assessed Value, Total",Building Info
+ExemptLand,"Exempt Value, Land",Lot Info
+ExemptTot,"Exempt Value, Total",Building Info
+YearBuilt,Year Built,Building Info
+BuiltCode,Year Built Code,Building Info
+YearAlter1,Year Altered 1,Building Info
+YearAlter2,Year Altered 2,Building Info
+HistDist,Historic District Name,Geographic
+Landmark,Landmark Name,Geographic
+BuiltFAR,Built Floor Area Ratio - FAR,FAR
+ResidFAR,Maximum Allowable Residential FAR,FAR
+CommFAR,Maximum Allowable Commercial FAR,FAR
+FacilFAR,Maximum Allowable Facility FAR,FAR
+BoroCode,Boro Code,FAR
+BBL,"Borough, Tax Block & Lot",ID
+CondoNo,Condominium Number,Building Info
+Tract2010,Census Tract 2,Geographic
+XCoord,X Coordinate,Geographic
+YCoord,Y Coordinate,Geographic
+ZoneMap,Zoning Map #,Geographic
+ZMCode,Zoning Map Code,Geographic
+Sanborn,Sanborn Map #,Geographic
+TaxMap,Tax Map #,Geographic
+EDesigNum,E-Designation Number,Geographic
+APPBBL,Apportionment Bbl,Building Info
+APPDate,Apportionment Date,Building Info
+PLUTOMapID,Pluto - Base Map Indicator,Info
+Version,Version Number,Info
