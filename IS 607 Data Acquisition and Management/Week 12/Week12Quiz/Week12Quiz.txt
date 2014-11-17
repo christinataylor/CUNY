@@ -1,0 +1,44 @@
+Charley Ferrari
+Week 12 Quiz
+
+----------------------------------------------------------------------------------------------------
+
+1. Your first job is to produce the code to read in the CSV files to create the proper output. Note that student nodes will have relationships with both courses (enrolled or completed) and dormitories (housed). Submit the code as a plain text file. Note that you may wish to preprocess the CSV files to make your life easier. Explain any steps you take to do so. (For instance, you may wish to
+
+I first used an R script to recreate the CSV files. I created a Student CSV, Course CSV, Dormlist CSV, and split the data-courses provded csv into enrolled and completed for easier uploading
+
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/Week12Quiz/courseTable.csv" as courses create (a1:Course {department: courses.CourseDepartment, number: courses.CourseNumber, title: courses.CourseName})
+
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/Week12Quiz/housingList.csv" as housing create (a1:Dormitory {name: housing.Dormitory})
+
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/Week12Quiz/studentTable.csv" as students create (a1:Student {firstname: students.GivenName, lastname: students.Surname, id: students.ID, gender: students.Gender, address: students.StreetAddress, city: students.City, state: students.State, zipcode: students.ZipCode, phone: students.TelephoneNumber})
+
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/Week12Quiz/enrolledCourses.csv" as enrolledCourses match (a: Student {id: enrolledCourses.ID}), (b: Course {title: enrolledCourses.CourseName}) create (a) -[r:Enrolled {section: enrolledCourses.Section, instructor: enrolledCourses.Instructor, grade: enrolledCourses.Grade}]-> (b)
+
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/Week12Quiz/completedCourses.csv" as completedCourses match (a: Student {id: completedCourses.ID}), (b: Course {title: completedCourses.CourseName}) create (a) -[r:Completed {section: completedCourses.Section, instructor: completedCourses.Instructor, grade: completedCourses.Grade}]-> (b)
+
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/Week12Quiz/week-12-quiz-data-students-and-housing.csv" as studentHousing match (a: Student {id: studentHousing.ID}), (b: Dormitory {name: studentHousing.Dormitory}) create (a) -[r:Housed {room: studentHousing.Room}]-> (b)
+
+----------------------------------------------------------------------------------------------------
+
+2. In addition, please provide a short paragraph commenting on whether a graph database is a better choice or a worse choice than a SQL database for this task. Back up your claim succinctly with explanation. You do not need to implement the SQL solution.
+
+In this case, I would think this is a worse choice than a SQL database. This data is relational in nature, and can easily be stored in a SQL database without losing any information. The characteristics of relationships versus the characteristics of nodes don't matter too much. In my opinion, the increased flexibility of a SQL database would be more desired than having this sort of data in graph structure. Data where the relationships matter, such as bilateral country trade data, family trees, social networks, or the flight data we used in the lab have more benefits in graph structure.
+
+----------------------------------------------------------------------------------------------------
+
+3. Write the Cypher query that will find all of the roommates of the student Richard Kowalski.
+
+match (a: Student { id:'19457' })-[r1:Housed]->(dorm: Dormitory)<-[r2:Housed]- (b: Student) Where r1.room = r2.room return (b)
+
+----------------------------------------------------------------------------------------------------
+
+4. Finally, suppose you were told Richard Kowalski, who was enrolled in section 12136 of Math 120: Finite Mathematics, completed the course with a grade of B. Show the query that would find the appropriate relationship and update both the label (enrolled to completed) and the grade.
+
+match (s: Student { id:'19457' }) -[r]-> (c: Course { title: 'Finite Mathematics' }) create (s) -[r2: Completed{section: r.section, instructor: r.instructor, grade: 'B'}]-> (c) delete r return r2
+
+----------------------------------------------------------------------------------------------------
+
+5. We have instructor as a property of the relationship “enrolled” in our model. Describe a data model that might improve on this setup by making instructor a type of node rather than an attribute. Which way do you think might make more sense? Does the use case affect your opinion? Explain. (You may wish to sketch a picture of what this new model would look like.)
+
+This is one of the reasons why I don't think this data is best suited for a graph database. There is no clear answer to this question, it's only a matter of which part of the data you would like to highlight. One could imagine several models for this data. Having instructors available as a node would allow for more visual representations of instructors who have multiple classes. One would be able to view a node and relationship view of instructors and classes, whereas without this you would only see a list of student-course relationships with the instructor you're querying for. I think in a SQL database the most detail can be achieved, and all of the relationships can be queried in an ad hoc way depending on what you were looking for, whether it be what courses instructors are teaching or which students are enrolled in courses.

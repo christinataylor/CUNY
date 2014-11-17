@@ -1,0 +1,7 @@
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/neo4j-airport-csv-raw.csv" as airports create (a1:Airport {label: airports.label, city: airports.city, state: airports.state})
+
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/neo4j-flight-csv-raw.csv" as flights create (a1:Flight {number: flights.flight, airline: flights.airline, capacity: flights.capacity})
+
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/neo4j-flight-csv-raw.csv" as flights match (a: Flight {number: flights.flight}), (b:Airport {label: flights.arrive}) create (a) -[r:Arrives]-> (b)
+
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/neo4j-flight-csv-raw.csv" as flights match (a: Flight {number: flights.flight}), (b:Airport {label: flights.depart}) create (a) -[r:Departs]-> (b)
