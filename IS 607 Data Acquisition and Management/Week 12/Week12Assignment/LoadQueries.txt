@@ -1,0 +1,29 @@
+# For Assignment
+# Trade data with only country nodes
+
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/Week12Assignment/countryList.csv" as countries create (a1:Country {name: countries.x})
+
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/Week12Assignment/trade.csv" as trade match (ex: Country {name : trade.exportCountry}), (im: Country {name : trade.importCountry}) create (ex) -[r:Exported {Product: trade.Product, Amount: trade.Trade}]-> (im)
+
+# For some reason Neo4J isn't recognizing my trade flows as numbers, so I have to manually set this...
+
+match (a:Country)-[r]->(b:Country) set r.Amount = tofloat(r.Amount)
+
+match(a: Country{name: 'Brazil'})-[r]->(b: Country{name: 'Argentina'})  return (a.name), (r), (b.name)
+
+match(a:Country{name: 'Argentina'})<-[r]->(b:Country{name: 'Brazil'}) return a.name, b.name, r.Product, r.Amount, case startnode(r).name when 'Argentina' then 1 else -1 end as result
+
+match(a:Country{name: 'Argentina'})<-[r]->(b:Country{name: 'Brazil'}) return sum((case startnode(r).name when 'Argentina' then 1 else -1 end)*r.Amount) 
+
+YAY!
+
+# For Lab
+# Flight Data with flight nodes
+
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/Week12Lab/neo4j-airport-csv-raw.csv" as airports create (a1:Airport {label: airports.label, city: airports.city, state: airports.state})
+
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/Week12Lab/neo4j-flight-lab-data.csv" as flights create (a1:Flight {number: flights.flight, airline: flights.airline, capacity: flights.capacity})
+
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/Week12Lab/neo4j-flight-lab-data.csv" as flights match (a: Flight {number: flights.flight}), (b: Airport {label: flights.depart}) create (a)-[r: Departs {takeoff: flights.takeoff}]->(b)
+
+load csv with headers from "file:C:/Users/Charley/Downloads/Courses/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Week 12/Week12Lab/neo4j-flight-lab-data.csv" as flights match (a: Flight {number: flights.flight}), (b: Airport {label: flights.arrive}) create (a)-[r: Arrives {landing: flights.landing}]->(b)

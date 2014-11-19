@@ -1,0 +1,729 @@
+exportCountry,importCountry,Product,Trade
+Canada,United States,Animal Products,7458959.29
+Mexico,United States,Animal Products,1742016.49
+Argentina,United States,Animal Products,155011.4
+Brazil,United States,Animal Products,331230.99
+Chile,United States,Animal Products,1495736.26
+Colombia,United States,Animal Products,106013.71
+Ecuador,United States,Animal Products,925514.72
+Canada,United States,Beverages and Oils,2562751.68
+Mexico,United States,Beverages and Oils,3169437.37
+Argentina,United States,Beverages and Oils,454336.39
+Brazil,United States,Beverages and Oils,76523.62
+Chile,United States,Beverages and Oils,349677.71
+Colombia,United States,Beverages and Oils,18401.85
+Ecuador,United States,Beverages and Oils,2940.99
+Canada,United States,Chemicals and Related Products,33938274.95
+Mexico,United States,Chemicals and Related Products,9825719.45
+Argentina,United States,Chemicals and Related Products,824324.63
+Brazil,United States,Chemicals and Related Products,3377321.37
+Chile,United States,Chemicals and Related Products,839535.98
+Colombia,United States,Chemicals and Related Products,280451.4
+Ecuador,United States,Chemicals and Related Products,18631.28
+Canada,United States,"Computers, Office, Communications, and Professional Equipment",5976070.93
+Mexico,United States,"Computers, Office, Communications, and Professional Equipment",53373569
+Argentina,United States,"Computers, Office, Communications, and Professional Equipment",13614.71
+Brazil,United States,"Computers, Office, Communications, and Professional Equipment",162903.86
+Chile,United States,"Computers, Office, Communications, and Professional Equipment",9309.97
+Colombia,United States,"Computers, Office, Communications, and Professional Equipment",11165.63
+Ecuador,United States,"Computers, Office, Communications, and Professional Equipment",3081.39
+Canada,United States,Energy and Mining,108567812.5
+Mexico,United States,Energy and Mining,35202386.79
+Argentina,United States,Energy and Mining,673841.46
+Brazil,United States,Energy and Mining,6227312.6
+Chile,United States,Energy and Mining,179111.09
+Colombia,United States,Energy and Mining,15392554.5
+Ecuador,United States,Energy and Mining,8846728.37
+Canada,United States,Glass and Non-Metallic Products,1628832.26
+Mexico,United States,Glass and Non-Metallic Products,2484570.76
+Argentina,United States,Glass and Non-Metallic Products,11570.74
+Brazil,United States,Glass and Non-Metallic Products,951708.44
+Chile,United States,Glass and Non-Metallic Products,2496.38
+Colombia,United States,Glass and Non-Metallic Products,87737.28
+Ecuador,United States,Glass and Non-Metallic Products,6627.62
+Canada,United States,Machinery and Electrical Equipment,20739075.54
+Mexico,United States,Machinery and Electrical Equipment,50336482.21
+Argentina,United States,Machinery and Electrical Equipment,82382.19
+Brazil,United States,Machinery and Electrical Equipment,1862016.05
+Chile,United States,Machinery and Electrical Equipment,61684.22
+Colombia,United States,Machinery and Electrical Equipment,65093.49
+Ecuador,United States,Machinery and Electrical Equipment,17434.16
+Canada,United States,Metals and Metal Products,28267315.7
+Mexico,United States,Metals and Metal Products,16482748.54
+Argentina,United States,Metals and Metal Products,708346.03
+Brazil,United States,Metals and Metal Products,3824138.29
+Chile,United States,Metals and Metal Products,3896860.95
+Colombia,United States,Metals and Metal Products,2477105.86
+Ecuador,United States,Metals and Metal Products,431368.99
+Canada,United States,Miscellaneous,18136434.86
+Mexico,United States,Miscellaneous,17362861.29
+Argentina,United States,Miscellaneous,410521.21
+Brazil,United States,Miscellaneous,2553767.13
+Chile,United States,Miscellaneous,276004.84
+Colombia,United States,Miscellaneous,632944.76
+Ecuador,United States,Miscellaneous,177686.38
+Canada,United States,"Textiles, Leather, and Apparel",2135826.82
+Mexico,United States,"Textiles, Leather, and Apparel",6331219.88
+Argentina,United States,"Textiles, Leather, and Apparel",78281.48
+Brazil,United States,"Textiles, Leather, and Apparel",445627.32
+Chile,United States,"Textiles, Leather, and Apparel",15969.96
+Colombia,United States,"Textiles, Leather, and Apparel",318887.37
+Ecuador,United States,"Textiles, Leather, and Apparel",10314.58
+Canada,United States,Transportation Equipment and Parts,66892789.23
+Mexico,United States,Transportation Equipment and Parts,68143397.9
+Argentina,United States,Transportation Equipment and Parts,54459.79
+Brazil,United States,Transportation Equipment and Parts,2645405.55
+Chile,United States,Transportation Equipment and Parts,51073.53
+Colombia,United States,Transportation Equipment and Parts,23631.06
+Ecuador,United States,Transportation Equipment and Parts,983.58
+Canada,United States,Vegetable Products,14689238.76
+Mexico,United States,Vegetable Products,13704731.4
+Argentina,United States,Vegetable Products,1138127
+Brazil,United States,Vegetable Products,2933081.77
+Chile,United States,Vegetable Products,2421927.27
+Colombia,United States,Vegetable Products,2165845.85
+Ecuador,United States,Vegetable Products,984989.09
+Canada,United States,"Wood, Paper and Related Products",18281920.76
+Mexico,United States,"Wood, Paper and Related Products",1658123.33
+Argentina,United States,"Wood, Paper and Related Products",35957.98
+Brazil,United States,"Wood, Paper and Related Products",2162400.98
+Chile,United States,"Wood, Paper and Related Products",763842.64
+Colombia,United States,"Wood, Paper and Related Products",37476.94
+Ecuador,United States,"Wood, Paper and Related Products",62655
+Mexico,Canada,Animal Products,23503.51
+United States,Canada,Animal Products,5164271.38
+Argentina,Canada,Animal Products,13929.07
+Brazil,Canada,Animal Products,60709.43
+Chile,Canada,Animal Products,211705.17
+Colombia,Canada,Animal Products,6376.17
+Ecuador,Canada,Animal Products,26662.39
+Mexico,Canada,Beverages and Oils,147198.34
+United States,Canada,Beverages and Oils,1915922.5
+Argentina,Canada,Beverages and Oils,105500.96
+Brazil,Canada,Beverages and Oils,1969.16
+Chile,Canada,Beverages and Oils,97661.29
+Colombia,Canada,Beverages and Oils,1631.98
+Ecuador,Canada,Beverages and Oils,3212.15
+Mexico,Canada,Chemicals and Related Products,747704.79
+United States,Canada,Chemicals and Related Products,37863013.3
+Argentina,Canada,Chemicals and Related Products,42221.16
+Brazil,Canada,Chemicals and Related Products,254156.83
+Chile,Canada,Chemicals and Related Products,58077.97
+Colombia,Canada,Chemicals and Related Products,27823.65
+Ecuador,Canada,Chemicals and Related Products,174.65
+Mexico,Canada,"Computers, Office, Communications, and Professional Equipment",4387236.88
+United States,Canada,"Computers, Office, Communications, and Professional Equipment",11532888.07
+Argentina,Canada,"Computers, Office, Communications, and Professional Equipment",387.09
+Brazil,Canada,"Computers, Office, Communications, and Professional Equipment",12982.34
+Chile,Canada,"Computers, Office, Communications, and Professional Equipment",3749.9
+Colombia,Canada,"Computers, Office, Communications, and Professional Equipment",816.67
+Ecuador,Canada,"Computers, Office, Communications, and Professional Equipment",201.57
+Mexico,Canada,Energy and Mining,1474845.27
+United States,Canada,Energy and Mining,26676966.64
+Argentina,Canada,Energy and Mining,61269.3
+Brazil,Canada,Energy and Mining,1669277.46
+Chile,Canada,Energy and Mining,48860.46
+Colombia,Canada,Energy and Mining,273940.2
+Ecuador,Canada,Energy and Mining,45729
+Mexico,Canada,Glass and Non-Metallic Products,150199.05
+United States,Canada,Glass and Non-Metallic Products,3402176.19
+Argentina,Canada,Glass and Non-Metallic Products,925.64
+Brazil,Canada,Glass and Non-Metallic Products,75299.13
+Chile,Canada,Glass and Non-Metallic Products,2714.87
+Colombia,Canada,Glass and Non-Metallic Products,9719.09
+Ecuador,Canada,Glass and Non-Metallic Products,180.32
+Mexico,Canada,Machinery and Electrical Equipment,4348514.01
+United States,Canada,Machinery and Electrical Equipment,38943971.4
+Argentina,Canada,Machinery and Electrical Equipment,23547.8
+Brazil,Canada,Machinery and Electrical Equipment,282676.27
+Chile,Canada,Machinery and Electrical Equipment,9927.28
+Colombia,Canada,Machinery and Electrical Equipment,5911.17
+Ecuador,Canada,Machinery and Electrical Equipment,1873.15
+Mexico,Canada,Metals and Metal Products,1277481.66
+United States,Canada,Metals and Metal Products,21967509.89
+Argentina,Canada,Metals and Metal Products,1511817.31
+Brazil,Canada,Metals and Metal Products,347017.24
+Chile,Canada,Metals and Metal Products,663173.13
+Colombia,Canada,Metals and Metal Products,2205.21
+Ecuador,Canada,Metals and Metal Products,25127.07
+Mexico,Canada,Miscellaneous,1501149.19
+United States,Canada,Miscellaneous,14282917.82
+Argentina,Canada,Miscellaneous,1709.55
+Brazil,Canada,Miscellaneous,39455.18
+Chile,Canada,Miscellaneous,315.18
+Colombia,Canada,Miscellaneous,5501.3
+Ecuador,Canada,Miscellaneous,171.17
+Mexico,Canada,"Textiles, Leather, and Apparel",446446.48
+United States,Canada,"Textiles, Leather, and Apparel",3978610.35
+Argentina,Canada,"Textiles, Leather, and Apparel",3722.11
+Brazil,Canada,"Textiles, Leather, and Apparel",34020.75
+Chile,Canada,"Textiles, Leather, and Apparel",1246.5
+Colombia,Canada,"Textiles, Leather, and Apparel",15733.43
+Ecuador,Canada,"Textiles, Leather, and Apparel",910.64
+Mexico,Canada,Transportation Equipment and Parts,8791563.74
+United States,Canada,Transportation Equipment and Parts,59662879.16
+Argentina,Canada,Transportation Equipment and Parts,3988.22
+Brazil,Canada,Transportation Equipment and Parts,119359.33
+Chile,Canada,Transportation Equipment and Parts,6065.04
+Colombia,Canada,Transportation Equipment and Parts,1947.72
+Ecuador,Canada,Transportation Equipment and Parts,548.74
+Mexico,Canada,Vegetable Products,1173654.93
+United States,Canada,Vegetable Products,14785461.72
+Argentina,Canada,Vegetable Products,152594.37
+Brazil,Canada,Vegetable Products,703029.6
+Chile,Canada,Vegetable Products,390277.66
+Colombia,Canada,Vegetable Products,330564.26
+Ecuador,Canada,Vegetable Products,144818.99
+Mexico,Canada,"Wood, Paper and Related Products",144089.74
+United States,Canada,"Wood, Paper and Related Products",10893951.29
+Argentina,Canada,"Wood, Paper and Related Products",11970.55
+Brazil,Canada,"Wood, Paper and Related Products",123751.54
+Chile,Canada,"Wood, Paper and Related Products",72011.51
+Colombia,Canada,"Wood, Paper and Related Products",1319.11
+Ecuador,Canada,"Wood, Paper and Related Products",285.3
+Canada,Mexico,Animal Products,210080.95
+United States,Mexico,Animal Products,5168717.24
+Argentina,Mexico,Animal Products,7467.94
+Brazil,Mexico,Animal Products,2003.4
+Chile,Mexico,Animal Products,171093.85
+Colombia,Mexico,Animal Products,1107.05
+Ecuador,Mexico,Animal Products,6145.08
+Canada,Mexico,Beverages and Oils,39957.37
+United States,Mexico,Beverages and Oils,989578.29
+Argentina,Mexico,Beverages and Oils,41372.59
+Brazil,Mexico,Beverages and Oils,3206.37
+Chile,Mexico,Beverages and Oils,35078.14
+Colombia,Mexico,Beverages and Oils,39882.59
+Ecuador,Mexico,Beverages and Oils,29126.98
+Canada,Mexico,Chemicals and Related Products,695766.78
+United States,Mexico,Chemicals and Related Products,32583205.91
+Argentina,Mexico,Chemicals and Related Products,154417.43
+Brazil,Mexico,Chemicals and Related Products,577701.94
+Chile,Mexico,Chemicals and Related Products,285338.98
+Colombia,Mexico,Chemicals and Related Products,237840.31
+Ecuador,Mexico,Chemicals and Related Products,5646.35
+Canada,Mexico,"Computers, Office, Communications, and Professional Equipment",187945.45
+United States,Mexico,"Computers, Office, Communications, and Professional Equipment",10956121.9
+Argentina,Mexico,"Computers, Office, Communications, and Professional Equipment",9440.09
+Brazil,Mexico,"Computers, Office, Communications, and Professional Equipment",87282.98
+Chile,Mexico,"Computers, Office, Communications, and Professional Equipment",3500.11
+Colombia,Mexico,"Computers, Office, Communications, and Professional Equipment",5587.18
+Ecuador,Mexico,"Computers, Office, Communications, and Professional Equipment",2032.37
+Canada,Mexico,Energy and Mining,106144.85
+United States,Mexico,Energy and Mining,25440152.2
+Argentina,Mexico,Energy and Mining,22567.71
+Brazil,Mexico,Energy and Mining,134718.83
+Chile,Mexico,Energy and Mining,73089.23
+Colombia,Mexico,Energy and Mining,119670.35
+Ecuador,Mexico,Energy and Mining,636.19
+Canada,Mexico,Glass and Non-Metallic Products,7149.45
+United States,Mexico,Glass and Non-Metallic Products,1090528.19
+Argentina,Mexico,Glass and Non-Metallic Products,1170.05
+Brazil,Mexico,Glass and Non-Metallic Products,66009.37
+Chile,Mexico,Glass and Non-Metallic Products,5746.27
+Colombia,Mexico,Glass and Non-Metallic Products,19006.2
+Ecuador,Mexico,Glass and Non-Metallic Products,605.92
+Canada,Mexico,Machinery and Electrical Equipment,663653.21
+United States,Mexico,Machinery and Electrical Equipment,30744530.94
+Argentina,Mexico,Machinery and Electrical Equipment,61160.43
+Brazil,Mexico,Machinery and Electrical Equipment,756082.58
+Chile,Mexico,Machinery and Electrical Equipment,34861.68
+Colombia,Mexico,Machinery and Electrical Equipment,34870.93
+Ecuador,Mexico,Machinery and Electrical Equipment,3138.39
+Canada,Mexico,Metals and Metal Products,764796.68
+United States,Mexico,Metals and Metal Products,15740068.59
+Argentina,Mexico,Metals and Metal Products,81537.29
+Brazil,Mexico,Metals and Metal Products,582087.8
+Chile,Mexico,Metals and Metal Products,145766.19
+Colombia,Mexico,Metals and Metal Products,28822.02
+Ecuador,Mexico,Metals and Metal Products,1494.48
+Canada,Mexico,Miscellaneous,120367.5
+United States,Mexico,Miscellaneous,9682187.73
+Argentina,Mexico,Miscellaneous,31992.76
+Brazil,Mexico,Miscellaneous,25737.31
+Chile,Mexico,Miscellaneous,48738.43
+Colombia,Mexico,Miscellaneous,15576.57
+Ecuador,Mexico,Miscellaneous,27546.87
+Canada,Mexico,"Textiles, Leather, and Apparel",39195.42
+United States,Mexico,"Textiles, Leather, and Apparel",4419309.63
+Argentina,Mexico,"Textiles, Leather, and Apparel",128662.74
+Brazil,Mexico,"Textiles, Leather, and Apparel",136117.75
+Chile,Mexico,"Textiles, Leather, and Apparel",9104.9
+Colombia,Mexico,"Textiles, Leather, and Apparel",126114.39
+Ecuador,Mexico,"Textiles, Leather, and Apparel",4328.56
+Canada,Mexico,Transportation Equipment and Parts,1075181.69
+United States,Mexico,Transportation Equipment and Parts,27518936.95
+Argentina,Mexico,Transportation Equipment and Parts,202930.9
+Brazil,Mexico,Transportation Equipment and Parts,1551301.73
+Chile,Mexico,Transportation Equipment and Parts,8842.95
+Colombia,Mexico,Transportation Equipment and Parts,197736.15
+Ecuador,Mexico,Transportation Equipment and Parts,53.69
+Canada,Mexico,Vegetable Products,1411030.72
+United States,Mexico,Vegetable Products,11624166.86
+Argentina,Mexico,Vegetable Products,199115.53
+Brazil,Mexico,Vegetable Products,129414.32
+Chile,Mexico,Vegetable Products,332933.92
+Colombia,Mexico,Vegetable Products,37682.81
+Ecuador,Mexico,Vegetable Products,43020.72
+Canada,Mexico,"Wood, Paper and Related Products",163686.13
+United States,Mexico,"Wood, Paper and Related Products",5444241.27
+Argentina,Mexico,"Wood, Paper and Related Products",19618.09
+Brazil,Mexico,"Wood, Paper and Related Products",175494.08
+Chile,Mexico,"Wood, Paper and Related Products",365155.85
+Colombia,Mexico,"Wood, Paper and Related Products",37510.5
+Ecuador,Mexico,"Wood, Paper and Related Products",4754.27
+Canada,Argentina,Animal Products,897.43
+Mexico,Argentina,Animal Products,0
+United States,Argentina,Animal Products,18696.52
+Brazil,Argentina,Animal Products,115356.31
+Chile,Argentina,Animal Products,55590.98
+Colombia,Argentina,Animal Products,192.9
+Ecuador,Argentina,Animal Products,65576.56
+Canada,Argentina,Beverages and Oils,216.71
+Mexico,Argentina,Beverages and Oils,12661.83
+United States,Argentina,Beverages and Oils,6145.15
+Brazil,Argentina,Beverages and Oils,13880.61
+Chile,Argentina,Beverages and Oils,9118.3
+Colombia,Argentina,Beverages and Oils,62.55
+Ecuador,Argentina,Beverages and Oils,1861.07
+Canada,Argentina,Chemicals and Related Products,55176.89
+Mexico,Argentina,Chemicals and Related Products,504143.25
+United States,Argentina,Chemicals and Related Products,2924714.3
+Brazil,Argentina,Chemicals and Related Products,2574394.71
+Chile,Argentina,Chemicals and Related Products,222648.07
+Colombia,Argentina,Chemicals and Related Products,119199.85
+Ecuador,Argentina,Chemicals and Related Products,843.76
+Canada,Argentina,"Computers, Office, Communications, and Professional Equipment",28391.63
+Mexico,Argentina,"Computers, Office, Communications, and Professional Equipment",288501.51
+United States,Argentina,"Computers, Office, Communications, and Professional Equipment",1415182.56
+Brazil,Argentina,"Computers, Office, Communications, and Professional Equipment",409767.5
+Chile,Argentina,"Computers, Office, Communications, and Professional Equipment",2246.74
+Colombia,Argentina,"Computers, Office, Communications, and Professional Equipment",714.18
+Ecuador,Argentina,"Computers, Office, Communications, and Professional Equipment",160.8
+Canada,Argentina,Energy and Mining,38310.38
+Mexico,Argentina,Energy and Mining,2656.06
+United States,Argentina,Energy and Mining,2282235.44
+Brazil,Argentina,Energy and Mining,1272913.79
+Chile,Argentina,Energy and Mining,12015.76
+Colombia,Argentina,Energy and Mining,104609.83
+Ecuador,Argentina,Energy and Mining,0
+Canada,Argentina,Glass and Non-Metallic Products,2023.13
+Mexico,Argentina,Glass and Non-Metallic Products,16550.81
+United States,Argentina,Glass and Non-Metallic Products,42986.46
+Brazil,Argentina,Glass and Non-Metallic Products,146693.16
+Chile,Argentina,Glass and Non-Metallic Products,15992.58
+Colombia,Argentina,Glass and Non-Metallic Products,5999.68
+Ecuador,Argentina,Glass and Non-Metallic Products,77.3
+Canada,Argentina,Machinery and Electrical Equipment,101215.95
+Mexico,Argentina,Machinery and Electrical Equipment,129301.65
+United States,Argentina,Machinery and Electrical Equipment,1602271.14
+Brazil,Argentina,Machinery and Electrical Equipment,1784143.87
+Chile,Argentina,Machinery and Electrical Equipment,91476.74
+Colombia,Argentina,Machinery and Electrical Equipment,3749.18
+Ecuador,Argentina,Machinery and Electrical Equipment,1295.24
+Canada,Argentina,Metals and Metal Products,13011.18
+Mexico,Argentina,Metals and Metal Products,154297.06
+United States,Argentina,Metals and Metal Products,188581.96
+Brazil,Argentina,Metals and Metal Products,1389380.54
+Chile,Argentina,Metals and Metal Products,186172.9
+Colombia,Argentina,Metals and Metal Products,2104.38
+Ecuador,Argentina,Metals and Metal Products,83.8
+Canada,Argentina,Miscellaneous,6821.86
+Mexico,Argentina,Miscellaneous,18248.38
+United States,Argentina,Miscellaneous,543964.07
+Brazil,Argentina,Miscellaneous,217148.99
+Chile,Argentina,Miscellaneous,10696.51
+Colombia,Argentina,Miscellaneous,2707.88
+Ecuador,Argentina,Miscellaneous,294.62
+Canada,Argentina,"Textiles, Leather, and Apparel",1783.43
+Mexico,Argentina,"Textiles, Leather, and Apparel",6646.47
+United States,Argentina,"Textiles, Leather, and Apparel",52647.33
+Brazil,Argentina,"Textiles, Leather, and Apparel",461826.17
+Chile,Argentina,"Textiles, Leather, and Apparel",21186.4
+Colombia,Argentina,"Textiles, Leather, and Apparel",3457.68
+Ecuador,Argentina,"Textiles, Leather, and Apparel",1111.39
+Canada,Argentina,Transportation Equipment and Parts,32179.54
+Mexico,Argentina,Transportation Equipment and Parts,958527.68
+United States,Argentina,Transportation Equipment and Parts,893048.65
+Brazil,Argentina,Transportation Equipment and Parts,6970136.43
+Chile,Argentina,Transportation Equipment and Parts,40009.3
+Colombia,Argentina,Transportation Equipment and Parts,82435.98
+Ecuador,Argentina,Transportation Equipment and Parts,0
+Canada,Argentina,Vegetable Products,9187.96
+Mexico,Argentina,Vegetable Products,25266.33
+United States,Argentina,Vegetable Products,105377.04
+Brazil,Argentina,Vegetable Products,366797.99
+Chile,Argentina,Vegetable Products,100349.04
+Colombia,Argentina,Vegetable Products,5126.06
+Ecuador,Argentina,Vegetable Products,137689.05
+Canada,Argentina,"Wood, Paper and Related Products",3879.14
+Mexico,Argentina,"Wood, Paper and Related Products",9419.12
+United States,Argentina,"Wood, Paper and Related Products",112630.74
+Brazil,Argentina,"Wood, Paper and Related Products",437847.73
+Chile,Argentina,"Wood, Paper and Related Products",156379.25
+Colombia,Argentina,"Wood, Paper and Related Products",17111.64
+Ecuador,Argentina,"Wood, Paper and Related Products",455.18
+Canada,Chile,Animal Products,15089.58
+Mexico,Chile,Animal Products,13461.84
+United States,Chile,Animal Products,290217.71
+Argentina,Chile,Animal Products,559056.05
+Brazil,Chile,Animal Products,514593.62
+Colombia,Chile,Animal Products,12310.4
+Ecuador,Chile,Animal Products,74343.35
+Canada,Chile,Beverages and Oils,42622.03
+Mexico,Chile,Beverages and Oils,65145.45
+United States,Chile,Beverages and Oils,80898.39
+Argentina,Chile,Beverages and Oils,212097.62
+Brazil,Chile,Beverages and Oils,3661.43
+Colombia,Chile,Beverages and Oils,18116.86
+Ecuador,Chile,Beverages and Oils,30268.32
+Canada,Chile,Chemicals and Related Products,137294.23
+Mexico,Chile,Chemicals and Related Products,495385.26
+United States,Chile,Chemicals and Related Products,2233513.04
+Argentina,Chile,Chemicals and Related Products,699580.13
+Brazil,Chile,Chemicals and Related Products,688346.79
+Colombia,Chile,Chemicals and Related Products,169904.74
+Ecuador,Chile,Chemicals and Related Products,15869.16
+Canada,Chile,"Computers, Office, Communications, and Professional Equipment",33103.33
+Mexico,Chile,"Computers, Office, Communications, and Professional Equipment",582396.74
+United States,Chile,"Computers, Office, Communications, and Professional Equipment",1780378.3
+Argentina,Chile,"Computers, Office, Communications, and Professional Equipment",12405.02
+Brazil,Chile,"Computers, Office, Communications, and Professional Equipment",126528.79
+Colombia,Chile,"Computers, Office, Communications, and Professional Equipment",3490.09
+Ecuador,Chile,"Computers, Office, Communications, and Professional Equipment",93.27
+Canada,Chile,Energy and Mining,129128.63
+Mexico,Chile,Energy and Mining,28779.82
+United States,Chile,Energy and Mining,6018097.65
+Argentina,Chile,Energy and Mining,1431196.09
+Brazil,Chile,Energy and Mining,1141104.08
+Colombia,Chile,Energy and Mining,1888426.78
+Ecuador,Chile,Energy and Mining,1724682.02
+Canada,Chile,Glass and Non-Metallic Products,2658.42
+Mexico,Chile,Glass and Non-Metallic Products,60042.95
+United States,Chile,Glass and Non-Metallic Products,45885.91
+Argentina,Chile,Glass and Non-Metallic Products,98066.08
+Brazil,Chile,Glass and Non-Metallic Products,54797.32
+Colombia,Chile,Glass and Non-Metallic Products,18769.38
+Ecuador,Chile,Glass and Non-Metallic Products,2179.57
+Canada,Chile,Machinery and Electrical Equipment,204039.9
+Mexico,Chile,Machinery and Electrical Equipment,225868.28
+United States,Chile,Machinery and Electrical Equipment,2328290.54
+Argentina,Chile,Machinery and Electrical Equipment,161473.41
+Brazil,Chile,Machinery and Electrical Equipment,518397.98
+Colombia,Chile,Machinery and Electrical Equipment,36793.92
+Ecuador,Chile,Machinery and Electrical Equipment,6167.72
+Canada,Chile,Metals and Metal Products,55722.51
+Mexico,Chile,Metals and Metal Products,144559.9
+United States,Chile,Metals and Metal Products,316191.42
+Argentina,Chile,Metals and Metal Products,146450.18
+Brazil,Chile,Metals and Metal Products,303002.87
+Colombia,Chile,Metals and Metal Products,13007.35
+Ecuador,Chile,Metals and Metal Products,13082.28
+Canada,Chile,Miscellaneous,15752.56
+Mexico,Chile,Miscellaneous,28619.14
+United States,Chile,Miscellaneous,1040189.77
+Argentina,Chile,Miscellaneous,27747.83
+Brazil,Chile,Miscellaneous,60379.2
+Colombia,Chile,Miscellaneous,13342.73
+Ecuador,Chile,Miscellaneous,3260.22
+Canada,Chile,"Textiles, Leather, and Apparel",9653.46
+Mexico,Chile,"Textiles, Leather, and Apparel",26818.27
+United States,Chile,"Textiles, Leather, and Apparel",214729.52
+Argentina,Chile,"Textiles, Leather, and Apparel",66500.17
+Brazil,Chile,"Textiles, Leather, and Apparel",100314.09
+Colombia,Chile,"Textiles, Leather, and Apparel",39635.83
+Ecuador,Chile,"Textiles, Leather, and Apparel",4701.25
+Canada,Chile,Transportation Equipment and Parts,41733.51
+Mexico,Chile,Transportation Equipment and Parts,616135.84
+United States,Chile,Transportation Equipment and Parts,2408607.83
+Argentina,Chile,Transportation Equipment and Parts,315889.02
+Brazil,Chile,Transportation Equipment and Parts,854930.81
+Colombia,Chile,Transportation Equipment and Parts,16542.11
+Ecuador,Chile,Transportation Equipment and Parts,3871.27
+Canada,Chile,Vegetable Products,61029.77
+Mexico,Chile,Vegetable Products,48607.34
+United States,Chile,Vegetable Products,526609.45
+Argentina,Chile,Vegetable Products,1064866.79
+Brazil,Chile,Vegetable Products,147219.37
+Colombia,Chile,Vegetable Products,152757.93
+Ecuador,Chile,Vegetable Products,109617.28
+Canada,Chile,"Wood, Paper and Related Products",23661.79
+Mexico,Chile,"Wood, Paper and Related Products",48335.72
+United States,Chile,"Wood, Paper and Related Products",258650.45
+Argentina,Chile,"Wood, Paper and Related Products",181696.16
+Brazil,Chile,"Wood, Paper and Related Products",149502.56
+Colombia,Chile,"Wood, Paper and Related Products",36590.76
+Ecuador,Chile,"Wood, Paper and Related Products",1801.83
+Canada,Colombia,Animal Products,19048.49
+Mexico,Colombia,Animal Products,7111.36
+United States,Colombia,Animal Products,198832.59
+Argentina,Colombia,Animal Products,37528.97
+Brazil,Colombia,Animal Products,12819.33
+Chile,Colombia,Animal Products,89798.31
+Ecuador,Colombia,Animal Products,142990.16
+Canada,Colombia,Beverages and Oils,14632.26
+Mexico,Colombia,Beverages and Oils,13046.23
+United States,Colombia,Beverages and Oils,108408.49
+Argentina,Colombia,Beverages and Oils,119993.36
+Brazil,Colombia,Beverages and Oils,22356.18
+Chile,Colombia,Beverages and Oils,32622.77
+Ecuador,Colombia,Beverages and Oils,63026.58
+Canada,Colombia,Chemicals and Related Products,82190.28
+Mexico,Colombia,Chemicals and Related Products,948510.07
+United States,Colombia,Chemicals and Related Products,3076114.45
+Argentina,Colombia,Chemicals and Related Products,102542.73
+Brazil,Colombia,Chemicals and Related Products,599045.21
+Chile,Colombia,Chemicals and Related Products,108091.31
+Ecuador,Colombia,Chemicals and Related Products,139005.89
+Canada,Colombia,"Computers, Office, Communications, and Professional Equipment",36743.31
+Mexico,Colombia,"Computers, Office, Communications, and Professional Equipment",993014.88
+United States,Colombia,"Computers, Office, Communications, and Professional Equipment",2705473.32
+Argentina,Colombia,"Computers, Office, Communications, and Professional Equipment",7590.68
+Brazil,Colombia,"Computers, Office, Communications, and Professional Equipment",77903.1
+Chile,Colombia,"Computers, Office, Communications, and Professional Equipment",3678.72
+Ecuador,Colombia,"Computers, Office, Communications, and Professional Equipment",23085.44
+Canada,Colombia,Energy and Mining,12460.17
+Mexico,Colombia,Energy and Mining,947462.25
+United States,Colombia,Energy and Mining,5535005.26
+Argentina,Colombia,Energy and Mining,908.53
+Brazil,Colombia,Energy and Mining,29175.69
+Chile,Colombia,Energy and Mining,3026.81
+Ecuador,Colombia,Energy and Mining,4090.22
+Canada,Colombia,Glass and Non-Metallic Products,1208.49
+Mexico,Colombia,Glass and Non-Metallic Products,100178.1
+United States,Colombia,Glass and Non-Metallic Products,63476.67
+Argentina,Colombia,Glass and Non-Metallic Products,1731.45
+Brazil,Colombia,Glass and Non-Metallic Products,53758.2
+Chile,Colombia,Glass and Non-Metallic Products,4447.91
+Ecuador,Colombia,Glass and Non-Metallic Products,16266.12
+Canada,Colombia,Machinery and Electrical Equipment,149844.1
+Mexico,Colombia,Machinery and Electrical Equipment,467294.62
+United States,Colombia,Machinery and Electrical Equipment,2317397.85
+Argentina,Colombia,Machinery and Electrical Equipment,69213.48
+Brazil,Colombia,Machinery and Electrical Equipment,434849.38
+Chile,Colombia,Machinery and Electrical Equipment,39062.6
+Ecuador,Colombia,Machinery and Electrical Equipment,18606.48
+Canada,Colombia,Metals and Metal Products,34682.83
+Mexico,Colombia,Metals and Metal Products,508610.35
+United States,Colombia,Metals and Metal Products,535059.99
+Argentina,Colombia,Metals and Metal Products,28453.51
+Brazil,Colombia,Metals and Metal Products,457842.13
+Chile,Colombia,Metals and Metal Products,118870.26
+Ecuador,Colombia,Metals and Metal Products,60933
+Canada,Colombia,Miscellaneous,26169.44
+Mexico,Colombia,Miscellaneous,45350.56
+United States,Colombia,Miscellaneous,824459.58
+Argentina,Colombia,Miscellaneous,5295.45
+Brazil,Colombia,Miscellaneous,44992.03
+Chile,Colombia,Miscellaneous,25156.34
+Ecuador,Colombia,Miscellaneous,5609.51
+Canada,Colombia,"Textiles, Leather, and Apparel",5908.05
+Mexico,Colombia,"Textiles, Leather, and Apparel",95212.2
+United States,Colombia,"Textiles, Leather, and Apparel",192568.82
+Argentina,Colombia,"Textiles, Leather, and Apparel",9086.78
+Brazil,Colombia,"Textiles, Leather, and Apparel",86392.08
+Chile,Colombia,"Textiles, Leather, and Apparel",14140.65
+Ecuador,Colombia,"Textiles, Leather, and Apparel",98331.2
+Canada,Colombia,Transportation Equipment and Parts,116359.35
+Mexico,Colombia,Transportation Equipment and Parts,1942946.84
+United States,Colombia,Transportation Equipment and Parts,1503864.71
+Argentina,Colombia,Transportation Equipment and Parts,303239.87
+Brazil,Colombia,Transportation Equipment and Parts,368894.65
+Chile,Colombia,Transportation Equipment and Parts,27655.26
+Ecuador,Colombia,Transportation Equipment and Parts,264631.79
+Canada,Colombia,Vegetable Products,279084.06
+Mexico,Colombia,Vegetable Products,85396.28
+United States,Colombia,Vegetable Products,1178183.66
+Argentina,Colombia,Vegetable Products,1102290.22
+Brazil,Colombia,Vegetable Products,378398.31
+Chile,Colombia,Vegetable Products,213019.74
+Ecuador,Colombia,Vegetable Products,119450.4
+Canada,Colombia,"Wood, Paper and Related Products",57750.69
+Mexico,Colombia,"Wood, Paper and Related Products",41058.27
+United States,Colombia,"Wood, Paper and Related Products",304126.16
+Argentina,Colombia,"Wood, Paper and Related Products",6955.67
+Brazil,Colombia,"Wood, Paper and Related Products",78895.97
+Chile,Colombia,"Wood, Paper and Related Products",183754.85
+Ecuador,Colombia,"Wood, Paper and Related Products",71757.53
+Canada,Ecuador,Animal Products,1841.38
+Mexico,Ecuador,Animal Products,1193.23
+United States,Ecuador,Animal Products,40946.96
+Argentina,Ecuador,Animal Products,4061.78
+Brazil,Ecuador,Animal Products,15976.41
+Chile,Ecuador,Animal Products,18869.49
+Colombia,Ecuador,Animal Products,19920.98
+Canada,Ecuador,Beverages and Oils,1460.75
+Mexico,Ecuador,Beverages and Oils,5754.55
+United States,Ecuador,Beverages and Oils,6040.7
+Argentina,Ecuador,Beverages and Oils,33892.57
+Brazil,Ecuador,Beverages and Oils,1584.68
+Chile,Ecuador,Beverages and Oils,21895.32
+Colombia,Ecuador,Beverages and Oils,9234.92
+Canada,Ecuador,Chemicals and Related Products,24943.94
+Mexico,Ecuador,Chemicals and Related Products,233991.5
+United States,Ecuador,Chemicals and Related Products,709247.24
+Argentina,Ecuador,Chemicals and Related Products,56315.05
+Brazil,Ecuador,Chemicals and Related Products,217532.9
+Chile,Ecuador,Chemicals and Related Products,122796.42
+Colombia,Ecuador,Chemicals and Related Products,705518.67
+Canada,Ecuador,"Computers, Office, Communications, and Professional Equipment",9223.47
+Mexico,Ecuador,"Computers, Office, Communications, and Professional Equipment",136880.32
+United States,Ecuador,"Computers, Office, Communications, and Professional Equipment",851575.47
+Argentina,Ecuador,"Computers, Office, Communications, and Professional Equipment",3204.7
+Brazil,Ecuador,"Computers, Office, Communications, and Professional Equipment",52522.37
+Chile,Ecuador,"Computers, Office, Communications, and Professional Equipment",935.21
+Colombia,Ecuador,"Computers, Office, Communications, and Professional Equipment",18843.37
+Canada,Ecuador,Energy and Mining,764.15
+Mexico,Ecuador,Energy and Mining,7049.29
+United States,Ecuador,Energy and Mining,3144588
+Argentina,Ecuador,Energy and Mining,99163.18
+Brazil,Ecuador,Energy and Mining,7104.78
+Chile,Ecuador,Energy and Mining,2301.16
+Colombia,Ecuador,Energy and Mining,45351.58
+Canada,Ecuador,Glass and Non-Metallic Products,22.44
+Mexico,Ecuador,Glass and Non-Metallic Products,47941.36
+United States,Ecuador,Glass and Non-Metallic Products,25349.27
+Argentina,Ecuador,Glass and Non-Metallic Products,1232.76
+Brazil,Ecuador,Glass and Non-Metallic Products,20300.34
+Chile,Ecuador,Glass and Non-Metallic Products,3581.02
+Colombia,Ecuador,Glass and Non-Metallic Products,76729.65
+Canada,Ecuador,Machinery and Electrical Equipment,27084.29
+Mexico,Ecuador,Machinery and Electrical Equipment,99176.33
+United States,Ecuador,Machinery and Electrical Equipment,965252.66
+Argentina,Ecuador,Machinery and Electrical Equipment,26015.78
+Brazil,Ecuador,Machinery and Electrical Equipment,180922.58
+Chile,Ecuador,Machinery and Electrical Equipment,45122.83
+Colombia,Ecuador,Machinery and Electrical Equipment,166080.55
+Canada,Ecuador,Metals and Metal Products,14219.35
+Mexico,Ecuador,Metals and Metal Products,115366.46
+United States,Ecuador,Metals and Metal Products,225689.15
+Argentina,Ecuador,Metals and Metal Products,41088.88
+Brazil,Ecuador,Metals and Metal Products,108563.56
+Chile,Ecuador,Metals and Metal Products,46043.21
+Colombia,Ecuador,Metals and Metal Products,97725.47
+Canada,Ecuador,Miscellaneous,3216.75
+Mexico,Ecuador,Miscellaneous,13647.32
+United States,Ecuador,Miscellaneous,274907.19
+Argentina,Ecuador,Miscellaneous,2335.56
+Brazil,Ecuador,Miscellaneous,17382.33
+Chile,Ecuador,Miscellaneous,11980.43
+Colombia,Ecuador,Miscellaneous,44712.85
+Canada,Ecuador,"Textiles, Leather, and Apparel",1074.75
+Mexico,Ecuador,"Textiles, Leather, and Apparel",7116.22
+United States,Ecuador,"Textiles, Leather, and Apparel",55308.67
+Argentina,Ecuador,"Textiles, Leather, and Apparel",5604.83
+Brazil,Ecuador,"Textiles, Leather, and Apparel",28165.63
+Chile,Ecuador,"Textiles, Leather, and Apparel",7721.06
+Colombia,Ecuador,"Textiles, Leather, and Apparel",236162.92
+Canada,Ecuador,Transportation Equipment and Parts,5305.96
+Mexico,Ecuador,Transportation Equipment and Parts,170777.24
+United States,Ecuador,Transportation Equipment and Parts,435806.33
+Argentina,Ecuador,Transportation Equipment and Parts,31125.7
+Brazil,Ecuador,Transportation Equipment and Parts,106625.04
+Chile,Ecuador,Transportation Equipment and Parts,4517.36
+Colombia,Ecuador,Transportation Equipment and Parts,299942.31
+Canada,Ecuador,Vegetable Products,143341.43
+Mexico,Ecuador,Vegetable Products,36563.06
+United States,Ecuador,Vegetable Products,379113.06
+Argentina,Ecuador,Vegetable Products,92299.35
+Brazil,Ecuador,Vegetable Products,100312.55
+Chile,Ecuador,Vegetable Products,185209.9
+Colombia,Ecuador,Vegetable Products,135035.34
+Canada,Ecuador,"Wood, Paper and Related Products",11744.96
+Mexico,Ecuador,"Wood, Paper and Related Products",9065.44
+United States,Ecuador,"Wood, Paper and Related Products",206012.27
+Argentina,Ecuador,"Wood, Paper and Related Products",18908.51
+Brazil,Ecuador,"Wood, Paper and Related Products",36929.92
+Chile,Ecuador,"Wood, Paper and Related Products",86886.21
+Colombia,Ecuador,"Wood, Paper and Related Products",175079.06
+Canada,Brazil,Animal Products,23051.98
+Mexico,Brazil,Animal Products,1654.02
+United States,Brazil,Animal Products,111766.96
+Argentina,Brazil,Animal Products,551423.74
+Chile,Brazil,Animal Products,379393.22
+Colombia,Brazil,Animal Products,0
+Ecuador,Brazil,Animal Products,29127.6
+Canada,Brazil,Beverages and Oils,269.95
+Mexico,Brazil,Beverages and Oils,15831.89
+United States,Brazil,Beverages and Oils,25334.26
+Argentina,Brazil,Beverages and Oils,124832.63
+Chile,Brazil,Beverages and Oils,105882.58
+Colombia,Brazil,Beverages and Oils,36223.49
+Ecuador,Brazil,Beverages and Oils,30944.94
+Canada,Brazil,Chemicals and Related Products,978893.42
+Mexico,Brazil,Chemicals and Related Products,1450783.03
+United States,Brazil,Chemicals and Related Products,10717750.27
+Argentina,Brazil,Chemicals and Related Products,2310626.9
+Chile,Brazil,Chemicals and Related Products,659637.27
+Colombia,Brazil,Chemicals and Related Products,596723.3
+Ecuador,Brazil,Chemicals and Related Products,4361.45
+Canada,Brazil,"Computers, Office, Communications, and Professional Equipment",130677.03
+Mexico,Brazil,"Computers, Office, Communications, and Professional Equipment",372441.86
+United States,Brazil,"Computers, Office, Communications, and Professional Equipment",5392759.66
+Argentina,Brazil,"Computers, Office, Communications, and Professional Equipment",96387.32
+Chile,Brazil,"Computers, Office, Communications, and Professional Equipment",3087.71
+Colombia,Brazil,"Computers, Office, Communications, and Professional Equipment",14919.22
+Ecuador,Brazil,"Computers, Office, Communications, and Professional Equipment",8336.39
+Canada,Brazil,Energy and Mining,536822.16
+Mexico,Brazil,Energy and Mining,145194.25
+United States,Brazil,Energy and Mining,6717934.23
+Argentina,Brazil,Energy and Mining,1444900.36
+Chile,Brazil,Energy and Mining,573906.73
+Colombia,Brazil,Energy and Mining,554863.29
+Ecuador,Brazil,Energy and Mining,0
+Canada,Brazil,Glass and Non-Metallic Products,27396.03
+Mexico,Brazil,Glass and Non-Metallic Products,112230.78
+United States,Brazil,Glass and Non-Metallic Products,196832.79
+Argentina,Brazil,Glass and Non-Metallic Products,34794.33
+Chile,Brazil,Glass and Non-Metallic Products,2800.26
+Colombia,Brazil,Glass and Non-Metallic Products,63303.14
+Ecuador,Brazil,Glass and Non-Metallic Products,0
+Canada,Brazil,Machinery and Electrical Equipment,378690.68
+Mexico,Brazil,Machinery and Electrical Equipment,544295.75
+United States,Brazil,Machinery and Electrical Equipment,8504561.65
+Argentina,Brazil,Machinery and Electrical Equipment,502580.51
+Chile,Brazil,Machinery and Electrical Equipment,26128.08
+Colombia,Brazil,Machinery and Electrical Equipment,27350.66
+Ecuador,Brazil,Machinery and Electrical Equipment,5796.56
+Canada,Brazil,Metals and Metal Products,75983.41
+Mexico,Brazil,Metals and Metal Products,416972.77
+United States,Brazil,Metals and Metal Products,1250947.9
+Argentina,Brazil,Metals and Metal Products,563170.23
+Chile,Brazil,Metals and Metal Products,2088320.98
+Colombia,Brazil,Metals and Metal Products,107701.58
+Ecuador,Brazil,Metals and Metal Products,5990.61
+Canada,Brazil,Miscellaneous,35463.84
+Mexico,Brazil,Miscellaneous,83011.3
+United States,Brazil,Miscellaneous,1387623.06
+Argentina,Brazil,Miscellaneous,19776.87
+Chile,Brazil,Miscellaneous,666.39
+Colombia,Brazil,Miscellaneous,5285.05
+Ecuador,Brazil,Miscellaneous,228.16
+Canada,Brazil,"Textiles, Leather, and Apparel",9701.67
+Mexico,Brazil,"Textiles, Leather, and Apparel",43802.27
+United States,Brazil,"Textiles, Leather, and Apparel",198988.66
+Argentina,Brazil,"Textiles, Leather, and Apparel",119081.55
+Chile,Brazil,"Textiles, Leather, and Apparel",10945.29
+Colombia,Brazil,"Textiles, Leather, and Apparel",33049.61
+Ecuador,Brazil,"Textiles, Leather, and Apparel",6292.7
+Canada,Brazil,Transportation Equipment and Parts,262661.23
+Mexico,Brazil,Transportation Equipment and Parts,3452441.21
+United States,Brazil,Transportation Equipment and Parts,7357282.53
+Argentina,Brazil,Transportation Equipment and Parts,8317056.01
+Chile,Brazil,Transportation Equipment and Parts,114361.42
+Colombia,Brazil,Transportation Equipment and Parts,3782.32
+Ecuador,Brazil,Transportation Equipment and Parts,903.66
+Canada,Brazil,Vegetable Products,42847.72
+Mexico,Brazil,Vegetable Products,62324.97
+United States,Brazil,Vegetable Products,1676415.59
+Argentina,Brazil,Vegetable Products,3069023.86
+Chile,Brazil,Vegetable Products,310208.41
+Colombia,Brazil,Vegetable Products,19548.09
+Ecuador,Brazil,Vegetable Products,42241.71
+Canada,Brazil,"Wood, Paper and Related Products",224988.85
+Mexico,Brazil,"Wood, Paper and Related Products",30738.58
+United States,Brazil,"Wood, Paper and Related Products",429171.5
+Argentina,Brazil,"Wood, Paper and Related Products",249332.21
+Chile,Brazil,"Wood, Paper and Related Products",68782.75
+Colombia,Brazil,"Wood, Paper and Related Products",22963.78
+Ecuador,Brazil,"Wood, Paper and Related Products",14882.52
