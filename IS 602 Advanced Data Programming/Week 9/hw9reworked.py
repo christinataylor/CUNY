@@ -72,7 +72,7 @@ df = pd.DataFrame({ 'Host' : host,
 					'Minute' : minute,
 					'Second' : second})
 
-
+"""
 # Which hostname or IP Address made the most requests?
 
 df1 = copy.copy(df).groupby('Host').count().sort('Date')
@@ -111,3 +111,4 @@ print "The most download gif was from request: " + str(df4['Request'][len(df4)-1
 # I'm not sure why this isn't working...
 
 print "The other HTTP reply codes that were sent other than 200 were " + str(df.HTTP.unique()[1:])
+"""

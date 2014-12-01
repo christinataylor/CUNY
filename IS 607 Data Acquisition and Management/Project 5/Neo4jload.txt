@@ -1,0 +1,25 @@
+﻿1. Load a dataset from R or PostgreSQL into Neo4j. For example, you could load the PostgreSQL flights data into
+Neo4j. You’re encouraged to find a different dataset to load that you might find even more interesting
+
+2. Document your load process, in a way that is reproducible (so that I can test your work “soup to nuts” without
+needing to access your machine!)
+
+I used the R dataset "eurodist", which is a dist object that shows the distances between 21 European cities. The R code used to get this data into a csv that would make sense for loading into Neo4J is included. I also manually looked up populations of these cities, and included that as a second CSV (unfortunately there were lots of small cities and I could not find one webtable to scrape in order to find this information)
+
+load csv with headers from "file:E:/CUNY 112614/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Project 5/europop.csv" as cities create (a1: City{name: cities.City, country: cities.Country, population: cities.Population})
+
+load csv with headers from "file:E:/CUNY 112614/CUNY/SPS/Git/IS 607 Data Acquisition and Management/Project 5/eurodistances.csv" as distances match (a: City{name: distances.Origin}), (b: City{name: distances.Destination}) create (a) -[r: Distance{km: distances.Distance}]-> (b)
+
+3. Write at least one Cypher query against your newly created Neo4j database
+
+If I wanted to find the distance between any two cities, I could use the form below. By using bidirectional arrows, it doesn't matter which city is set as the origin and which as the destination.
+
+match (a: City{name: 'Vienna'}) <-[r]-> (b: City{name: 'Athens'}) return r.km
+
+4. What are the advantages and disadvantages of having this information in a graph database instead of a relational
+database?
+
+I think the advantages of having this data in a graph database is pretty substantial, moreso than any other dataset I have looked at so far in Neo4j. In any sort of tabular format, the data presentation can be a bit awkward. Because directionality doesn't matter (the distance from Athens to Vienna is the same as the distance from Vienna to Athens), the table display of this sort of data is in a triangular shape. Storing this information in a graph format allows the data to be displayed as it truly should be. The distance between two cities is a quality of the relationship between those two cities, not of either or both cities themselves.
+
+My only concern was that Neo4J doesn't appear to allow you to create non-directional relationships. For other data I've used, such as trade flows, the direction matters (and each bilateral pair actually had two values based on the direction.) For this sort of data, the direction is meaningless. Querying the data using a double arrow solves the problem, but I would like there to be a more elegant way of dealing with directionless relationships.
+
