@@ -1,7 +1,7 @@
 library(nycflights13)
 library(dplyr)
 library(RPostgreSQL)
-library(plyr)
+
 
 ##### Question 1 Prep #####
 
@@ -17,10 +17,6 @@ con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="sinaiA9xp
                  dbname="flights")
 con
 
-length(unique(flightsdf$dest))
-
-length(flightsdf$flight)
-
 # I found a double here, I'll remove it for the purposes of this assignment.
 # Lets keep Beaufort
 
@@ -28,7 +24,7 @@ length(flightsdf$flight)
 airportsdf <- airportsdf %>%
   filter(name != "BFT County Airport")
 
-# I also found a fewairports, BQN, in flights that's not in 
+# I also found a few airports, BQN, in flights that's not in 
 # airports. I'll remove this as well for the assignment
 
 
@@ -55,33 +51,29 @@ dbWriteTable(con, "flights", flightsdf, row.names=TRUE)
 
 ##### Question 3 Comparison #####
 
-planes <- group_by(flights, tailnum)
-delay <- summarise(planes,
-                   count = n(),
-                   dist = mean(distance, na.rm = TRUE),
-                   delay = mean(arr_delay, na.rm = TRUE))
-delay <- filter(delay, count > 20, dist < 2000)
+system.time(airport.delays <- flights %>%
+  filter(!(is.na(dep_delay) | is.na(arr_delay))) %>%
+  mutate(sumdelay = arr_delay + dep_delay) %>%
+  group_by(carrier,origin) %>%
+  summarise(total.delay = sum(sumdelay)))
 
+# user  system elapsed 
+# 0.10    0.02    0.11 
 
-airport.delays <- flights %>%
-  filter(!(is.na(flights$dep_delay) | is.na(flights$arr_delay))) %>%
-  group_by(origin)
-
-airport.delay.sum <- summarise(airport.delays,
-                               count = n(),
-                               sumdelay = sum(arr_delay))
-
-
+aggregatetest <- function(){
 
 airport.delays <- flights[!(is.na(flights$dep_delay) | is.na(flights$arr_delay)),]
 
-dim(flights[flights$dep_delay>0 | flights$arr_delay>0,])
+airport.delays$sumdelay <- with(airport.delays, dep_delay + arr_delay)
 
-sumcount <- function(data){
-  c(count = with(data, count = dim(data[data$dep_delay>0 | data$arr_delay>0,])[1]),
-    sum = with(data, sum = sum(data$dep_delay) + sum(data$arr_delay)))
+
+airport.delay.sum <- aggregate(sumdelay ~ carrier + origin, airport.delays,
+                               FUN = function(x) c(num.delays = length(x), total.delay = sum(x)))
 }
 
-sum(flights$dep_delay[!(is.na(flights$dep_delay))])
+system.time(aggregatetest())
 
-airport.delay.sum <- ddply(airport.delays, .variables = "origin", .fun = sumcount)
+# user  system elapsed 
+# 5.06    0.11    5.29
+
+# Looks like dplyr is faster than the stock aggregation in R
