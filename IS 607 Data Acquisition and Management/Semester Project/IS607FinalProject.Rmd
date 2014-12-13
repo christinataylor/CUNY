@@ -848,7 +848,7 @@ To perform my hourly analysis, I aggregated the trips table by hour, and then jo
 Now the data is ready for a regression model. 
 
 ```{r}
-con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="sinaiA9xpsql",
+con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="insertpasswordhere",
                  dbname="bikeshare")
 
 con
@@ -1093,12 +1093,108 @@ I also wanted to break apart weekends and weekdays. The first few steps took pla
 ```
 
 
-After creating these tables, I was able to bring them into R. I added a few zero counts for stations that weren't used 
+After creating these tables, I was able to bring them into R. I added a few zero counts for stations that weren't used, checking a histogram to make sure this wasn't a mistake in the data intake.
 
-I subtracted the start counts and end counts at each station to arrive at a "flow" of bikes to and from each station. Using the ggmap package, I mapped out the stations by latitude and longitude. For each hour, I created a map of the flow of bikes. Below is an example of the flow at 5pm on a weekday;
+I subtracted the start counts and end counts at each station to arrive at a "flow" of bikes to and from each station. Using the ggmap package, I mapped out the stations by latitude and longitude. For each hour, I created a map of the flow of bikes. Below is an example of the flow at 5pm on a weekday:
 
 ```{r}
+con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="insertpasswordhere",
+                 dbname="bikeshare")
 
+con
+
+start.station.pop <- dbReadTable(con, "startstationweekendhourly")
+
+end.station.pop <- dbReadTable(con, "endstationweekendhourly")
+
+colnames(start.station.pop)[2] <- "station.id"
+colnames(end.station.pop)[2] <- "station.id"
+
+
+# There are a few hours when no one borrowed from a station,
+# lets find those and add 0's
+
+
+
+
+addzerosweekend <- function(data)
+{
+  comboaz <- filter(combo, weekend == 1)
+  vec <- unique(comboaz$station.id[!(comboaz$station.id %in% data$station.id)])
+  return(vec)
+}
+
+addzerosweekday <- function(data)
+{
+  comboaz <- filter(combo, weekend == 0)
+  vec <- unique(comboaz$station.id[!(comboaz$station.id %in% data$station.id)])
+  return(vec)
+}
+
+
+makedf <- function(ec)
+{
+  df <- data.frame(station.id = ec)
+}
+
+combo <- expand.grid(unique(start.station.pop$station.id),0:23,0:1)
+colnames(combo) <- c("station.id", "hour", "weekend")
+
+stationagg <- start.station.pop %>%
+  select(-count, -hour, -weekend)
+
+stationagg <- unique(stationagg)
+
+start.station.weekend <- filter(start.station.pop, weekend==1)
+start.station.weekend <- select(start.station.weekend, -weekend)
+emptycheckss <- dlply(start.station.weekend, .variables="hour", .fun=addzerosweekend)
+missingss <- ldply(emptycheckss, .fun = makedf)
+missingss <- merge(missingss, stationagg, by="station.id")
+missingss$count <- 0
+start.station.weekend <- rbind(start.station.weekend, missingss)
+
+start.station.weekday <- filter(start.station.pop, weekend==0)
+start.station.weekday <- select(start.station.weekday, -weekend)
+emptycheckss <- dlply(start.station.weekday, .variables="hour", .fun=addzerosweekday)
+missingss <- ldply(emptycheckss, .fun = makedf)
+missingss <- merge(missingss, stationagg, by="station.id")
+missingss$count <- 0
+start.station.weekday <- rbind(start.station.weekday, missingss)
+  
+end.station.weekend <- filter(end.station.pop, weekend==1)
+end.station.weekend <- select(end.station.weekend, -weekend)
+emptycheckes <- dlply(end.station.weekend, .variables="hour", .fun=addzerosweekend)
+missinges <- ldply(emptycheckes, .fun=makedf)
+missinges <- merge(missinges, stationagg, by="station.id")
+missinges$count <- 0
+end.station.weekend <- rbind(end.station.weekend, missinges)
+
+end.station.weekday <- filter(end.station.pop, weekend==0)
+end.station.weekday <- select(end.station.weekday, -weekend)
+emptycheckes <- dlply(end.station.weekday, .variables="hour", .fun=addzerosweekday)
+missinges <- ldply(emptycheckes, .fun=makedf)
+missinges <- merge(missinges, stationagg, by="station.id")
+missinges$count <- 0
+end.station.weekday <- rbind(end.station.weekday, missinges)
+
+
+colnames(start.station.weekend)[6] <- "startcount"
+colnames(end.station.weekend)[6] <- "endcount"
+colnames(start.station.weekday)[6] <- "startcount"
+colnames(end.station.weekday)[6] <- "endcount"
+
+
+mergedweekend <- merge(start.station.weekend, end.station.weekend, 
+                       by=c("hour", "station.id", "station.name", 
+                            "station.latitude", "station.longitude"))
+mergedweekend <- mergedweekend %>%
+  mutate(flow = endcount - startcount)
+
+mergedweekday <- merge(start.station.weekday, end.station.weekday, 
+                       by=c("hour", "station.id", "station.name", 
+                            "station.latitude", "station.longitude"))
+mergedweekday <- mergedweekday %>%
+  mutate(flow = endcount - startcount)
 
 
 ```

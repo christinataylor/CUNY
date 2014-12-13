@@ -6,7 +6,7 @@ library(plyr)
 library(scales)
 library(animation)
 
-con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="sinaiA9xpsql",
+con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="insertpasswordhere",
                  dbname="bikeshare")
 
 con
@@ -108,7 +108,6 @@ rm(combo, end.station.pop, missinges, missingss, start.station.pop, stationagg,
    emptycheckes, emptycheckss, addzerosweekday, addzerosweekend, makedf,
    end.station.weekday, end.station.weekend, start.station.weekday, start.station.weekend)
 
-ggplot(filter(mergedweekday, startcount < 10), aes(x=startcount)) + geom_histogram()
 
 ###################################################
 

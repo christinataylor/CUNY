@@ -6,7 +6,7 @@ library(plyr)
 # Has already been created.
 #############################
 
-con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="sinaiA9xpsql",
+con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="insertpasswordhere",
                  dbname="bikeshare")
 
 con
