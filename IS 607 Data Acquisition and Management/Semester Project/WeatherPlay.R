@@ -41,3 +41,25 @@ for(date in problemdays){
   dfoctober1<- rbind(dfoctober1, dfadd)
   rm(dfadd, dftest)
 }
+
+
+dftest <- df %>% 
+  group_by(year,month,day,hour) %>%
+  summarise(count = n()) %>%
+  filter(count != 1)
+
+dftest1 <- df %>%
+  filter(month==3, day==9, hour==0)
+
+dfagg <- df %>%
+  filter(month == 3) %>%
+  group_by (day) %>%
+  summarise(count = n())
+
+dftest2 <- df %>%
+  filter(month==3, day==9)
+
+dftest3 <- df %>%
+  filter(month==3, day==9, hour==0, temp==39.0)
+
+df[df$month==3 & df$day==9 & df$hour==0 & df$temp==39.0,]$hour <- 2
