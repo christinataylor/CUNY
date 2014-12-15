@@ -5,7 +5,7 @@ library(GGally)
 library(ggthemes)
 library(coefplot)
 
-con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="insertpasswordhere",
+con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="is607",
                  dbname="bikeshare")
 
 con

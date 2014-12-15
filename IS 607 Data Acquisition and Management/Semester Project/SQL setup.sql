@@ -275,7 +275,7 @@ SELECT
   stoptime, "start.station.id", "end.station.id",
   bikeid, usertype, "birth.year", gender, starthour,
   startday, startmonth, startyear, startminute, 
-  startsecond
+  startsecond,
 
   weekends.weekend
 FROM
@@ -287,11 +287,13 @@ INNER JOIN
   AND trips.startday = weekends.day
   AND trips.starthour = weekends.hour;
 
+CREATE TABLE firststartstationweekenddailyhourly AS
 
-CREATE TABLE firststartstationweekendhourly AS
-
-SELECT
+SELECT 
   starthour AS hour,
+  startday AS day,
+  startmonth AS month,
+  startyear AS year,
   "start.station.id",
   weekend,
   count(*)
@@ -299,6 +301,23 @@ FROM
   weekendstarttrips
 GROUP BY
   starthour,
+  startday,
+  startmonth,
+  startyear,
+  "start.station.id",
+  weekend;
+
+CREATE TABLE firststartstationweekendhourly AS
+
+SELECT
+  hour,
+  "start.station.id",
+  weekend,
+  avg(count) AS count
+FROM
+  firststartstationweekenddailyhourly
+GROUP BY
+  hour, 
   "start.station.id",
   weekend;
 
@@ -340,20 +359,40 @@ INNER JOIN
   AND trips.endday = weekends.day
   AND trips.endhour = weekends.hour;
 
-
-CREATE TABLE firstendstationweekendhourly AS
+CREATE TABLE firstendstationweekenddailyhourly AS
 
 SELECT
   endhour AS hour,
+  endday AS day,
+  endmonth AS month,
+  endyear AS year,
   "end.station.id",
   weekend,
   count(*)
 FROM
   weekendendtrips
-GROUP BY
+GROUP BY 
   endhour,
+  endday,
+  endmonth,
+  endyear,
   "end.station.id",
-  weekend;
+  weekend
+
+CREATE TABLE firstendstationweekendhourly AS
+
+SELECT
+  hour,
+  "end.station.id",
+  weekend,
+  avg(count) as count
+FROM
+  firstendstationweekenddailyhourly
+GROUP BY
+  hour,
+  "end.station.id",
+  weekend
+
 
 
 CREATE TABLE endstationweekendhourly AS
@@ -374,3 +413,34 @@ INNER JOIN
 
 
 
+
+--CREATE TABLE firstendstationweekendhourly AS
+
+--SELECT
+--  endhour AS hour,
+--  "end.station.id",
+--  weekend,
+--  count(*)
+--FROM
+--  weekendendtrips
+--GROUP BY
+--  endhour,
+--  "end.station.id",
+--  weekend;
+
+
+
+
+--CREATE TABLE firststartstationweekendhourly AS
+
+--SELECT
+--  starthour AS hour,
+--  "start.station.id",
+--  weekend,
+--  count(*)
+--FROM
+--  weekendstarttrips
+--GROUP BY
+--  starthour,
+--  "start.station.id",
+--  weekend;

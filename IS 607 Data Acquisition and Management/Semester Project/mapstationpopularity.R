@@ -6,7 +6,7 @@ library(plyr)
 library(scales)
 library(animation)
 
-con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="insertpasswordhere",
+con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="is607",
                  dbname="bikeshare")
 
 con
@@ -111,6 +111,24 @@ rm(combo, end.station.pop, missinges, missingss, start.station.pop, stationagg,
 
 ###################################################
 
+upperweekdaycap <- mean(mergedweekday$flow) + 3*sd(mergedweekday$flow)
+lowerweekdaycap <- mean(mergedweekday$flow) - 3*sd(mergedweekday$flow)
+upperweekendcap <- mean(mergedweekend$flow) + 3*sd(mergedweekend$flow)
+lowerweekendcap <- mean(mergedweekend$flow) - 3*sd(mergedweekend$flow)
+
+mergedweekday$flow[mergedweekday$flow > upperweekdaycap] <- upperweekdaycap
+mergedweekday$flow[mergedweekday$flow < lowerweekdaycap] <- lowerweekdaycap
+mergedweekend$flow[mergedweekend$flow > upperweekendcap] <- upperweekendcap
+mergedweekend$flow[mergedweekend$flow < lowerweekendcap] <- lowerweekendcap
+
+ggplot(mergedweekday, aes(x=startcount)) + geom_histogram()
+
+mean(mergedweekday$startcount) + 2*sd(mergedweekday$startcount)
+
+length(mergedweekday$startcount[mergedweekday$startcount > 11.49])/length(mergedweekday$startcount)
+
+length(mergedweekday$startcount[mergedweekday$startcount > 5000]) / 
+  length(mergedweekday$startcount)
 
 nyc <- get_map(location = c(lon=-73.968410, lat=40.725496), zoom = 12)
 
@@ -119,10 +137,11 @@ lowerweekendlimit <- min(mergedweekend$flow)
 upperweekdaylimit <- max(mergedweekday$flow)
 lowerweekdaylimit <- min(mergedweekday$flow)
 
+ggplot(mergedweekday, aes(x=flow)) + geom_histogram()
 
 
 nyc2 <- ggmap(nyc)
-i = 0
+i = 17
 
 for(i in 0:23){
   mergedstationsfilter <- mergedweekend %>%

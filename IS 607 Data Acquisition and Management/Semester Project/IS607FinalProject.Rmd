@@ -2,7 +2,7 @@
 title: "Weather and Citibike Usage"
 author: "Charley Ferrari"
 date: "Thursday, December 11, 2014"
-output: html_document
+output: pdf_document
 ---
 
 ```{r results='hide', message=FALSE, warning=FALSE}
@@ -18,6 +18,7 @@ library(ggmap)
 library(ggplot2)
 library(ggthemes)
 library(coefplot)
+library(scales)
 
 ```
 
@@ -32,9 +33,10 @@ For analysis, I created a regression model that predicts hourly Citibike usage b
 
 Data was brought into PostgreSQL as soon as possible. The majority of aggregations were done in PostgreSQL, and tables were then imported into R.
 
-### Data Profile ###
+Data Profile
+------------
 
-Weather data:
+### Weather data: ###
 
 Weather data was scraped using the following code. The for loops were complicated due to the unclean nature of the weather data, and the entire code is reproduced in Appendix A. The loops recreate the html addresses, an example of which can be found [here](http://www.wunderground.com/history/airport/KNYC/2014/11/3/DailyHistory.html). The table at the bottom of the page was scraped.
 
@@ -570,7 +572,7 @@ df$precip <- as.numeric(df$precip)
 
 ```
 
-Trip Data:
+### Trip Data: #####
 
 The trip data from the source CSV included the following columns:
 
@@ -848,7 +850,7 @@ To perform my hourly analysis, I aggregated the trips table by hour, and then jo
 Now the data is ready for a regression model. 
 
 ```{r}
-con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="insertpasswordhere",
+con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="is607",
                  dbname="bikeshare")
 
 con
@@ -904,6 +906,7 @@ ggplot(fulldata, aes(x=ridescount, y=temp, colour = simplifiedconditions)) +
 
 ```
 
+\pagebreak
 ###Humidity:###
 
 ```{r}
@@ -915,6 +918,7 @@ ggplot(fulldata, aes(x=ridescount, y=humidity, colour = simplifiedconditions)) +
 
 ```
 
+\pagebreak
 ###Pressure:###
 
 ```{r}
@@ -926,6 +930,7 @@ ggplot(fulldata, aes(x=ridescount, y=pressure, colour = simplifiedconditions)) +
 
 ```
 
+\pagebreak
 ###Visibility:###
 
 ```{r}
@@ -937,6 +942,7 @@ ggplot(fulldata, aes(x=ridescount, y=visibility, colour = simplifiedconditions))
 
 ```
 
+\pagebreak
 ###Windspeed:###
 
 ```{r}
@@ -994,7 +1000,7 @@ With the trip level data, I'm able to do more than recreate aggregates of rides 
 
 I decided to take the trips data and aggregate it by only hour. This way, you can get an average "day in the life" of the citibike system.
 
-I also wanted to break apart weekends and weekdays. The first few steps took place in PostgreSQL, joining the weekends data with the trips data, and aggregating based off of that. This had to be done twice, once for the start stations and once fore the end stations:
+I also wanted to break apart weekends and weekdays. The first few steps took place in PostgreSQL, joining the weekends data with the trips data, and aggregating based off of that. This had to be done twice, once for the start stations and once fore the end stations. The aggregations took place in two steps. First, I would count the trips on a daily basis, to get the number of trips per hour per day. Then, I averaged this hourly count across all days, to get a representative weekday and weekend:
 
 ```{r}
 # Start trip tables #################################
@@ -1006,8 +1012,7 @@ I also wanted to break apart weekends and weekdays. The first few steps took pla
 #   stoptime, "start.station.id", "end.station.id",
 #   bikeid, usertype, "birth.year", gender, starthour,
 #   startday, startmonth, startyear, startminute, 
-#   startsecond, endhour, endmonth, endyear, endminute, 
-#   endsecond, 
+#   startsecond,
 # 
 #   weekends.weekend
 # FROM
@@ -1019,19 +1024,55 @@ I also wanted to break apart weekends and weekdays. The first few steps took pla
 #   AND trips.startday = weekends.day
 #   AND trips.starthour = weekends.hour;
 # 
+# CREATE TABLE firststartstationweekenddailyhourly AS
 # 
-# CREATE TABLE firststartstationweekendhourly AS
-# 
-# SELECT
+# SELECT 
 #   starthour AS hour,
+#   startday AS day,
+#   startmonth AS month,
+#   startyear AS year,
 #   "start.station.id",
-#   weekend
+#   weekend,
 #   count(*)
 # FROM
 #   weekendstarttrips
 # GROUP BY
 #   starthour,
-#   "start.station.id";
+#   startday,
+#   startmonth,
+#   startyear,
+#   "start.station.id",
+#   weekend;
+# 
+# CREATE TABLE firststartstationweekendhourly AS
+# 
+# SELECT
+#   hour,
+#   "start.station.id",
+#   weekend,
+#   avg(count) AS count
+# FROM
+#   firststartstationweekenddailyhourly
+# GROUP BY
+#   hour, 
+#   "start.station.id",
+#   weekend;
+# 
+# 
+# CREATE TABLE startstationweekendhourly AS
+# 
+# SELECT
+#   hour,
+#   "start.station.id",
+#   stations."station.name",
+#   stations."station.latitude",
+#   stations."station.longitude",
+#   weekend,
+#   count
+# FROM
+#   firststartstationweekendhourly
+# INNER JOIN
+#   stations ON firststartstationweekendhourly."start.station.id" = stations."station.id";
 
 #####################################################
 
@@ -1056,20 +1097,40 @@ I also wanted to break apart weekends and weekdays. The first few steps took pla
 #   AND trips.endday = weekends.day
 #   AND trips.endhour = weekends.hour;
 # 
-# 
-# CREATE TABLE firstendstationweekendhourly AS
+# CREATE TABLE firstendstationweekenddailyhourly AS
 # 
 # SELECT
 #   endhour AS hour,
+#   endday AS day,
+#   endmonth AS month,
+#   endyear AS year,
 #   "end.station.id",
 #   weekend,
 #   count(*)
 # FROM
 #   weekendendtrips
-# GROUP BY
+# GROUP BY 
 #   endhour,
+#   endday,
+#   endmonth,
+#   endyear,
 #   "end.station.id",
-#   weekend;
+#   weekend
+# 
+# CREATE TABLE firstendstationweekendhourly AS
+# 
+# SELECT
+#   hour,
+#   "end.station.id",
+#   weekend,
+#   avg(count) as count
+# FROM
+#   firstendstationweekenddailyhourly
+# GROUP BY
+#   hour,
+#   "end.station.id",
+#   weekend
+# 
 # 
 # 
 # CREATE TABLE endstationweekendhourly AS
@@ -1093,12 +1154,11 @@ I also wanted to break apart weekends and weekdays. The first few steps took pla
 ```
 
 
-After creating these tables, I was able to bring them into R. I added a few zero counts for stations that weren't used, checking a histogram to make sure this wasn't a mistake in the data intake.
-
-I subtracted the start counts and end counts at each station to arrive at a "flow" of bikes to and from each station. Using the ggmap package, I mapped out the stations by latitude and longitude. For each hour, I created a map of the flow of bikes. Below is an example of the flow at 5pm on a weekday:
+After creating these tables, I was able to bring them into R. There were a few hours where stations recorded zero usage, which I had to account for.
 
 ```{r}
-con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="insertpasswordhere",
+
+con <- dbConnect(RPostgreSQL::PostgreSQL(), user="postgres", password="is607",
                  dbname="bikeshare")
 
 con
@@ -1183,7 +1243,11 @@ colnames(end.station.weekend)[6] <- "endcount"
 colnames(start.station.weekday)[6] <- "startcount"
 colnames(end.station.weekday)[6] <- "endcount"
 
+```
 
+I subtracted the start counts and end counts at each station to arrive at a "flow" of bikes to and from each station. Using the ggmap package, I mapped out the stations by latitude and longitude. First, I'll merge the stations to create a flow.
+
+```{r}
 mergedweekend <- merge(start.station.weekend, end.station.weekend, 
                        by=c("hour", "station.id", "station.name", 
                             "station.latitude", "station.longitude"))
@@ -1198,3 +1262,133 @@ mergedweekday <- mergedweekday %>%
 
 
 ```
+
+Checking a histogram of the flow by station lead to some skewed distributions:
+
+```{r}
+
+ggplot(mergedweekday, aes(x=flow)) + geom_histogram()
+
+ggplot(mergedweekend, aes(x=flow)) + geom_histogram()
+
+```
+
+For the purposes of this map, in order to see how the detail in the vast majority of stations, I'm going to take care of outliers. Instead of simply deleting them, I'm going to cap all counts at 3 standard deviations out from the mean. I'll loose a bit of detail with the actual numbers of those larger stations, but the tradeoff is worth seeing the detail in the majority of stations where it matters (the alternative, adding another color to the color scale, might be a bit misleading visually.)
+
+```{r}
+
+upperweekdaycap <- mean(mergedweekday$flow) + 3*sd(mergedweekday$flow)
+lowerweekdaycap <- mean(mergedweekday$flow) - 3*sd(mergedweekday$flow)
+upperweekendcap <- mean(mergedweekend$flow) + 3*sd(mergedweekend$flow)
+lowerweekendcap <- mean(mergedweekend$flow) - 3*sd(mergedweekend$flow)
+
+mergedweekday$flow[mergedweekday$flow > upperweekdaycap] <- upperweekdaycap
+mergedweekday$flow[mergedweekday$flow < lowerweekdaycap] <- lowerweekdaycap
+mergedweekend$flow[mergedweekend$flow > upperweekendcap] <- upperweekendcap
+mergedweekend$flow[mergedweekend$flow < lowerweekendcap] <- lowerweekendcap
+
+
+```
+
+With this done, I can map out the flow of weekday and weekend hours. As an example, below is a graph of the flow of bikes on a weekday at 5pm.
+
+
+```{r}
+
+nyc <- get_map(location = c(lon=-73.968410, lat=40.725496), zoom = 12)
+
+upperweekendlimit <- max(mergedweekend$flow)
+lowerweekendlimit <- min(mergedweekend$flow)
+upperweekdaylimit <- max(mergedweekday$flow)
+lowerweekdaylimit <- min(mergedweekday$flow)
+
+nyc <- ggmap(nyc)
+
+i = 17
+
+mergedstationsfilter <- mergedweekend %>%
+  filter(hour == i)
+  
+nyc <- nyc +
+  geom_point(data = mergedstationsfilter, 
+             aes(x = station.longitude, y = station.latitude, colour=flow), size = 4) + 
+  scale_colour_gradientn(colours=c("blue","cyan","white", "yellow","red"),
+                         values=rescale(c(lowerweekendlimit,-1,0,1,upperweekendlimit)),
+                         limits=c(lowerweekendlimit,upperweekendlimit)) + 
+  theme(legend.position = c(1,0.2)) + 
+  annotate("text", x=-73.92, y=40.72, label=paste(i,":00",sep=""), size=9)
+  
+print(nyc)
+
+```
+
+I ran this code in a for loop for both weekends and weekdays:
+
+```{r eval=FALSE}
+nyc2 <- ggmap(nyc)
+
+for(i in 0:23){
+  mergedstationsfilter <- mergedweekend %>%
+    filter(hour == i)
+  
+  png(filename=paste("weekendhour",i,".png",sep=""), width = 600)
+  
+  nyc <- nyc2
+  
+  nyc <- nyc +
+    geom_point(data = mergedstationsfilter, 
+               aes(x = station.longitude, y = station.latitude, colour=flow), size = 4) + 
+    scale_colour_gradientn(colours=c("blue","cyan","white", "yellow","red"),
+                           values=rescale(c(lowerweekendlimit,-1,0,1,upperweekendlimit)),
+                           limits=c(lowerweekendlimit,upperweekendlimit)) + 
+    theme(legend.position = c(1,0.2)) + 
+    annotate("text", x=-73.92, y=40.72, label=paste(i,":00",sep=""), size=9)
+  
+  print(nyc)
+  
+  dev.off()
+  
+}
+
+for(i in 0:23){
+  mergedstationsfilter <- mergedweekday %>%
+    filter(hour == i)
+  
+  png(filename=paste("weekdayhour",i,".png",sep=""), width = 600)
+  
+  nyc <- nyc2
+  
+  nyc <- nyc +
+    geom_point(data = mergedstationsfilter, 
+               aes(x = station.longitude, y = station.latitude, colour=flow), size = 4) + 
+    scale_colour_gradientn(colours=c("blue","cyan","white", "yellow","red"),
+                           values=rescale(c(lowerweekdaylimit,-1,0,1,upperweekdaylimit)),
+                           limits=c(lowerweekdaylimit,upperweekdaylimit)) + 
+    theme(legend.position = c(1,0.2)) + 
+    annotate("text", x=-73.92, y=40.72, label=paste(i,":00",sep=""), size=9)
+  
+  print(nyc)
+  
+  dev.off()
+  
+}
+
+
+```
+
+These pictures then had to be uploaded to an external service to create an animated gif.
+Originally, I wanted to use the animate package to do this, but unfortunately it seems the dependent packages that animate uses are not able to work with current versions of R. A copy of the animated gif created can be found [here](http://www.github.com)
+
+Conclusion and Discussion
+------------
+
+The correlation analysis and regression served to highlight what sorts of factors can be used to predict ridership on the citibike system. Weather definitely had a marked effect, but not as much as hour itself. Rush hour seemed to have the highest predictive effect on citibike usage. For planning purposes, one could imagine using more sophisticated statistical techniques to separate the model by hour, and use weather to predict what happens at each hour knowing the underlying temporal pattern.
+
+The geographic analysis led to some very interesting patterns. In general, there was a clear rush hour pattern coming in from the far east and west sides of Manhattan, and ending in the center of the island. I was expecting a more marked influx into Midtown and the Financial District, but the distribution was actually more uniform across the center of Manhattan, including a swath from Soho, up through eastern Chlsea and Union Square. This area has been a new commercial center. While more traditional businesses stay in Midtown and the Financial district, this new emerging business district has been a center for start ups, tech, and fashion. 
+
+I'd argue the workers in these companies trend younger, and are more likely to use a service like citibike, which is why this business district becomes pronounced when looking at the data. Another whimsical conclusion comes out when looking at the morning rush hour. Young employees at trendy companies show up to work later than those in Midtown or in the Financial District.
+
+There was also a confirmation of my personal citibike strategy. I work in Midtown East, and instead of using the station closer to my office, I use one closer to Grand Central. Further away from this station, rush hour trends dominate. By Grand Central, however, this is moderated by commuters coming in from the Northern suburbs and biking from Grand Central to their final destination. You'll notice this anomoly looking at the stations around Grand Central and Penn Station.
+
+There were a few important lessons working on this project taught me. This was larger than the other datasets we worked with in this class. My programming flow tends to involve a lot of trial and error, and I was forced to divide my work into chunks to get large jobs out of the way. As an example, for scraping the weather data, I started out scraping the weather each time as I debugged, and eventually moved to working with the already scraped raw data that was now local.
+
