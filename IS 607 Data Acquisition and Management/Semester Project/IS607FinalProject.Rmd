@@ -1,7 +1,7 @@
 ---
-title: "Weather and CitiBike Usage"
+title: "The Effect of Weather on citiBike Usage, and a Geographic Analysis of Bike Flow"
 author: "Charley Ferrari"
-date: "Thursday, December 11, 2014"
+date: "Sunday, December 14, 2014"
 output: pdf_document
 ---
 
@@ -1390,5 +1390,5 @@ I'd argue the workers in these companies trend younger, and are more likely to u
 
 There was also a confirmation of my personal CitiBike strategy. I work in Midtown East, and instead of using the station closer to my office, I use one closer to Grand Central. Further away from this station, rush hour trends dominate. By Grand Central, however, this is moderated by commuters coming in from the Northern suburbs and biking from Grand Central to their final destination. You'll notice this anomaly looking at the stations around Grand Central and Penn Station.
 
-There were a few important lessons working on this project taught me. This was larger than the other datasets we worked with in this class. My programming flow tends to involve a lot of trial and error, and I was forced to divide my work into chunks to get large jobs out of the way. As an example, for scraping the weather data, I started out scraping the weather each time as I debugged, and eventually moved to working with the already scraped raw data that was now local.
+There were a few important lessons working on this project taught me. This was larger than the other datasets we worked with in this class. My programming flow tends to involve a lot of trial and error, and I was forced to divide my work into chunks to get large jobs out of the way. For example, while originally when I was scraping the weather data, I was debugging the entire code that pulled the data from each individual website, a long process. When it became clear I was wasting time (and I stopped being stubborn thinking "this time there's no way it can't work!") I changed my code to pull in the raw data once, and then separated out the code that massages that raw data into the dataframe I needed.
 
