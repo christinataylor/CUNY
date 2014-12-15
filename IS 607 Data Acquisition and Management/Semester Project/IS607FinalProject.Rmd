@@ -1,5 +1,5 @@
 ---
-title: "Weather and Citibike Usage"
+title: "Weather and CitiBike Usage"
 author: "Charley Ferrari"
 date: "Thursday, December 11, 2014"
 output: pdf_document
@@ -25,11 +25,11 @@ library(scales)
 Introduction
 ------------
 
-The Citibike bikeshare system in New York City produces detailed ride level data for research purposes. This data details each trip taken by a citibike, including information about the bike, the rider, timing, and the start and end station. Inspired by the Kaggle competition's [bike share challenge](http://www.kaggle.com/c/bike-sharing-demand), which included aggregate hourly data joined with weather data, I decided to rebuild this framework using the raw rides data coming from Citibike.
+The CitiBike bikeshare system in New York City produces detailed ride level data for research purposes. This data details each trip taken by a CitiBike, including information about the bike, the rider, timing, and the start and end station. Inspired by the Kaggle competition's [bike share challenge](http://www.kaggle.com/c/bike-sharing-demand), which included aggregate hourly data joined with weather data, I decided to rebuild this framework using the raw rides data coming from CitiBike.
 
-The weather data was scraped directly from the WUnderground website, looping through daily pages. Weekends are expressed as a dummy variable, on an hourly basis. The citibike data was just obtained from the citibike site as raw CSVs
+The weather data was scraped directly from the WUnderground website, looping through daily pages. Weekends are expressed as a dummy variable, on an hourly basis. The CitiBike data was just obtained from the CitiBike site as raw CSVs
 
-For analysis, I created a regression model that predicts hourly Citibike usage based on weather and weekend. Because I had the trip level data, I also created a map with station aggregated data animated by hour, to get a look at an average day's flow of bikes. This data is divided into both a weekday and weekend average.
+For analysis, I created a regression model that predicts hourly CitiBike usage based on weather and weekend. Because I had the trip level data, I also created a map with station aggregated data animated by hour, to get a look at an average day's flow of bikes. This data is divided into both a weekday and weekend average.
 
 Data was brought into PostgreSQL as soon as possible. The majority of aggregations were done in PostgreSQL, and tables were then imported into R.
 
@@ -860,7 +860,7 @@ fulldata <- dbReadTable(con, "hourlyrideswithweather")
 
 ```
 
-First lets take a look at some of the long term trends. I'll create a monthly aggregate to look at how citibike average usage evolved over the available time period:
+First lets take a look at some of the long term trends. I'll create a monthly aggregate to look at how CitiBike average usage evolved over the available time period:
 
 ```{r}
 
@@ -998,7 +998,7 @@ Mapping Methodology
 
 With the trip level data, I'm able to do more than recreate aggregates of rides over time. Since the trip level data included station information, I wanted to display a geographic analysis of these trips. 
 
-I decided to take the trips data and aggregate it by only hour. This way, you can get an average "day in the life" of the citibike system.
+I decided to take the trips data and aggregate it by only hour. This way, you can get an average "day in the life" of the CitiBike system.
 
 I also wanted to break apart weekends and weekdays. The first few steps took place in PostgreSQL, joining the weekends data with the trips data, and aggregating based off of that. This had to be done twice, once for the start stations and once fore the end stations. The aggregations took place in two steps. First, I would count the trips on a daily basis, to get the number of trips per hour per day. Then, I averaged this hourly count across all days, to get a representative weekday and weekend:
 
@@ -1273,7 +1273,7 @@ ggplot(mergedweekend, aes(x=flow)) + geom_histogram()
 
 ```
 
-For the purposes of this map, in order to see how the detail in the vast majority of stations, I'm going to take care of outliers. Instead of simply deleting them, I'm going to cap all counts at 3 standard deviations out from the mean. I'll loose a bit of detail with the actual numbers of those larger stations, but the tradeoff is worth seeing the detail in the majority of stations where it matters (the alternative, adding another color to the color scale, might be a bit misleading visually.)
+For the purposes of this map, in order to see how the detail in the vast majority of stations, I'm going to take care of outliers. Instead of simply deleting them, I'm going to cap all counts at 3 standard deviations out from the mean. I'll lose a bit of detail with the actual numbers of those larger stations, but the tradeoff is worth seeing the detail in the majority of stations where it matters (the alternative, adding another color to the color scale, might be a bit misleading visually.)
 
 ```{r}
 
@@ -1377,18 +1377,18 @@ for(i in 0:23){
 ```
 
 These pictures then had to be uploaded to an external service to create an animated gif.
-Originally, I wanted to use the animate package to do this, but unfortunately it seems the dependent packages that animate uses are not able to work with current versions of R. A copy of the animated gif created can be found [here](http://www.github.com)
+Originally, I wanted to use the animate package to do this, but unfortunately it seems the dependent packages that animate uses are not able to work with current versions of R. The weekday animated patterns can be found [here](https://github.com/charleyferrari/CUNY/blob/master/IS%20607%20Data%20Acquisition%20and%20Management/Semester%20Project/weekday.gif) and the weekend animated patterns can be found [here](https://github.com/charleyferrari/CUNY/blob/master/IS%20607%20Data%20Acquisition%20and%20Management/Semester%20Project/weekend.gif)
 
 Conclusion and Discussion
 ------------
 
-The correlation analysis and regression served to highlight what sorts of factors can be used to predict ridership on the citibike system. Weather definitely had a marked effect, but not as much as hour itself. Rush hour seemed to have the highest predictive effect on citibike usage. For planning purposes, one could imagine using more sophisticated statistical techniques to separate the model by hour, and use weather to predict what happens at each hour knowing the underlying temporal pattern.
+The correlation analysis and regression served to highlight what sorts of factors can be used to predict ridership on the CitiBike system. Weather definitely had a marked effect, but not as much as hour itself. Rush hour seemed to have the highest predictive effect on CitiBike usage. For planning purposes, one could imagine using more sophisticated statistical techniques to separate the model by hour, and use weather to predict what happens at each hour knowing the underlying temporal pattern.
 
-The geographic analysis led to some very interesting patterns. In general, there was a clear rush hour pattern coming in from the far east and west sides of Manhattan, and ending in the center of the island. I was expecting a more marked influx into Midtown and the Financial District, but the distribution was actually more uniform across the center of Manhattan, including a swath from Soho, up through eastern Chlsea and Union Square. This area has been a new commercial center. While more traditional businesses stay in Midtown and the Financial district, this new emerging business district has been a center for start ups, tech, and fashion. 
+The geographic analysis led to some very interesting patterns. In general, there was a clear rush hour pattern coming in from the far east and west sides of Manhattan, and ending in the center of the island. I was expecting a more marked influx into Midtown and the Financial District, but the distribution was actually more uniform across the center of Manhattan, including a swath from Soho, up through eastern Chelsea and Union Square. This area has been a new commercial center. While more traditional businesses stay in Midtown and the Financial district, this new emerging business district has been a center for start ups, tech, and fashion. 
 
-I'd argue the workers in these companies trend younger, and are more likely to use a service like citibike, which is why this business district becomes pronounced when looking at the data. Another whimsical conclusion comes out when looking at the morning rush hour. Young employees at trendy companies show up to work later than those in Midtown or in the Financial District.
+I'd argue the workers in these companies trend younger, and are more likely to use a service like CitiBike, which is why this business district becomes pronounced when looking at the data. Another whimsical conclusion comes out when looking at the morning rush hour. Young employees at trendy companies show up to work later than those in Midtown or in the Financial District.
 
-There was also a confirmation of my personal citibike strategy. I work in Midtown East, and instead of using the station closer to my office, I use one closer to Grand Central. Further away from this station, rush hour trends dominate. By Grand Central, however, this is moderated by commuters coming in from the Northern suburbs and biking from Grand Central to their final destination. You'll notice this anomoly looking at the stations around Grand Central and Penn Station.
+There was also a confirmation of my personal CitiBike strategy. I work in Midtown East, and instead of using the station closer to my office, I use one closer to Grand Central. Further away from this station, rush hour trends dominate. By Grand Central, however, this is moderated by commuters coming in from the Northern suburbs and biking from Grand Central to their final destination. You'll notice this anomaly looking at the stations around Grand Central and Penn Station.
 
 There were a few important lessons working on this project taught me. This was larger than the other datasets we worked with in this class. My programming flow tends to involve a lot of trial and error, and I was forced to divide my work into chunks to get large jobs out of the way. As an example, for scraping the weather data, I started out scraping the weather each time as I debugged, and eventually moved to working with the already scraped raw data that was now local.
 
