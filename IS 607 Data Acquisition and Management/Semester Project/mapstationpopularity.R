@@ -121,7 +121,7 @@ mergedweekday$flow[mergedweekday$flow < lowerweekdaycap] <- lowerweekdaycap
 mergedweekend$flow[mergedweekend$flow > upperweekendcap] <- upperweekendcap
 mergedweekend$flow[mergedweekend$flow < lowerweekendcap] <- lowerweekendcap
 
-ggplot(mergedweekday, aes(x=startcount)) + geom_histogram()
+ggplot(mergedweekend, aes(x=flow)) + geom_histogram() + ggtitle("Weekend Flow")
 
 mean(mergedweekday$startcount) + 2*sd(mergedweekday$startcount)
 

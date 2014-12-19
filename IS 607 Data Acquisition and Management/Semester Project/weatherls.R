@@ -91,8 +91,9 @@ length(fulldata$ridescount[fulldata$ridescount > 3000])/length(fulldata$ridescou
 mean(fulldata$ridescount) + 2*sd(fulldata$ridescount)
 
 model <- lm(ridescount ~ temp+month+hour+humidity+conditions+weekend, data=fulldata)
-coefplot(model) + 
-  theme_tufte()
+coefplot(model, horizontal = TRUE, textAngle=90) + 
+  theme_tufte() +
+  theme(axis.text.x=element_text(angle=90))
 
 modellog <- lm(log(ridescount) ~ temp+month+hour+humidity+conditions+weekend, data=fulldataraw)
 
@@ -128,7 +129,8 @@ dailyagg <- fulldata %>%
 
 dailyagg$date <- ISOdatetime(dailyagg$year, dailyagg$month, dailyagg$day, 0, 0, 0)
 
-ggplot(dailyagg, aes(x=date, y=ridescount)) + geom_line()
+ggplot(monthlyagg, aes(x=date, y=ridescount)) + geom_line() + ggtitle("Monthly Ride Counts") + 
+  theme_tufte()
 
 monthlyagg <- fulldata %>%
   group_by(year, month) %>%
