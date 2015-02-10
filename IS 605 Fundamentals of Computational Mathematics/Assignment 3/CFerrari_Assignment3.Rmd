@@ -1,0 +1,319 @@
+---
+title: "Assignment 3"
+author: "Charley Ferrari"
+date: "Sunday, February 08, 2015"
+output: pdf_document
+---
+
+Problem Set 1
+============
+
+1- What is the rank of Matrix A? 
+
+$\left[ {\begin{array}{cccc}
+1 & 2 & 3 & 4\\
+-1 & 0 & 1 & 3\\
+0 & 1 & -2 & 1\\
+5 & 4 & -2 & -3\\
+\end{array} } \right]$
+
+Subtract -1 * row 1 from row 2 and -5 * row 1 from row 4:
+
+$\left[ {\begin{array}{cccc}
+1 & 2 & 3 & 4\\
+0 & 2 & 4 & 7\\
+0 & 1 & -2 & 1\\
+0 & -6 & -17 & -23\\
+\end{array} } \right]$
+
+Subtract $-\frac{1}{2}$ * row 2 from row 3 and -3 * row 2 from row 4:
+
+$\left[ {\begin{array}{cccc}
+1 & 2 & 3 & 4\\
+0 & 2 & 4 & 7\\
+0 & 0 & -4 & \frac{5}{2}\\
+0 & 0 & 0 & \frac{13}{6}\\
+\end{array} } \right]$
+
+The rank of this matrix is 4 because it has no zero rows when reduced to REF.
+
+***
+
+2 - Given an m x n matrix where m > n, what can be the maximum rank of a non-zero matrix? The minimum rank?
+
+Lets assume we can get the below matrix in REF:
+
+$\left[ {\begin{array}{cccc}
+a & e & i\\
+b & f & j\\
+c & g & k\\
+d & h & i\\
+\end{array} } \right]$
+
+So it looks somthing like this:
+
+$\left[ {\begin{array}{cccc}
+w & 0 & 0\\
+0 & x & 0\\
+0 & 0 & y\\
+0 & 0 & z\\
+\end{array} } \right]$
+
+In this case, once we run out of columns, the rows below the nth column become multiples of eachother, and can be eliminated.
+
+The minimum rank of an m x n matrix that is non-zero is 1. Even in a situation where every row is a multiple of the pivot row, there is still one pivot.
+
+*** 
+
+3 - What is the rank of Matrix B?
+
+$\left[ {\begin{array}{ccc}
+1 & 2 & 1\\
+3 & 6 & 3\\
+2 & 4 & 2\\
+\end{array} } \right]$
+
+Subtract 3 * row 1 from row 2, and 2 * row 1 from row 3:
+
+$\left[ {\begin{array}{ccc}
+1 & 2 & 1\\
+0 & 0 & 0\\
+0 & 0 & 0\\
+\end{array} } \right]$
+
+The other two rows zero out. There is only one pivot, so the rank is 1.
+
+***
+
+Problem Set 2
+============
+
+Compute the eigenvalues and eigenvectors of the matrix A. You'll need to show your
+work. You'll need to write out the characteristic polynomial and show your solution.
+
+First lets define the Matrix:
+
+```{r}
+
+A <- matrix(c(1,0,0,2,4,0,3,5,6),nrow=3)
+
+A
+
+```
+
+We're solving for the eigenvalues $\lambda$, where $Av = \lambda v$
+
+Another way of writing this equation is $( \lambda I_3 - A)v = 0$
+
+We can solve for $\lambda$ by setting the determinant of the matrix $( \lambda I_3 - A )v$ to 0
+
+So, 
+
+$( \lambda I_3 - A ) = 
+\left[ {\begin{array}{ccc}
+\lambda - 1 & -2 & -3\\
+0 & \lambda - 4 & -5\\
+0 & 0 & \lambda - 6\\
+\end{array} } \right]$
+
+and $det( \lambda I_3 - A ) = 0$
+
+so $( \lambda - 1)( \lambda - 4)( \lambda - 6) + -2 * -5 * 0 + -3 * 0 * 0
+- 0 * ( \lambda - 4) * -3 - 0 * -5 * ( \lambda - 1) - ( \lambda - 6) * 0 * -2 = 0$
+
+Out of 6 terms, all terms multiply by at least one 0 except for the first, so the characteristic polynomial is:
+
+$( \lambda - 1)( \lambda - 4)( \lambda - 6) = 0$
+
+And this is solved when $\lambda = 1,4,6$
+
+now, lets plug in each value of $\lambda$ into the matrix:
+
+***
+
+$\lambda = 1$
+------------
+
+$( \lambda I_3 - A ) = 
+\left[ {\begin{array}{ccc}
+0 & -2 & -3\\
+0 & -3 & -5\\
+0 & 0 & -5\\
+\end{array} } \right]$
+
+```{r}
+
+A1 <- matrix(c(0,0,0,-2,-3,0,-3,-5,-5),nrow=3)
+
+# eliminate A1[2,3] by subtracting row 3 from row 2
+# eliminate A1[1,3] by subtracting 3/5 * row 3 from row 
+
+A1[2,] <- A1[2,] - A1[3,]
+
+A1[1,] <- A1[1,] - (3/5)*A1[3,]
+
+A1
+
+```
+
+```{r}
+# eliminate A1[1,2] by subtracting (2/3)*A1[2,]
+
+A1[1,] <- A1[1,] - (2/3)*A1[2,]
+
+A1
+
+```
+
+```{r}
+
+# Get matrix into reduced row echelon form by making pivots = 1
+# Then move the zero rows to the bottom
+
+A1[2,] <- A1[2,]/-3
+A1[3,] <- A1[3,]/-5
+
+A1 <- A1[c(2,3,1),]
+
+```
+
+$( \lambda I_3 - A )v = 
+\left[ {\begin{array}{ccc}
+0 & 1 & 0\\
+0 & 0 & 1\\
+0 & 0 & 0\\
+\end{array} } \right]
+\left[ {\begin{array}{c}
+v_1\\
+v_2\\
+v_3\\
+\end{array} } \right]$
+
+$v_2 = 0 \\ v_3 = 0$
+
+Let $v_1 = t$
+
+$E_{\lambda = 1} = t \left[ {\begin{array}{c}
+1\\
+0\\
+0\\
+\end{array} } \right]$
+
+where $t$ is real
+
+***
+
+$\lambda = 4$
+------------
+
+
+$( \lambda I_3 - A ) = 
+\left[ {\begin{array}{ccc}
+3 & -2 & -3\\
+0 & 0 & -5\\
+0 & 0 & -2\\
+\end{array} } \right]$
+
+```{r}
+
+A4 <- matrix(c(3,0,0,-2,0,0,-3,-5,-2),nrow=3)
+
+# Eliminate A4[2,3] by subtracting (5/2) * row 3 from row 2
+# Eliminate A4[1,3] by subtracting (3/2) * row 3 from row 1
+
+A4[2,] <- A4[2,] - (5/2)*A4[3,]
+A4[1,] <- A4[1,] - (3/2)*A4[3,]
+
+A4
+
+```
+
+```{r}
+
+# Divide row 1 by 3 to make the pivot 1
+# Divide row 3 by -2 to make the pivot 1
+# Move the zero row to the bottom
+
+A4[1,] <- A4[1,]/3
+A4[3,] <- A4[3,]/-2
+
+A4 <- A4[c(1,3,2),]
+
+
+```
+
+$( \lambda I_3 - A )v = 
+\left[ {\begin{array}{ccc}
+1 & -\frac{2}{3} & 0\\
+0 & 0 & 1\\
+0 & 0 & 0\\
+\end{array} } \right]
+\left[ {\begin{array}{c}
+v_1\\
+v_2\\
+v_3\\
+\end{array} } \right]$
+
+$v_1 -\frac{2}{3}v_2 = 0 \\ v_3 = 0$
+
+let $v_2 = t$
+
+So:
+$\frac{2}{3}t = v_1\\$
+
+$E_{\lambda = 4} = t \left[ {\begin{array}{c}
+\frac{2}{3}\\
+1\\
+0\\
+\end{array} } \right]$
+
+Where t is real
+
+***
+
+$\lambda = 6$
+------------
+
+
+```{r}
+
+A6 <- matrix(c(5,0,0,-2,2,0,-3,-5,0),nrow=3)
+
+# Eliminate A6[1,2] by subtracting -1 * row 2
+
+A6[1,] <- A6[1,] + A6[2,]
+
+# Divide Row 1 by 5 and row 2 by 2 to make the pivots 1
+
+A6[1,] <- A6[1,]/5
+A6[2,] <- A6[2,]/2
+
+A6
+
+```
+
+$( \lambda I_3 - A )v = 
+\left[ {\begin{array}{ccc}
+1 & 0 & -1.6\\
+0 & 1 & -2.5\\
+0 & 0 & 0\\
+\end{array} } \right]
+\left[ {\begin{array}{c}
+v_1\\
+v_2\\
+v_3\\
+\end{array} } \right]$
+
+$v_1 - 1.6v_3 = 0 \\ v_2 - 2.5v_3 = 0$
+
+let $v_3 = t$
+
+So
+
+$V_1 = 1.6t \\ v_2 = 2.5t$
+
+$E_{\lambda = 6} = t \left[ {\begin{array}{c}
+1.6\\
+2.5\\
+1\\
+\end{array} } \right]$
