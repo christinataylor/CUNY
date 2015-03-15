@@ -1,0 +1,241 @@
+---
+title: "CFerrari_Assignment7"
+author: "Charley Ferrari"
+date: "Tuesday, March 10, 2015"
+output: pdf_document
+---
+
+Problem Set 1
+============
+
+Please write a function to compute the expected value and standard deviation of an
+array of values. Compare your results with that of R's mean and std functions. Please
+document your work in an R-Markdown file and ensure that you have good comments to
+help the reader follow your work.
+
+```{r}
+
+vec <- c(2,4,4,4,5,5,7,9)
+
+expectedValue <- function(vec){
+  return(sum(vec)/length(vec))
+}
+
+mean(vec) == expectedValue(vec)
+
+standardDeviation <- function(vec){
+  return(sqrt(sum((vec-expectedValue(vec))^2)/length(vec)))
+}
+
+standardDeviation(vec) == sd(vec)
+
+```
+
+It looks like standard deviation isn't matching, but, if you look at the notes for the 
+sd function:
+
+Like var this uses denominator n - 1.
+
+Lets test that out to see if using n - 1 as a denominator changes things:
+
+```{r}
+
+standardDeviation <- function(vec){
+  return(sqrt(sum((vec-expectedValue(vec))^2)/(length(vec)-1)))
+}
+
+sd(vec) == standardDeviation(vec)
+
+
+```
+
+Now, consider that instead of being able to neatly fit the values in memory in an array,
+you have an infinite stream of numbers coming by. How would you estimate the mean and
+standard deviation of such a stream? Your function should be able to return the current
+estimate of the mean and standard deviation at any time it is asked. Your program should
+maintain these current estimates and return them back at any invocation of these functions.
+(Hint: You can maintain a rolling estimate of the mean and standard deviation and allow
+these to slowly change over time as you see more and more new values).
+
+I decided to build a function that takes in two arguments: a list of stats and a vector. The
+vector is meant to be the updated flow of information, while the stats list is the cumulative
+stats received so far.
+
+The list consists of a mean, standard deviation (sd), the number of observations (n), and the
+cumulative sum of the squares of all the observations (sumxsquared). The vector can be of any
+length. The variable sumxsquared is crucial to calculating the revised standard deviations.
+
+If no statsList is entered (meaning you're at the beginning of the stream), the function
+assigns it to an empty list, and simply begins the calculation of the stats.
+
+```{r}
+
+vec1 <- c(80,2,74,65,99,40,29,46,91)
+vec2 <- c(5,7,18,93,66,59)
+
+movingStats <- function(statsList = list(), vec){
+  
+  if(length(statsList) != 0){
+  
+    nnew <- statsList$n + length(vec)
+    
+    meannew <- (statsList$n*statsList$mean + sum(vec))/nnew
+    
+    sumxold <- statsList$n*statsList$mean
+    sumxnew <- sumxold + sum(vec)
+    
+    sumxsquarednew <- statsList$sumxsquared + sum(vec^2)
+    
+    nsdsquarednew <- nnew*meannew^2 - 2*meannew*sumxnew + sumxsquarednew
+    
+    sdnew <- sqrt(nsdsquarednew/nnew)
+    
+  }else{
+    
+    nnew <- length(vec)
+    
+    meannew <- sum(vec) / nnew
+    
+    sumxnew <- sum(vec)
+    
+    sumxsquarednew <- sum(vec^2)
+    
+    nsdsquarednew <- nnew*meannew^2 - 2*meannew*sumxnew + sumxsquarednew
+    sdnew <- sqrt(nsdsquarednew/nnew)
+  }
+  
+  return(list(mean = meannew, sd = sdnew, n = nnew, sumxsquared = sumxsquarednew))
+  
+}
+
+statsList1 <- movingStats(vec = vec1)
+
+movingStats(statsList = statsList1, vec = vec2)
+
+
+```
+
+
+Problem Set 2
+============
+
+For the auto-mpg data set that we looked at in Assignment 5, please compute the
+correlation and covariance matrices of the 5 variables in there. 
+
+```{r}
+
+setwd("E:/Downloads/Courses/CUNY/SPS/Git/IS 605 Fundamentals of Computational Mathematics/Assignment 7")
+
+autodata <- scan("auto-mpg.data")
+
+autodata <- t(matrix(autodata, nrow = 5))
+
+means <- colMeans(autodata)
+
+autodataCov <- matrix(ncol = ncol(autodata), nrow = nrow(autodata))
+
+for(i in 1:ncol(autodata)){
+  autodataCov[,i] <- autodata[,i] - means[i]
+}
+
+meansCov <- colMeans(autodataCov)
+
+covMat <- matrix(nrow = 5, ncol = 5)
+
+for(i in 1:nrow(covMat)){
+  for(j in 1:ncol(covMat)){
+    covMat[i,j] <- mean(autodataCov[,i] * autodataCov[,j])
+  }
+}
+
+corrMat <- matrix(nrow = 5, ncol = 5)
+
+for(i in 1:nrow(corrMat)){
+  for(j in 1:ncol(corrMat)){
+    corrMat[i,j] <- covMat[i,j] / 
+      (standardDeviation(autodata[,i])*standardDeviation(autodata[,j]))
+  }
+}
+
+covMat
+
+corrMat
+
+```
+
+For bonus credit, please
+also perform Principal Components Analysis using prcomp command in R. This command
+has two options: centering and scaling. Make sure both are set to true. This option
+normalizes the random variables in order to make them comparable with each other. Please
+plot the output of your PCA and write a short paragraph on your observations.
+Please submit one R-markdown document containing the answers for both the problem
+sets.
+
+Looking at the pairs graphs, it looks like scale should be set to FALSE in order to get 
+truly uncorrelated values for autodata. Repeating the method outlined in the notes, this
+is what matches the eigenvector matrix calculated for 
+
+```{r}
+
+pca <- prcomp(covMat, center = TRUE, scale. = FALSE)
+
+eigencov <- eigen(covMat)
+
+proj <- autodata %*% pca$rotation
+
+pairs(autodata)
+
+pairs(proj)
+
+```
+
+I set scale to FALSE so the PCA would match the eigenvector vector matrix created from the 
+covariance matrix. For some reason this was the only way to get these two methods to match,
+otherwise not only would the matrices not match, but the data was not uncorrelated. See below
+for an example:
+
+```{r}
+
+pcatrue <- prcomp(covMat, center = TRUE, scale. = TRUE)
+
+pairs(autodata %*% pcatrue$rotation)
+
+```
+
+When scale is set to TRUE, the data appears even more correlated than before.
+
+The block below is simply some of the practice I was running from the notes:
+
+
+```{r echo = FALSE}
+
+
+C <- matrix(cbind(1,.8,.6, .8,1,.7, .6,.7,1),nrow=3)
+
+U <- t(chol(C))
+
+nvars <- dim(U)[1]
+
+numobs <- 10000
+
+set.seed(42)
+
+random.normal <- matrix(rnorm(nvars*numobs,0,1), nrow = nvars, ncol = numobs)
+
+X <- t(U %*% random.normal)
+
+raw <- as.data.frame(X)
+
+names(raw) <- c("claims", "potholes", "emergencies")
+
+cor(raw)
+
+eigen(cor(raw))
+
+pairs(head(raw, 500))
+
+proj <- as.matrix(raw) %*% eigen(cor(raw))$vectors
+
+pairs(head(proj,500))
+
+```
