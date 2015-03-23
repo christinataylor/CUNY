@@ -14,3 +14,9 @@ links = soup.findAll('li',{'class' : 'unit'})
 for link in links:
 	print link
 
+filename = "riverkeeper_data_2013.csv"	
+
+reader = open(filename)
+cleanlist = []
+for row in reader:
+    cleanlist.append(row)
