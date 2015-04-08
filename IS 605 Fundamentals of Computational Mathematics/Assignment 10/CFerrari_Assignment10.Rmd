@@ -1,0 +1,111 @@
+---
+title: "CFerrari_Assignment10"
+author: "Charley Ferrari"
+date: "Friday, April 03, 2015"
+output: pdf_document
+---
+
+Problem Set 1
+============
+
+You'll verify for yourself that PageRank works by performing calculations on a small
+universe of web pages.Let's use the 6 page universe that we had in the course notes. 
+For this directed graph, perform the following calculations in R.
+
+
+Form the A matrix. Then, introduce decay and form the B matrix as we did in
+the course notes.
+
+```{r}
+A <- matrix(c(0, 1/2, 1/2, 0, 0,  0,
+             0, 0, 1, 0, 0, 0,
+             1/4, 1/4, 0, 0, 1/4, 1/4,
+             0, 0, 0, 0, 1/2, 1/2,
+             0, 0, 0, 1/2, 0, 1/2,
+             0, 0, 1/2, 1/2, 0, 0), nrow=6)
+
+# Introduce decay d = 0.85
+
+d <- 0.85
+
+B <- 0.85*A + (0.15/6)
+
+
+```
+
+Start with a uniform rank vector r and perform power iterations on B till convergence.
+That is, compute the solution $r = B^k × r$. Attempt this for a sufficiently
+large k so that r actually converges
+
+```{r}
+
+# Technically, this function will multiply A by B 'power' times
+# But I'm going to use this to calculate powers.
+
+matrixPower <- function(A, power, B){
+  if(power == 1){
+    return(A)
+  }else{
+    return(matrixPower(A %*% B, power - 1, B))
+  }
+}
+
+r <- matrix(c(1/6,1/6,1/6,1/6,1/6,1/6),nrow=6)
+
+k <- 500
+
+rk <- matrixPower(B,k,B) %*% r
+
+rk
+
+
+
+
+```
+
+Compute the eigen-decomposition of B and verify that you indeed get an eigenvalue
+of 1 as the largest eigenvalue and that its corresponding eigenvector is the same
+vector that you obtained in the previous power iteration method. Further, this
+eigenvector has all positive entries and it sums to 1.
+
+```{r}
+
+eigen(B)$values[1]
+
+# Need to scale the Eigenvectors, I just divided the vectors to get my scale.
+
+(rk / eigen(B)$vectors[,1]) * eigen(B)$vectors[,1]
+
+
+
+
+```
+
+Use the graph package in R and its page.rank method to compute the Page Rank
+of the graph as given in A. Note that you don't need to apply decay. The package
+starts with a connected graph and applies decay internally. Verify that you do get
+the same PageRank vector as the two approaches above
+
+```{r}
+
+library(igraph)
+
+
+relations <- data.frame(from=c(1,1,2,3,3,3,3,4,4,5,5,6),
+                        to = c(2,3,3,1,2,5,6,5,6,4,6,4),
+                        weight = c(1,1,1,1,1,1,1,1,1,1,1,1))
+
+
+g <- graph.data.frame(relations, directed=TRUE)
+
+page.rank(g)
+
+# Once again to scale: 
+
+(rk / page.rank(g)$vector) * page.rank(g)$vector
+
+plot(g)
+
+```
+
+

@@ -10,44 +10,46 @@ import bs4
 import urllib2
 import string
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
 
-	url = 'http://www.citylab.com/weather/2014/09/a-strange-cloud-over-st-louis-turns-out-to-be-an-enormous-swarm-of-butterflies/380614/'
+url = 'http://www.citylab.com/weather/2014/09/a-strange-cloud-over-st-louis-turns-out-to-be-an-enormous-swarm-of-butterflies/380614/'
 
-	page = urllib2.urlopen(url)
+page = urllib2.urlopen(url)
 
-	soup = bs4.BeautifulSoup(page.read())
+soup = bs4.BeautifulSoup(page.read())
 
-	links = soup.findAll('div',{'id':'article-body'})
+links = soup.findAll('div',{'id':'article-body'})
 
-	newString = ''
+newString = ''
 
-	triTest = True
+triTest = True
 
-	parTest = True
+parTest = True
 
-	validLetters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,?\'\":;'
+validLetters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,?\'\":;'
 
 
-	for char in str(links):
+for char in str(links):
 
-		if char == '<':
-			triTest = False
-		if char == '>':
-			triTest = True
+	if char == '<':
+		triTest = False
+	if char == '>':
+		triTest = True
 
-		if char == '(':
-			parTest = False
-		if char == ')':
-			parTest = True
+	if char == '(':
+		parTest = False
+	if char == ')':
+		parTest = True
 
-		if triTest and parTest and char in validLetters:
-			newString += char
+	if triTest and parTest and char in validLetters:
+		newString += char
 
-		if triTest and parTest and char == '\n':
-			newString += ' '
+	if triTest and parTest and char == '\n':
+		newString += ' '
 
-	alchemyapi = AlchemyAPI()
+alchemyapi = AlchemyAPI()
+
+"""
 
 	# Look at example for more examples on this. The results are clearly in XML, and you'll have to parse that.
 
@@ -70,3 +72,5 @@ if __name__ == "__main__":
 	for i in range(0,10):
 		print(keywordlist[i][0] + ", with a relevance score of: " + str(keywordlist[i][1]))
 
+
+"""
