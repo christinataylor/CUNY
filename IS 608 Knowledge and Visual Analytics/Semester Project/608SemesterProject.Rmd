@@ -63,7 +63,7 @@ agent01$ActualDateDisplay <- strptime(agent01$ActualDateDisplay, format="%m/%d/%
 
 agent01 <- agent01[order(agent01$ActualDateDisplay),]
 
-ggplot(econ, aes(x=Date, y=Value.Add)) +
+ggplot(econ, aes(x=Date, y=ValueAdd)) +
   geom_line() + 
   theme_tufte()
 

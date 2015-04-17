@@ -37,6 +37,15 @@ ggplot(data, aes(x=Age, y=MaxHR)) +
 
 ```
 
+Using the Coefficient values, the resulting eqution is:
+
+$$MaxHR = 210.04846 - 0.79773 * Age$$
+
+The effect of Age on MaxHR is indeed significant, satisfying a p level for the t statistic 
+of 0.001. Similarly, the p value fo the F statistic is below this (on the order of magnitude of
+$10^-8$.)
+
+
 Using the Auto data set from Assignment 5 (also attached here) perform a Linear Regression analysis 
 using mpg as the dependent variable and the other 4 (displacement, horsepower, weight, acceleration) 
 as independent variables. What is the ???nal linear regression ???t equation? Which of the 4 independent 
@@ -54,12 +63,23 @@ setwd("E:/Downloads/Courses/CUNY/SPS/Git/IS 605 Fundamentals of Computational Ma
 autodata <- scan("auto-mpg.data")
 autodata <- t(matrix(autodata, nrow = 5))
 
-lm(autodata[,5] ~ autodata[,1:4])
+autodata <- data.frame(displacement = autodata[,1],
+                       horsepower = autodata[,2],
+                       weight = autodata[,3],
+                       acceleration = autodata[,4],
+                       mpg = autodata[,5])
+
+summary(lm(mpg ~ displacement + horsepower + weight + acceleration, data=autodata))
 
 ```
 
 Which of the 4 independent  variables have a signi???cant impact on mpg? What are their corresponding 
-signi???cance levels? What are  the standard errors on each of the coe???cients? Please perform this 
+signi???cance levels? 
+
+Horsepower and weight have a significant impact on mpg, satisfying p values on their t stats of
+0.01 and 0.001 respectively. Displacement and acceleration don't have 
+
+What are  the standard errors on each of the coe???cients? Please perform this 
 experiment in two ways. First take any random 40 data points from the entire auto data sample and 
 perform the linear regression ???t and measure the 95% con???dence intervals. Then, take the entire data 
 set (all 392 points) and perform linear regression and measure the 95% con???dence intervals. Please 
@@ -67,6 +87,34 @@ report the resulting ???t equation, their signi???cance values and con???dence i
 two runs.
 
 ```{r}
+set.seed(42)
+autodataSample <- autodata[sample(1:length(autodata$displacement), 40, replace=F),]
+
+summary(lm(mpg ~ displacement + horsepower + weight + acceleration, data=autodata))
+
+```
+
+The equation (when first ran) is:
+
+$$mpg = 45.2511397 - 0.0060009*displacement - 0.0436077*horsepower - 0.0052805*weight - 0.0231480*acceleration $$
+
+When I set the seed to 42, I actually got different significance levels:
+
+$$mpg = 45.2511397 - 0.0060009*displacement - 0.0436077*horsepower - 0.0052805*weight - 0.0231480*acceleration $$
+
+This will probably chan
+
+the confidence values for the t stats are in the pr(>|t|) column in the variable list.
+
+```{r}
+
+summary(lm(mpg ~ displacement + horsepower + weight + acceleration, data=autodataSample))
 
 
 ```
+
+For this random set, the equation is:
+
+$$mpg = 43.264219 - 0.030943*displacement + 0.001819*horsepower - 0.004096*weight - 0.070219 *acceleration.$$
+
+This time
