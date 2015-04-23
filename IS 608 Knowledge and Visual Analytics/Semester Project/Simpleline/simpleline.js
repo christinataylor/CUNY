@@ -57,3 +57,5 @@ d3.csv("d3econdata.csv", function(error, data) {
       .attr("class", "line")
       .attr("d", line);
 });
+
+// python -m SimpleHTTPServer 8888 &.
