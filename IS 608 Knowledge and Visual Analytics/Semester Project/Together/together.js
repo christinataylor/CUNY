@@ -212,9 +212,7 @@ var econChange = function(){
     };
 
     d3.select("#DateDropDown select")
-      .on("change", function(){
-        dateChange(); sectorChange();
-      });
+      .on("change", dateChange);
   };
 
   d3.select("#CurrentOrFutureDropDown select")
