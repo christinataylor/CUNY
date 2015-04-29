@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>My First Chart</title>
+        <link href="d3/nv.d3.css" rel="stylesheet" type="text/css">
+        <style>
+            text {
+                font: 12px sans-serif;
+            }
+            svg {
+                display: block;
+            }
+            html, body, #chart1, svg {
+                margin: 0px;
+                padding: 0px;
+                height: 100%;
+                width: 100%;
+            }
+        </style>
+        <script src="d3/d3.js"></script>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        
+    </head>
+
+    <body>
+        <div id="dropDown"></div>
+
+        <div id="chart_div" style="width: 600px; height: 300px;"></div>
+
+        <div id="Intro Text">
+            <p>This graph shows a motion plot of two types of company visit scores. The demand score is on the x-axis and 
+                Employment Score is on the Y-axis. The employment score is an average of the employment scores of the group of
+                companies with a certain demand score. In other words, the raw data is filtered by the demand score. Then
+                the average employment score of the filtered data set is calculated. The graph is animated by time, and the
+                size of the circles correspond to the number of companies with the corresponding demand score.</p>
+        </div>
+        <script type="text/javascript" src="googletest.js"></script>
+    </body>
+</html>

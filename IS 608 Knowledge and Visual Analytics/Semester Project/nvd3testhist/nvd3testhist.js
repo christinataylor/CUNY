@@ -55,14 +55,19 @@
     //     return chart;
     // });
 
-d3.csv("agentdataprop1d.csv", function(error, data){
+d3.csv("agentdataprop.csv", function(error, data){
 
-  function surveyData(){
-    // var parseDate = d3.time.format("%m-%d-%Y").parse;
+  function surveyData(sector, ActualDate){
+    // var parseDate = d3.time.format("%m/%d/%Y").parse;
     var surveyCounts = [0,0,0,0,0,0,0,0,0,0,0];
 
+    // data.forEach(function(d){
+    //   d.ActualDateDisplay = parseDate(d.ActualDateDisplay);
+    // })
+
     data.forEach(function(d){
-      if(d.Sector == "Business and financial services"){
+      if(d.Sector == sector &&
+          d.ActualDateDisplay == ActualDate){
         surveyCounts[+d.DemandScore+5] += 1;
       }
     });
@@ -84,6 +89,9 @@ d3.csv("agentdataprop1d.csv", function(error, data){
   }
 
   nv.addGraph(function() {
+
+      var height = 500;
+
       var chart = nv.models.discreteBarChart()
           .x(function(d) { return d.label })
           .y(function(d) { return d.value })
@@ -92,11 +100,19 @@ d3.csv("agentdataprop1d.csv", function(error, data){
           .tooltips(true)
           .showValues(false)
           .duration(250)
+          .height(height)
           ;
+
+      chart.yAxis
+        .axisLabel("Number of Company Visits")
+        .tickFormat(function(d){ return Math.round(d); });  
+
       d3.select('#chart1 svg')
-          .datum(surveyData())
-          .call(chart);
-      nv.utils.windowResize(chart.update);
+          .attr("height", height)
+          .datum(surveyData("Business and financial services","7/1/2008"))
+          .call(chart)
+          // .style({ 'height': height });
+      nv.utils.windowResize(function() { chart.update(); } );
       return chart;
   });
 
