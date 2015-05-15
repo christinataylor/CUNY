@@ -1,0 +1,81 @@
+---
+title: "CFerrari_Assignment14"
+author: "Charley Ferrari"
+date: "Thursday, May 07, 2015"
+output: pdf_document
+---
+
+$$f(x) = \frac{1}{1-x}$$
+
+$$f(x) = \sum_{n=0}^{\infty}  \frac{f^{(n)} (a)}{n!} (x-a)^n$$
+
+Lets first try to arrive at a general derivative form for $\frac{1}{1-x}$
+
+$$f^{(1)}(x) = (-1)(-1) \frac{1}{(1-x)^2}$$
+
+$$f^{(2)}(x) = (-1)^2 (-1)(-2) \frac{1}{(1-x)^3}$$
+
+$$f^{(3)}(x) = (-1)^3 (-1)(-2)(-3) \frac{1}{(1-x)^4}$$
+
+The negative terms always cancel eachother out
+
+$$f^{(n)}(x) = \frac{1}{n!(1-x)^{n+1}}$$
+
+The n! terms cancel eachother out:
+
+$$\frac{1}{1-x} = \sum_{n=0}^{\infty} \frac{(-1)^{n+1} (x-a)^n}{(1-a)^{n+1}}$$
+
+So for a = 0:
+
+$$\frac{1}{1-x} = \sum_{n=0}^{\infty} x^n$$
+
+And since this is a basic power series, the radius of convervence is -1 < x < 1, since the 
+$\lim_{x\to\infty} p^x$ is 0 for that radius.
+
+-----------------------------------
+
+$$f(x) = e^x$$
+
+The multiple derivatives of this is easy, $\frac{d}{dx} e^x$ is just $e^x$
+
+$$e^x = \sum_{n=0}^{\infty} \frac{e^a}{n!} (x-a)^n$$
+
+Lets take a = 0
+
+$$e^x = \sum_{n=0}^{\infty} \frac{x^n}{n!}$$
+
+Lets try to find its radius of convergence by using the ratio test.
+
+$$\frac{A_{n+1}}{A_n} = \frac{x^{n+1}}{(n+1)n!} \frac{n!}{x^n} = \frac{x}{n+1}$$
+
+$$\lim_{x\to\infty} \frac{x}{n+1} = 0$$
+
+No matter what value x takes, the ratio converges to 0, so the series converges for all values of x
+
+-----------------------------------
+
+$$f(x) = ln(1+x)$$
+
+Lets first try to arrive at a general derivative form for $ln(1+x)$
+
+$$f(x) = ln(1+x)$$
+
+$$f^{(1)}(x) = \frac{1}{1+x}$$
+
+$$f^{(2)}(x) = (-1) \frac{1}{(1+x)^2}$$
+
+$$f^{(3)}(x) = (-1)(-2) \frac{1}{(1+x)^3}$$
+
+$$f^{(n)}(x) = (-1)^{n-1} (n-1)! \frac{1}{(1+x)^n}$$
+
+$\frac{(n-1)!}{n!} = \frac{1}{n}$, so, for a=0:
+
+$$ln(1+x) = \sum_{n=0}^{\infty} -1^{n-1} \frac{x^n}{n}$$
+
+Lets try to find its radius of convergence by using the ratio test.
+
+$$\frac{A_{n+1}}{A_n} = - \frac{x^{n+1}}{n} \frac{n}{x^n} = - \frac{xn}{n+1}$$
+
+$$\lim_{n\to\infty} - \frac{xn}{n+1} = -x$$
+
+So, this is valid when $|x| < 1$

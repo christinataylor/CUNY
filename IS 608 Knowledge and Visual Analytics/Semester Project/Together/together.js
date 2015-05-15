@@ -78,10 +78,7 @@ dateList.forEach(function(d){
   };
 });
 
-d3.select("#EconDropDown").append("select")
-  .append("option")
-  .text("")
-  .attr("");
+d3.select("#EconDropDown").append("select");
 
 d3.select("#EconDropDown select")
   .selectAll("option")
@@ -90,6 +87,11 @@ d3.select("#EconDropDown select")
   .append("option")
   .text(function(d) { return d.econTitle; } )
   .attr("value", function(d) { return d.econ; } );
+
+d3.select("#EconDropDown select")
+  .insert("option",":first-child")
+  .text("")
+  .attr("");
 
 // d3.select("#EconDropDown select")
 //   .on("change", function(){
@@ -120,15 +122,20 @@ var econChange = function(){
 
   if(d3.select("#CurrentOrFutureDropDown select").empty()){
     d3.select("#CurrentOrFutureDropDown").append("select");
-  }
 
-  d3.select("#CurrentOrFutureDropDown select")
-    .selectAll("option")
-    .data(["Current", "Future"])
-    .enter()
-    .append("option")
-    .text(function(d) { return d; } )
-    .attr("value", function(d) { return d; } );
+    d3.select("#CurrentOrFutureDropDown select")
+      .selectAll("option")
+      .data(["Current", "Future"])
+      .enter()
+      .append("option")
+      .text(function(d) { return d; } )
+      .attr("value", function(d) { return d; } );
+
+    d3.select("#CurrentOrFutureDropDown select")
+      .insert("option", ":first-child")
+      .text("")
+      .attr("value", "");
+  }
 
   var currentOrFutureChange = function(){
     globalCurrentOrFuture = d3.event.target.value;
@@ -142,15 +149,20 @@ var econChange = function(){
   
     if(d3.select("#DateDropDown select").empty()){
       d3.select("#DateDropDown").append("select");
+      
+      d3.select("#DateDropDown select")
+        .selectAll("option")
+        .data(dateList)
+        .enter()
+        .append("option")
+        .text(function(d) { return d; } )
+        .attr("value", function(d) { return d; } );
+
+      d3.select("#DateDropDown select")
+        .insert("option", ":first-child")
+        .text("")
+        .attr("value", "");
     }
-    
-    d3.select("#DateDropDown select")
-      .selectAll("option")
-      .data(dateList)
-      .enter()
-      .append("option")
-      .text(function(d) { return d; } )
-      .attr("value", function(d) { return d; } );
 
     var dateChange = function(){
       globalDate = d3.event.target.value;
@@ -160,16 +172,23 @@ var econChange = function(){
         .classed("hidden", false);
 
       if(d3.select("#SectorDropDown select").empty()){
-        d3.select("#SectorDropDown").append("select");  
+        d3.select("#SectorDropDown").append("select");
+
+        d3.select("#SectorDropDown select")
+          .selectAll("option")
+          .data(sectorList)
+          .enter()
+          .append("option")
+          .text(function(d) { return d; } )
+          .attr("value", function(d) { return d; } );
+
+        d3.select("#SectorDropDown select")
+          .insert("option", ":first-child")
+          .text("")
+          .attr("value", "");  
       }
 
-      d3.select("#SectorDropDown select")
-        .selectAll("option")
-        .data(sectorList)
-        .enter()
-        .append("option")
-        .text(function(d) { return d; } )
-        .attr("value", function(d) { return d; } );
+
 
       var sectorChange = function(){
         globalSector = d3.event.target.value;
@@ -179,15 +198,22 @@ var econChange = function(){
 
         if(d3.select("#Concept2DropDown select").empty()){
           d3.select("#Concept2DropDown").append("select");
+
+          d3.select("#Concept2DropDown select")
+            .selectAll("option")
+            .data(conceptMap)
+            .enter()
+            .append("option")
+            .text(function(d) { return d.econTitle; } )
+            .attr("value", function(d) { return d.score; } );
+
+          d3.select("#Concept2DropDown select")          
+            .insert("option", ":first-child")
+            .text("")
+            .attr("value", "");
         }
 
-        d3.select("#Concept2DropDown select")
-          .selectAll("option")
-          .data(conceptMap)
-          .enter()
-          .append("option")
-          .text(function(d) { return d.econTitle; } )
-          .attr("value", function(d) { return d.score; } );
+
 
         d3.select("#Concept2Description")
           .classed("hidden", false);
@@ -211,8 +237,53 @@ var econChange = function(){
         .on("change", sectorChange);
     };
 
+    var sectorChangePrime = function(){
+      // globalSector = d3.event.target.value;
+      drawMeanCVSGraph();
+      drawCVSHist();
+      drawGoogleChart();
+
+      if(d3.select("#Concept2DropDown select").empty()){
+        d3.select("#Concept2DropDown").append("select");
+
+        d3.select("#Concept2DropDown select")
+          .selectAll("option")
+          .data(conceptMap)
+          .enter()
+          .append("option")
+          .text(function(d) { return d.econTitle; } )
+          .attr("value", function(d) { return d.score; } );
+
+        d3.select("#Concept2DropDown select")
+          .insert("option", ":first-child")
+          .text("")
+          .attr("value", "");
+      }
+
+
+
+      d3.select("#Concept2Description")
+        .classed("hidden", false);
+
+      var concept2ChangePrime = function(){
+        globalCVSConcept2 = d3.event.target.value;
+        drawGoogleChart();
+        d3.select("#GoogleChart")
+          .classed("hidden", false);
+        d3.select("#Concept2Description2")
+          .classed("hidden", false);
+        // d3.select("#Conclusion")
+        //   .classed("hidden", false);
+      };
+
+      d3.select("#Concept2DropDown select")
+        .on("change", concept2ChangePrime);
+    };
+
     d3.select("#DateDropDown select")
-      .on("change", dateChange);
+      .on("change", function(){
+        dateChange(); sectorChangePrime();
+      });
   };
 
   d3.select("#CurrentOrFutureDropDown select")
@@ -261,7 +332,7 @@ function drawEconGraph(){
               .tickFormat(function(d) { return d3.time.format("%b %Y")(new Date(d)); });
 
           chart.yAxis
-              .axisLabel("Average Company Visit Score")
+              .axisLabel("Percent Change YoY")
               .tickFormat(d3.format(".02f"))
               ;
 
@@ -405,7 +476,7 @@ function drawCVSHist(){
             ;
 
         chart.yAxis
-          .axisLabel("Number of Company Visits")
+          .axisLabel("Number of Companies")
           .tickFormat(function(d){ return Math.round(d); });  
 
         d3.select("#CVSHist svg")
@@ -488,7 +559,7 @@ function drawGoogleChart() {
     chartData.addColumn('date', 'Date');
     chartData.addColumn('number', globalCVSConcept);
     chartData.addColumn('number', globalCVSConcept2);
-    chartData.addColumn('string', 'ColorPlaceHolder');
+    chartData.addColumn('string', 'Blue');
     chartData.addColumn('number', 'SurveyCount');
     chartData.addRows(dataForGoogle);
     var chart = new google.visualization.MotionChart(document.getElementById('GoogleChart'));
