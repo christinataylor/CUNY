@@ -1,0 +1,312 @@
+---
+title: 'Homework #1'
+author: "Charley Ferrari"
+date: "Sunday, September 06, 2015"
+output: pdf_document
+---
+
+### Question 1.1 ###
+
+Name several entities, attributes, activities, events, and state variables for the following systems
+
+a. A cafeteria. 
+Entities: students, cooks, and teachers. 
+Attributes: Assigned lunch period, the amount of food available
+Activities: serving a student lunch, or a student eating.
+Events: the changing of a period, students entering or leaving.
+state variables: period number, number of students fed.
+
+b. A grocery store. 
+Entities: customers, items of food, and cashiers. 
+Attributes: the amount of food available, the scheduled working hours of the cashiers
+Activies: Bagging, walkin through the aisles.
+Events: A customer arriving or leaving
+State variables: number of busy cashiers, number of customers in store.
+
+c. A laundromat
+Entites: customers, employees, washing machines
+Attributes: size of load, whether a washing machine is being used or not, working hours of employees.
+Activities: running a load
+Events: washing machine breaking down
+State variables: number of washing machines busy, number of employees working
+
+d. A fast food restaurant
+Entities: Customers, employees, items of food
+Attributes: Whether an employee is busy or not, type of food, working hours of employee, employee 
+assignment (counter, cook, etc)
+Activities: Cooking, serving customer at counter, serving customer at drive through
+Events: Customers arriving or leaving
+State variables: Number of customers, number of employees working
+
+e. A hospital emergency room
+Entities: Patients, nurses, doctors
+Attributes: Type of illness, specialty of doctor, working hours of doctors and nurses
+Activities: Treating a patient, 
+Events: A major accident
+State variables: capacity of hospital
+
+f. a taxi cab company with 10 taxis
+Entities: Cabs, drivers, customers
+Attributes: age of cab, whether the cab is functional or not, working hours of drivers, origin and 
+desired destination of customers, location of cab
+Activities: Picking up and dropping off customers
+Events: A cab breaks down, a major event that leads to an influx of passengers
+State variables: Amount of traffic
+
+g. An automobile assembly line
+Entities: Scrap metal, assembly robots, workers
+Attributes: Type of worker, schedule of workers, whether workers or robots are idle.
+Activities: Performing a specific assembly action
+Events: Accident, robot breaking down
+State variables: Automobile demand
+
+### Question 2.1 ###
+
+Consider the following continuously operating job shop. Interarrival times of jobs are distributed as 
+follows:
+
+Time Between Arrivals (Hours) | Probability
+------------------------------|-------------
+0                             | .23
+1                             | .37
+2                             | .28
+3                             | .12
+
+Processing times for jobs are normally distributed, with mean 50 minutes and standard deviation 8 
+minutes. Construct a simulation table and perform a simulation for 10 new customers. Assume that, when the simulation begins, there is one job being processed (scheduled to be completed in 25 minutes) and 
+there is one job with a 50-minute processing time in the queue.
+
+I repurposed the model for example 2.5 for this question. I added a cumulative probability table and 
+calculated the interarrival times using the DescreteEmp() function. The service time was calculated 
+by rounding a random pull from the normal distribution: INT((8*NORM.S.INV(rnd01()))+50) (multiplying 
+by 8 and adding 50 to account for the mean and standard deviation.)
+
+a. What was the average time in the queue for the 10 new jobs? 
+There was some pretty large variability if we 
+in the average time in the queue. On the last run, it was 23.6 minutes.
+
+b. What was the average processing time of the 10 new jobs? This tracked pretty closely to what was 
+expected by taking random draws from the normal distribution. On the last run, it was 47.3
+
+c. What was the max time in the system for the 10 new jobs? This also varied a lot. On the last run 
+it was 140.
+
+2.2 A baker is trying to figure out how many dozens of bagels to make each day. The probability 
+distribution of the number of bagel customers is as follows:
+
+------------------------|------|------|------|-----
+Number of customers/Day | 8    | 10   | 12   | 14
+Probability             | 0.35 | 0.39 | 0.25 | 0.10
+
+Customers order 1, 2, 3, or 4 dozen bagels according to the following probability distribution:
+
+---------------------------------|------|------|------|-----
+Number of Dozen ordered/Customer | 1    | 2    | 3    | 4
+Probability                      | 0.40 | 0.30 | 0.20 | 0.10
+
+Bagels sell for $8.40 a dozen. They cost $5.80 per dozen to make. All bagels not sold at the end of 
+the day are sold at half-price to a local grocery store. Based on 5 days of simulation, how many 
+dozen (to the nearest 5 dozen) bagels should be baked each day?
+
+To solve this problem, I repurposed the News Dealer's inventory spreadsheet. I changed the 
+simulation table over several days into a table that represents a maximum of 14 customers in a 
+single day. Elsewhere in the spreadsheet, in a single cell I simulated the number of customers per 
+day, based on the probability distribution given. In the table, when calculating the number of 
+dozens of bagels ordered per customer, I added a condition that the number would be 0 if the customer 
+number was higher than the number of customers simulated. So, if in one simulation 8 customers 
+visited the store, customers 9 - 14 in my table would be recorded as buying 0 bagels.
+
+Here are five simulations of the number of bagels ordered in a day:
+
+24 dozen bagels ordered by 10 customers
+27 dozen bagels ordered by 10 customers
+29 dozen bagels ordered by 14 customers
+24 dozen bagels ordered by 10 customers
+16 dozen bagels ordered by 8 customers
+
+If we simply made sure we had just enough bagels to cover the highest demand out of those five days, 
+I'd make sure to order 29 dozen bagels (or 30 to the nearest 5 dozen bagels.)
+
+
+### Question 2.4 ###
+
+Smalltown Taxi operates one vehicle during th 9AM to 5PM period. Currently, consideration is being 
+given given to the addition of a second vehicle to the fleet. The demand for taxis follows the 
+distribution shown:
+
+-----------------------------|------|------|------|------|-----
+Time between calls (minutes) | 15   | 20   | 25   | 30   | 35
+Probability                  | 0.14 | 0.22 | 0.43 | 0.17 | 0.04
+
+The distribution of time to complete a service is as follows:
+
+-----------------------------|------|------|------|------|-----
+Time between calls (minutes) | 5    | 15   | 25   | 35   | 45
+Probability                  | 0.12 | 0.35 | 0.43 | 0.06 | 0.04
+
+Simulate 5 individual days of operation of the current system and of the system with an additional 
+taxicab. Compare the two systems with respect to the waiting times of the customers and any other 
+measures that might shed light on the simulation.
+
+For the one cab model, I reworked the model for example 2.5 again. I set my clock to end after a ride 
+went past the 5pm mark (measured in the spreadsheet as 480 minutes.) This means that if a fare had an 
+arrival time of 475, and a service time of 20 minutes, it would be the last fare picked up. This 
+technically means that if the arrival time is 475, and there's an additional wait time, the fare 
+could get picked up after 5. I decided to allow for this discrepancy.
+
+In this model, there are customer waiting times. Running it for 5 days, I came up with total wait 
+times of 150, 180, 150, 980 (I thought that was an outlier but I just got unlucky with a lot of 
+long trips and short interarrival times), and 515. There is definitely reason to believe a second 
+car could be useful.
+
+However, the second car would be idle a lot of the time. I reworked the Able Baker model to work with 
+this problem. I kept Able as the preferred car if it was free. I counted the service time of Baker 
+and then subtracted that from 480 to arrive at a total idle time for Baker. I ended up with idle 
+times of 450, 455, 365, 345, and 410 for five days of the two car model.
+
+The tradeoff here is how ok would we be with a second car that was idle for most of the day. If we 
+were to assume that riders begin dropping off if they wait for too long, perhaps it would make sense 
+to add the second car.
+
+### Question 2.5 ###
+
+The random variables X, Y, and Z are distributed as follows:
+
+$$ X ~ N(\mu = 100, \sigma^2 = 100) $$
+$$ Y ~ N(\mu = 300, \sigma^2 = 225) $$
+$$ Z ~ N(\mu = 40, \sigma^2 = 64) $$
+
+Simulate 50 values of the random variable
+
+$$ W = \frac{X+Y}{Z} $$
+
+In excel, I just made a table of X, Y, and Z variables, with a fourth column for W. X, Y, and Z were
+calculated using the norm.s.inv function. Replacing $\mu$ and $\sigma$ with their corresponding 
+values (and remembering to take the square root since variances are given above), I used the 
+following formula:
+
+=SQRT($\sigma$)*NORM.S.INV(Rnd01())+$\mu$
+
+Then, I just calculated the W by using the formula = (X+Y)/Z. I ended up with the simulations 
+below:
+
+W
+8.2884247
+16.94655604
+12.36579572
+9.578001532
+6.989934107
+13.96786759
+7.033430237
+8.886158048
+13.8390031
+10.28289005
+7.987229714
+16.17614015
+12.11863781
+11.14601059
+18.16229883
+9.180866836
+8.370016254
+7.725171716
+11.36177736
+12.76458948
+15.58167554
+12.88750968
+9.445737912
+13.56930612
+7.524518619
+6.985443007
+18.51212832
+9.33824899
+9.073823932
+12.52946257
+10.80781433
+7.874063171
+8.375214669
+16.45790843
+11.5822118
+9.826088161
+8.478389587
+7.739786437
+10.53228732
+7.492508598
+12.04667919
+7.98375268
+11.57104189
+9.935343409
+15.28439018
+8.236602651
+10.43705925
+9.256274833
+10.65783864
+9.328601194
+
+### Chapter 2, Question 7 ###
+
+Estimate, by simulation, the average number of lost sales per week for an inventory system that 
+functions as follows:
+
+a. Whenever the inventory level falls to or below 10 units, an order is placed. Only one order can be 
+outstanding at a time. Here, I assumed that this meant the review period would be 1 day. On whatever 
+day the inventory drops below 10, an order is placed. I changed the conditions in the refriginventory 
+sheet to change the pending order only if the previous day's "days until order arrives" was 0. This 
+stopped overlapping orders (without this, the orders would be placed every day, and there would be 
+negative orders as a result to get back to the maximum inventory.) Running this 5 times, I get 
+shortage values of 3, 4, 2, 1, and 7.
+
+b. The size of each order is equal to 20-I, where I is the inventory level when the order is placed.
+Here I assumed the review period was set back to 5 days. I changed the max inventory to 20, and 
+changed the pending order column formula so that it didn't add the shortage, and the order would 
+simply be 20 - I. Running this 5 times, I get shortage values of 1, 12, 5, 0, and 0.
+
+c. If a demand occurs during a period when the inventory level is zero, the sale is lost. Before, I 
+was counting the number of shortages to attempt to quantify potential lost sales. Here, we're given 
+a particular condition: sales are lost if the inventory level is zero and there is demand. To 
+calculate this, I added another column that tested if the inventory level was zero and there was 
+positive demand, and added the demand as the number of lost sales. In running the simulation 5 times,
+I ended up with lost sales values of 4, 4, 6, 0, 0.
+
+d. Daily demand is normally distributed, with a mean of 5 units and a standard deviation of 1.5 units 
+(round off demands to the closest integer during the simulation and, if a negative value results,
+give it a demand of 0.) 
+For this question, I started with the original refrig workbook. It's unclear if we should be 
+"building" on our previous answers
+To run this simulation, I used the formula =IF(INT(1.5*times*NORM.S.INV(rnd01())+5)>=0,
+INT(1.5*times*NORM.S.INV(rnd01())+5),0) to set the normally distributed demand. Using the rules of
+lost sales in part c (as well as shortage), after 5 simulations I ended up with total shortages of 
+230, 232, 169, 226, 173.
+
+e. Lead time is distributed uniformly between zero and 5 days, integers only.
+Here I changed the Lead time formula to =IF(D19=$L$6,discreteuniform(0,5),0). I ended up with 
+shortages of 217, 137, 79, 261, and 11.
+
+f. The simulation will start with 18 units in inventory. 
+This question made me think the simulations were building off of eachother... The default max number 
+of units was originally 11. I set this to 20 in the original spreadsheet. I ended up with total 
+shortages of 0 for several simulations.
+
+g. For simplicity, assume that orders are placed at the close of the business day and received after 
+the lead time has occurrred. Thus, if lead time is one day, the order is available for distribution 
+on the morning of the second day of business following the placement of the order. 
+This should just be all of the simulations... I don't believe anything would need to be changed in 
+order to run this simulation.
+
+h. Let the simulation run for five weeks. 
+For this I just lengthened the simulation table. I ended up with shortages of 21, 12, 3, 18, 1
+
+### Chapter 2, Question 8 ###
+
+An elevator in a manufacturing plan carries exactly 400 kg of material. There are three kinds of 
+material packaged in boxes that arrive for a ride on the elevator. these materials and their 
+distributions of time between arrivales are as follows:
+
+It takes the elevator 1 min to o up to the second floor, 2 minutes to unload, and 1 minute to 
+return to the first floor. The elevator does not leave the first floor unless it has a full load. 
+Simulate 1 hour of operation of the system. What is the average transit time for a box of 
+material A (time from its arrival until it is unloaded)? What is the average waiting time for a 
+box of material B? How many boxes of material C make the trip in 1 hour?
+
+
+
+
