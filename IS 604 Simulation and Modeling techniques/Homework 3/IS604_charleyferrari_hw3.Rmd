@@ -1,0 +1,758 @@
+---
+title: "IS604_charleyferrari_hw3"
+author: "Charley Ferrari"
+date: "Wednesday, September 30, 2015"
+output: pdf_document
+---
+
+### Question 1 ###
+
+Starting with $X_0 = 1$, write down the entire cycle for
+
+$$ X_i = 11X_{i-1} mod(16) $$
+
+```{r}
+
+x <- 1
+
+for(i in 1:7){
+  x <- c(x,(11*tail(x,1)) %% 16)
+}
+
+x
+
+```
+
+This cycle repeats every 4 values: 1, 11, 9, 3.
+
+### Question 2 ###
+
+Using the LCG provided below: $X_i = (X_{i-1} + 12) mod (13)$, plot the pairs 
+$(U_1, U_2), (U_2, U_3), etc...$ and observe the lattice structure obtained. Discuss 
+what you observed.
+
+The seed won't matter here, because this method of random number generation will 
+cycle in the same predictable way no matter where you start:
+
+```{r}
+
+x <- 0
+
+for(i in 1:25){
+  x <- c(x,(tail(x,1) + 12) %% 13)
+}
+
+x
+
+x <- 3
+
+for(i in 1:25){
+  x <- c(x,(tail(x,1) + 12) %% 13)
+}
+
+x
+
+```
+
+So, wherever the seed is, the sequence will start decreasing to 0, then reset 
+back to 12 and start decreasing again back to 0.
+
+Lets plot these pairs out:
+
+```{r}
+
+x <- 0
+
+for(i in 1:1000){
+  x <- c(x,(tail(x,1) + 12) %% 13)
+}
+
+library(ggplot2)
+
+data <- data.frame(x=head(x,-1), y=tail(x, -1))
+
+ggplot(data,aes(x=x,y=y)) + geom_point()
+  
+```
+
+As expected by the cycling of the variables, a very defined pattern emerges. The
+pairs repeat, just as the x values repeat. It displays as a line, with a single point 
+at (0,12)
+
+### Question 3 ###
+
+Implement the Pseudo-random number generator: 
+
+$$ X_i = 16807 X_{i-1} mod(2^31 - 1) $$
+
+Using the seed $X_0 = 1234567$, run the generator for 100,000 observations. Perform a chi-squared 
+goodness of fit test on the resulting PRNs. Use 20 equal-probability intervals and level 
+$\alpha = 0.05$. Now perform a runs up-and-down test with $\alpha = 0.05$ on the observations to see 
+if they are independent.
+
+```{r}
+
+x <- 1234567
+r <- 1234567/(2^31 - 1)
+
+for(i in 1:9999){
+  x <- c(x, (16807*tail(x,1)) %% (2^31 - 1))
+  r <- c(r, tail(x,1)/(2^31 - 1))
+}
+
+classes <- seq(0,1,by=1/20)
+
+table <- data.frame(lower=head(classes,-1),upper=tail(classes,-1)) 
+
+library(plyr)
+
+loweruppercount <- function(data){
+  c(intervalcount = with(data, length(r[r>=lower&r<upper])))
+}
+
+chitable <- ddply(table, .variables=c("lower","upper"), .fun=loweruppercount)
+
+chitable$chistat <- ((chitable$intervalcount - length(r)/20)^2)/(length(r)/20)
+
+chisquare <- sum(chitable$chistat)
+
+chisquare
+
+```
+
+with n=20 (19 degrees of freedom), the critical value of chi square is 30.1. The 
+value calculated above is smaller than this value, so the null hypothesis of a uniform 
+distribution is not rejected.
+
+runs up and down test:
+
+```{r}
+
+runs <- ifelse(head(r,-1)<tail(r,-1),1,-1)
+
+```
+
+I'll count the runs by counting how many times $R_i$ in the runs vector above is 
+different from $R_{i-1}$. if these two values are different, a run has occurred.
+If not, a run is still in progress. 
+
+```{r}
+
+S <- sum(head(runs,-1)!=tail(runs,-1))
+
+S
+
+```
+
+E(S) should be $\frac{2N-1}{3}$. Lets find out our the calculated S compares:
+
+```{r}
+Es <- (2*length(r)-1)/3
+
+Es
+
+Se <- sqrt((16*length(r)-29)/90)
+
+ZS <- (S-Es)/Se
+
+ZS
+
+```
+
+This is within the boundary of 1.96 95% confidence interval, so we can accept 
+the hypothesis that this data is uniformly distributed.
+
+### Question 4 ###
+
+Give Inverse Transforms, composition, and acceptance-rejection algorithms for generating from the 
+following density:
+
+$$ f(x) = \frac{3x^2}{2}, -1 \leq x \leq 1 $$
+$$ f(x) = 0, otherwise $$
+
+Inverse Transform:
+
+Our region of interest is [-1,1]. The density function is 0 outside of this region, meaning there is 
+0 probability that the random variable can fall outside of this region. As with all CDFs, the CDF 
+of this random variable will increase from 0 to 1. In the range $-\infty$ to -1, the CDF will be 
+0. From -1 to 1, the CDF will increase from 0 to 1, and from 1 to $\infty$ the CDF will remain 
+constant at 1.
+
+So, the CDF will be defined as:
+
+$$ F(x) = 0, -\infty < x < -1 $$
+$$ F(x) = \int_{-1}^{x} \frac{3x^2}{2}, -1 \leq x \leq 1 $$
+$$ F(x) = 1, 1 < x < \infty $$
+
+$$ \int_{-1}^{x} \frac{3x^2}{2} = \frac{x^3}{2} - \frac{-1^3}{2} = \frac{x^3 + 1}{2} $$
+
+Which means our CDF is:
+
+$$ F(x) = 0, -\infty < x < -1 $$
+$$ F(x) = \frac{x^3 + 1}{2} $$
+$$ F(x) = 1, 1 < x < \infty $$
+
+Now that I have the CDF, I can set $y = F(x)$, then solve for x to get $F^{-1} (x)$. This function 
+will be undefined outside of $0 \leq x \leq 1$. So, we have:
+
+$$ y = \frac{x^3 + 1}{2} $$
+
+$$ x = (2y - 1)^{\frac{1}{3}} $$
+
+So, our inverse CDF is defined as:
+
+$$ F^{-1} (x) = (2x - 1)^{\frac{1}{3}}, 0 \leq x \leq 1 $$
+$$ F^{-1} (x) = undefined, otherwise $$
+
+So, in order to sample from a random variable with this distribution, we can sample from a uniform 
+distribution between 0 and 1, and then run each of those samples through the $F^-1 (x)$ we calculated 
+above.
+
+
+
+First, I want to generate a set of random numbers from -1 to 1. I'll use runif to generate my 
+sample:
+
+```{r}
+
+x <- runif(10000)
+
+```
+
+I'm going to have to define my own cube root function, since R doesn't accept the real cube roots of 
+negative numbers, and instead gives me NaN. I'll define it below:
+
+```{r}
+
+cuberoot <- function(x){
+  return(sign(x)*(abs(x)^(1/3)))
+}
+
+```
+
+Now I can use this to generate my random variable:
+
+```{r}
+
+rv <- cuberoot(2*x - 1)
+
+hist(rv)
+
+```
+
+Acceptance-Rejection Method
+
+Lets graph our PMF to get an idea of what we should choose for g(x):
+
+```{r}
+
+x <- seq(-1,1,by=0.01)
+y <- (3*(x^2))/2
+
+plot(x,y)
+
+```
+
+If would appear the PMF is constantly $\leq$ 1.5. But, lets analyze the function just to be sure. 
+The derivative of this function is $f'(x) = 3x$. There is a critical point at x=0. The second 
+derivative $f''(x) = 3$, which is positive at x=0, so that point is a minimum. This is the only 
+critical point, so this is a global minimum, and x is increasing as |x| approaches $\infty$. 
+Since we have a defined range, lets calculate our PMF at the extrema:
+
+$$ f(-1) = \frac{3*(-1)^2}{2} = \frac{3}{2} $$
+$$ f(1) = \frac{3*(1)^2)}{2} = \frac{3}{2} $$
+
+Since outside of the interval [-1,1], f(x) = 0, we can state:
+
+$$ f(x) \leq 1.5, -\infty < x < \infty $$
+
+If we selected a uniformly distributed random variable ranging from -1 to 1, it's pmf would be:
+
+$$ g(x) = 0.5, -1 \leq x \leq 1 $$
+$$ g(x) = otherwise $$
+
+This is because the integral of the entire range of the uniform distribution has to be 1. The 
+uniform distribution with a defined range is a rectangle within that defined range. Since this is 
+ranging from -1 to 1, the height has to satisfy the below integral:
+
+$$ \int_{-\infty}^{\infty} g(x) = 1 $$
+
+if $g(x) = 0.5$, the above integral will be satisfied.
+
+Given our f(x) and g(x), we can be sure that:
+
+$$ \frac{f(x)}{g(x)} \leq \frac{1.5}{0.5} \leq 3$$
+
+So, to sample from f(x), we're going to generate y from g(x), generate a random u from Uniform(0,1),
+and accept y if $u < \frac{f(y)}{cg(y)}$
+
+For our variate:
+
+$$ \frac{f(x)}{cg(x)} = \frac{3x^2}{2} \times \frac{1}{3 * 0.5} = x^2 > u$$
+
+```{r}
+n <- 100000
+k <- 0
+j <- 0
+y <- numeric(n)
+
+while(k < n){
+  u <- runif(1)
+  j <- j+1
+  x <- runif(1,min=-1,max=1)
+  if(x^2 > u){
+    k <- k+1
+    y[k] <- x
+  }
+}
+
+hist(y)
+
+```
+
+The best way I can think of implementing composition is by separating the function 
+in half vertically at the Y axis.
+
+The PMF is symmetric about the Y-Axis, so I can run two simulations of the 
+positive half of this distribution, and simply make every member of the second 
+simulation negative.
+
+I'll have to multiply my pmf by 2. I'm taking away half of the pmf, yet I 
+still want the area under the curve from 0 to 1 to be 1. To do this, I can 
+simply multiply my function by 2.
+
+So, the variate I'll be generating is:
+
+$$ f(x) = 3x^2, 0 \leq x \leq 1 $$
+$$ f(x) = 0, otherwise $$
+
+With my second round of variate generation, I'll make all my numbers negative. 
+Technically, I'll be generating from the positive function, but by making each 
+number negative I'll actually be generating from the negative side of the function, 
+where $-1 \leq x \leq 0$
+
+I'll have a new CDF in this case:
+
+$$ F(x) = 0, -\infty < x < 0 $$
+$$ F(x) = \int_0^1 3x^2 0 \leq x \leq 1 $$
+$$ F(x) = 1, 1 < x < \infty $$
+
+So, this means the CDF is:
+
+$$ F(x) = 0, -\infty < x < 0 $$
+$$ F(x) = x^3, 0 \leq x \leq 1 $$
+$$ F(x) = 1, 1 < x < \infty $$
+
+And to get our inverse $F^{-1} (x)$
+
+$$ F^{-1} (x) = (x)^{\frac{1}{3}}, 0 \leq x \leq 1 $$
+$$ F^{-1} (x) = undefined, otherwise $$
+
+So lets generate this variate:
+
+```{r}
+
+x <- runif(5000)
+
+rv <- x^(1/3)
+
+xneg <- runif(5000)
+
+rvneg <- -(x^(1/3))
+
+rv <- c(rv,rvneg)
+
+hist(rv)
+
+```
+
+The method I chose has one problem: The negative numbers and positive numbers 
+are grouped together. If I wanted to avoid this issue, I could generate a discrete 
+random variable with equal probabilities of -1 and 1, and multiply that by the full 
+set pulled from my variate ranging from 0 to 1.
+
+```{r}
+
+neg <- sample(c(1,-1),10000,replace=TRUE)
+x <- runif(10000)
+
+rv <- neg*(x^(1/3))
+
+hist(rv)
+
+
+
+```
+
+### Question 5 ###
+
+Implement, test, and compare different methods to generate from a N(0,1) distribution
+
+Since $\mu = 0$ and $\sigma = 1$, we have the pmf:
+
+$$ f(x) = \frac{1}{\sqrt{2 \pi}} e^{-\frac{x^2}{2}} $$
+
+a. The simplest generator is the inverse transform method. Create a function normrandit that:
+
+1. Takes no input variables
+
+2. Generates a random number $U ~ U(0,1)$.
+
+3. Returns one output variable: $X = F^{-1} (U)$, where $F^{-1}$ is the inverse normal CDF
+
+We're not able to integrate this over the normal distribution, so I'll use the qnorm function
+
+
+```{r}
+
+normrandit <- function(){
+  U <- runif(1)
+  return(qnorm(U))
+}
+
+```
+
+Also create a function itstats that:
+
+1. Takes one input variable N
+
+2. Generates N samples from a N(0,1) distribution using normrandit  
+
+3. Returns two output variables: the mean and the standard deviation of the samples.
+
+```{r}
+
+itstats <- function(N){
+  x <- numeric()
+  for(i in 1:N){
+    x <- c(x,normrandit())
+  }
+  return(list(mean=mean(x), sd=sd(x)))
+}
+
+```
+
+b. Next up, we want to generate samples using the Box-Muller algorithm. Create a function 
+normrandbm that:
+
+1. Takes no input variables
+
+2. Generates two uniform random variables, $U_1$ and $U_2$ ~ $U(0,1)$
+
+3. Returns two output variables: $X = (-2ln(U_1))^{\frac{1}{2}} cos(2 \pi U_2)$ and 
+$Y = (-2ln(U_1))^{\frac{1}{2}} sin(2 \pi U_2)$
+
+```{r}
+
+normrandbm <- function(){
+  U <- runif(2)
+  return(((-2*log(U[1]))^(1/2))*cos(2*pi*U[2]))
+}
+
+```
+
+As in a), create a function bmstats that can produce N samples using normrandbm and return their 
+mean and the standard deviation.
+
+```{r}
+
+bmstats <- function(N){
+  x <- numeric()
+  for(i in 1:N){
+    x <- c(x,normrandbm())
+  }
+  return(list(mean=mean(x), sd=sd(x)))
+}
+
+```
+
+c. Lastly, we want to generate samples using the accept-reject approach. Create a function 
+normrandar that:
+
+1. Takes no input variable
+2. Generates two uniform random numbers: $U_1, U_2 ~ U(0,1)$
+3. Convert the samples to $Exp(1)$ by calculating $X,Y = -ln(U_i)
+4. Accept the sample if $Y \geq \frac{(X-1)^2}{2}$ and reject otherwise
+5. If a sample is accepted, randomly choose sign, and return.
+6. If sample is rejected, return to 2 and try again.
+
+```{r}
+
+normrandar <- function(){
+  repeat{
+    U <- runif(2)
+    X <- -log(U[1])
+    Y <- -log(U[2])
+    if(Y >= ((X-1)^2)/2){
+      break
+    }
+  }
+  return(X)
+}
+
+```
+
+as in a), create a function arstats that produces N samples using normrandar and returns their 
+means and standard deviations.
+
+```{r}
+
+arstats <- function(N){
+  x <- numeric()
+  for(i in 1:N){
+    x <- c(x,normrandar())
+  }
+  return(list(mean=mean(x), sd=sd(x)))
+}
+
+```
+
+d. We now compare and evaluate the approaches implemented in parts a, b, and c. Run 10 iterations of 
+itstats, bmstats, and arstats for N = 100, 1000, 10000, and 100000, and calculate the average 
+means and standard deviations produced by each method at each value of N. 
+
+In addition, measure the exact CPU time required for each iteration, and calculate the average 
+time required for each method at each value of N.
+
+For each method, plot the average means and standard deviations against the sample size. Which of 
+the three methods appears to be the most accurate? Also, plot the average CPU time vs. N. Which of 
+the three methods appears to take the least time?
+
+```{r eval=FALSE}
+
+library(dplyr)
+library(plyr)
+
+results <- expand.grid(1:10,c(100,1000,10000,100000),c("ar","bm","it"))
+results$id <- 1:length(results$n)
+
+addmeansdsystime <- function(data){
+  row <- ifelse(c(results$method=="ar",results$method=="ar"), as.numeric(arstats(data$n)),
+                ifelse(c(results$method=="bm",results$method=="bm"), as.numeric(bmstats(data$n)),
+                       as.numeric(itstats(data$n))))
+  #row <- as.numeric(arstats(data$n))
+  row <- c(row,as.numeric(system.time(arstats(data$n))[3]))
+  return(row)
+}
+
+testresults <- ddply(results,.variables="id",.fun=addmeansdsystime)
+colnames(testresults) <- c("id", "mean", "sd", "system.time")
+
+testresults2 <- merge(results, testresults, by="id")
+  
+
+
+```
+
+```{r eval=FALSE}
+
+# This was my first solution, just kept here in case anyone is interested:
+
+for(n in c(100,1000,10000,100000)){
+  means <- data.frame(ar=c(), bm=c(), it=c())
+  sds <- data.frame(ar=c(), bm=c(), it=c())
+  systimes <- data.frame(ar=c(), bm=c(), it=c())
+  for(i in 1:10){
+    arlist <- arstats(n)
+    bmlist <- bmstats(n)
+    itlist <- itstats(n)
+    means <- rbind(means,c(arlist$mean, bmlist$mean, itlist$mean))
+    sds <- rbind(sds,c(arlist$sd, bmlist$sd, itlist$sd))
+    systimes <- rbind(systimes,c(as.numeric(system.time(arstats(n))[3]),
+                                 as.numeric(system.time(bmstats(n))[3]),
+                                 as.numeric(system.time(itstats(n))[3])))
+  }
+  colnames(means) <- c("ar","bm", "it")
+  colnames(sds) <- c("ar","bm", "it")
+  colnames(systimes) <- c("ar","bm", "it")
+  
+  newdata <- data.frame(method=c("ar", "bm", "it"), n=rep(n,3), 
+                        mean=c(mean(means$ar), mean(means$bm), mean(means$it)),
+                        sd = c(mean(sds$ar), mean(sds$bm), mean(sds$it)),
+                        system.time = c(mean(systimes$ar), mean(systimes$bm), mean(systimes$it)))
+  
+  results <- rbind(results, newdata)
+}
+
+```
+
+Because this took a long time to run, I saved the data as a csv, and will import 
+it below;
+
+```{r}
+
+setwd("E:/Downloads/Courses/CUNY/SPS/Git/IS 604 Simulation and Modeling techniques/Homework 3")
+results <- read.csv("results.csv")
+
+results
+
+```
+
+The above results show all trials. I'll aggregate this to get at the means of 
+each of the 10 trials.
+
+```{r}
+
+library(dplyr)
+library(ggplot2)
+
+resultsagg <- results %>% group_by(n, method) %>% summarize(mean=mean(mean), 
+                                                            sd=mean(sd), 
+                                              system.time = mean(system.time))
+
+ggplot(resultsagg,aes(x=n, y=mean, color=method)) + geom_line()
+
+```
+
+Graphing it out with lines doesn't really provide too much information... Lets 
+try treating n as a factor and graphing it out with bars:
+
+```{r}
+
+ggplot(resultsagg,aes(x=as.factor(n), y=mean, fill=method)) + geom_bar(stat="identity", position="dodge")
+
+```
+
+Lets try the same thing with standard deviation:
+
+```{r}
+
+ggplot(resultsagg,aes(x=n, y=sd, color=method)) + geom_line()
+
+ggplot(resultsagg,aes(x=as.factor(n), y=sd, fill=method)) + 
+  geom_bar(stat="identity", position="dodge")
+
+```
+
+Lets try the same thing with system time:
+
+```{r}
+
+ggplot(resultsagg,aes(x=n, y=system.time, color=method)) + geom_line()
+
+ggplot(resultsagg,aes(x=as.factor(n), y=system.time, fill=method)) + 
+  geom_bar(stat="identity", position="dodge")
+
+```
+
+Surprisingly, the Inverse transform method seems to took the longest for me, and 
+Accept-reject was the least.
+
+As expected, increasing N reigned in the mean values. I'm not really sure why 
+the standard deviations increased as N increased... 
+
+### Question 6 ###
+
+Use Monte-Carlo integration to estimate the value of $\pi$.
+
+Generate N pairs of uniform random numbers $(x,y)$ Where $x~U(0,1)$ and $y~U(0,1)$,
+and each $(x,y)$ pair represents a point in the unit square. To obtain an estimate 
+of $\pi$, count the fraction  of points that fall inside the unit quarter circle 
+and multiply by 4. Note that the fraction of points that fall inside the quarter 
+circle should tend to the ratio between the area of the unit quarter circle (i.e.)
+$\frac{1}{4} \pi$ as compared to the area of the unit square (i.e., 1). We proceed 
+step by step:
+
+a. Create a function insidecircle that takes two inputs between 0 and 1 and returns 
+1 if these points fall within the unit circle.
+
+```{r}
+
+insidecircle <- function(x,y){
+  ifelse(x^2 + y^2 < 1,return(1),return(0))
+}
+
+```
+
+b. Create a function estimatepi that takes a single input N, generates N pairs of 
+uniform random numbers, and uses insidecircle to produce an estimate of $\pi$, estimatepi 
+should also return the standard error of this estimate, and a 95% confidence interval 
+for the estimate. 
+
+```{r}
+
+estimatepi <- function(N){
+  x <- runif(N)
+  y <- runif(N)
+  data <- data.frame(x=x,y=y)
+  data$inside <- apply(data,1,function(x) insidecircle(x[1],x[2]))
+  mean <- sum(data$inside)/length(data$inside)
+  piest <- 4*sum(data$inside)/length(data$inside)
+  se <- sd(data$inside)
+  pise <- 4*se
+  moe <- (1.96*pise)/sqrt(length(data$inside))
+  return(list(pi=piest,standard.error=pise,ci95=moe))
+}
+
+```
+
+c. Use estimatepi to estimate $\pi$ for N=1000 to 10000 in increments of 500 and 
+record the estimate, its standard error and the upper and lower bounds of the 95% 
+confidence Interval. How large must N be in order to ensure that your estimate of 
+$\pi$ is within 0.1 of the true value?
+
+```{r}
+
+citable <- data.frame(n=c(),estimate=c(),se=c(),upper=c(),lower=c(),interval=c())
+
+for(n in seq(1000,10000,by=500)){
+  pi <- estimatepi(n)
+  citable <- rbind(citable,c(n,pi$pi,pi$standard.error,
+                             pi$pi+pi$ci95,pi$pi-pi$ci95,pi$ci95*2))
+  
+  
+}
+
+colnames(citable) <- c("number","estimate", "standard.error", "upper", "lower",
+                       "interval")
+
+moe4500 <- as.numeric(citable %>% filter(number==4500) %>% select(interval))/2
+
+# for later
+
+
+citable
+
+```
+
+According to the above table, we must have an N of at least 4500 to be within 
+0.1 of pi.
+
+d. Using the value of N you determined in part c, run estimatepi 500 times and 
+collect 500 different estimates of pi. Produce a histogram of the estimates and 
+note the shape of this distribution. Calculate the standard deviation of the estimates - 
+does it match up with the standard error you obtained in part c? What percentage 
+of the estimates lie within the 95% CI you obtained in part c?
+
+```{r}
+
+pi <- c()
+for(i in 1:500){
+  pi <- c(pi,estimatepi(500)$pi)
+}
+
+hist(pi)
+
+```
+
+The histogram appears to be normally distributed.
+
+```{r}
+
+sdpi <- sd(pi)
+
+sdpi
+
+```
+
+My standard deviation here, however, seems a lot smaller than the standard error I 
+calculated above.
+
+What percentage of the estimates lie within the CI I calculated above?
+
+```{r}
+
+length(pi[pi>mean(pi)-moe4500 & pi<mean(pi)+moe4500])/length(pi)
+
+```
+

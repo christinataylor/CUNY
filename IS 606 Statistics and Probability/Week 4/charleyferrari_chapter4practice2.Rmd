@@ -1,0 +1,109 @@
+---
+title: "Chapter 4 Presentation"
+author: "Charley Ferrari"
+date: "October 8, 2015"
+output: ioslides_presentation
+---
+
+## 4.25: Waiting at an ER, Part III
+
+The hospital administrator mentioned in 4.13 randomly selected 64 patients and 
+measured the time (in minutes) between when they checked into the ER and the 
+time they were first seen by a doctor. The average time is 137.5 minutes and 
+the standard deviation is 39 minutes. She is getting grief from her supervisor 
+on the basis that the wait times in the ER has increased greatly from last 
+year's average of 127 minutes. However, she claims that the increase is probably 
+just due to chance.
+
+## 4.25: Waiting at an ER, Part III
+
+Are conditions for inference met? Note any assumptions you must make to 
+proceed. 
+
+- The only condition we know is met is the sample size. It is indeed greater 
+than 30. We would also have to assume that the sample is randomly chosen and 
+that the underlying distribution of wait times is not too skewed.
+
+## 4.25: Waiting at an ER, Part III
+
+Using a significance level of $\alpha = 0.05$, is the change in wait times 
+statistically significant? Use a two-sided test since it seems the supervisor 
+had to inspect the data before she suggested an increase occurred.
+
+- We'll use z = 1.96 for this once again.
+
+$$ H_o: \mu = 127 $$
+$$ H_a: \mu \neq 127 $$
+
+## 4.25: Waiting at an ER, Part III
+
+```{r}
+z <- 1.96
+
+se <- 39/sqrt(64)
+
+interval <- c(137.5-z*se, 137.5+z*se)
+
+interval
+
+```
+
+Looks like we have just enough evidence to reject the null hypothesis. The mean 
+is between 127.95 and 147.055 with 95% certainty. Assuming the last mean was 
+closer to 127.0, evidence would suggest mean wait times have increased.
+
+## 4.25: Waiting at an ER, Part III
+
+I could have done this using p-values:
+
+```{r}
+
+xbar <- 137.5
+sd <- 39
+n <- 64
+se <- sd/sqrt(n)
+z <- (127 - xbar)/se
+
+```
+
+## 4.25: Waiting at an ER, Part III
+
+This is a two-tailed test, so lets calculate our p-value for the mean of 127.
+
+```{r}
+pvalue <-  1 - (pnorm(z) - pnorm(-z))
+pvalue
+
+```
+
+This is just outside the p-value for $\alpha = 0.05$, which is actually 1.959964.
+Because of this, just as previously, we can reject the null hypothesis.
+
+## 4.25: Waiting at an ER, Part III
+
+Would the conclusion of the hypothesis test change if the significance level 
+was changed to $\alpha = 0.01$?
+
+- Probably, but lets check. First, lets calculate our z-score.
+
+- This is a two-tailed test, so we want 1% underneath both tails, and .05% 
+underneath either tail. Lets use this information to calculate our z-score, 
+then our intervals using the same method above.
+
+## 4.25: Waiting at an ER, Part III
+
+```{r}
+
+z <- qnorm(1-0.005)
+
+se <- 39/sqrt(64)
+
+interval <- c(137.5-z*se, 137.5+z*se)
+
+interval
+
+```
+
+We are 99% confident that the mean falls between 124.94 and 150.06. With this 
+chosen confidence interval, we can now say that it's possible that the 
+difference was due to chance.

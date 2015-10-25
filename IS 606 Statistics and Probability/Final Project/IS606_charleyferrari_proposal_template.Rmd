@@ -1,0 +1,114 @@
+---
+output: pdf_document
+---
+```{r include=FALSE, cache=FALSE}
+# DO NOT REMOVE
+# THIS IS FOR SETTING SOME PLOTTING PARAMETERS SO THAT YOUR PLOTS DON'T TAKE UP TOO MUCH SPACE
+# IF YOU WOULD LIKE TO CHANGE THESE, SEE HELP FILES ON THE par() FUNCTION
+# OR ASK FOR HELP
+library(knitr)
+## set global chunk options
+opts_chunk$set(fig.path='figure/manual-', cache.path='cache/manual-', fig.align='center', fig.show='hold', par=TRUE)
+## tune details of base graphics (http://yihui.name/knitr/hooks)
+knit_hooks$set(par=function(before, options, envir){
+if (before && options$fig.show!='none') par(mar=c(4,4,.2,.1),cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)
+})
+```
+
+```{r}
+# load data
+
+```
+
+
+### Research question 
+
+Do Cryptocurrencies such as Bitcoin or Dogecoin behave more like Commodities, Equities, or traditional currencies. Does the fact that Bitcoin has a fixed supply, and Dogecoin a growing one affect their relative behavior
+
+
+
+### Cases 
+
+My cases will be periodic percentage changes. Depending on the availability and granularity of the data availble, and level of detail desired, I could use daily, weekly, or monthly percent changes. For the purposes of this study, I will be looking at the percent changes as iid observations. Time will not be a factor, I'm not going to be concerned with predicting the growth of these changes. I'd like to look at distributions of various types of growth, and see which distributions are the most similar.
+
+
+
+### Data collection 
+
+Quandl has a pretty extensive database of 
+
+
+
+### Type of study 
+
+This is an observational study, based on historic time series data
+
+
+
+### Data Source 
+
+I'm planning on using Quandl to source all of this data. For the gold spot price, bitcoin, and Pound exchange rate, you can see the links directly sourced from Quandl below.
+
+
+
+
+### Response 
+
+This study isn't a regression, but will rely on test statistics to compare the distributions of various exchange rates. I used mean comparison below, but I would like to compare other measures of the distributions as well.
+
+
+
+### Explanatory 
+
+See above.
+
+
+
+### Relevant summary statistics 
+
+Ideally, I'd like to use a two sample t-test that tests for statistics other than the mean. I'd like to test the standard deviation, skew, and kurtosis in this way as well ideally. I'm more interested in the shape of the distributions for comparison, rather than the means.
+
+Here's how I would construct the two sample t-test for means of this data however. First, to bring in the data, and graph some histograms:
+
+```{r}
+
+library(Quandl)
+
+Quandl.api_key("1Cx13bkj4vDb7E13GLD6")
+
+bcusd <- Quandl("BITCOIN/CBXUSD", authcode="1Cx13bkj4vDb7E13GLD6", trim_start="2015-01-01", trim_end="2015-06-01")
+
+invpcbcusd <- ((tail(1/bcusd$Close,-1)-head(1/bcusd$Close,-1))/head(1/bcusd$Close,-1))*100
+
+gbpusd <- Quandl("CURRFX/USDGBP", authcode="1Cx13bkj4vDb7E13GLD6", trim_start="2015-01-01", trim_end="2015-06-01")
+
+pcgbpusd <- ((tail(gbpusd$Rate,-1)-head(gbpusd$Rate,-1))/head(gbpusd$Rate,-1))*100
+
+gldusd <- Quandl("WGC/GOLD_DAILY_USD", authcode="1Cx13bkj4vDb7E13GLD6", trim_start="2015-01-01", trim_end="2015-06-01")
+
+pcgldusd <- ((tail(gldusd$Value,-1)-head(gldusd$Value,-1))/head(gldusd$Value,-1))*100
+
+```
+
+And then, to calculate some test statistics, using the paired Z-test:
+
+$$ \frac{\bar{Y}_2 - \bar{Y}_1}{\sqrt{\frac{\sigma_1^2}{n} \frac{\sigma_2^2}{n}}} $$
+
+```{r}
+
+teststatpound <- (mean(pcgbpusd)-mean(invpcbcusd))/
+  sqrt((var(invpcbcusd)/length(invpcbcusd))+var(pcgbpusd)/length(pcgbpusd))
+
+teststatgold <- (mean(pcgldusd)-mean(invpcbcusd))/
+  sqrt((var(invpcbcusd)/length(invpcbcusd))+var(pcgldusd)/length(pcgldusd))
+
+teststatpound
+
+teststatgold
+
+```
+
+In these two cases, the test stat is below 1.96. The null hypothesis is that the mean of the percent changes of the pound/USD exchange rate is the same as the mean of the percent changes of the bitcoin/USD exchange rate, and we can't reject it based on the test statistic. Similarly, we can't reject the null hypothesis for the spot price of gold.
+
+Once again, I'd like to compare standard deviations with a test statistic.
+

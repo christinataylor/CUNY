@@ -1,0 +1,85 @@
+---
+title: "is604hw4test"
+author: "Charley Ferrari"
+date: "October 17, 2015"
+output: pdf_document
+---
+#### e. Importance Sampling ###
+
+To pick a function here, I wanted to use an upside-down parabola that crossed 
+the x-axis at -5 and 5, which would be $\frac{-3(x-5)(x+5)}{500}$
+
+This would be difficult to solve for an inverse transform, so lets sample from 
+it using acceptance/rejection.
+
+The max of my parabola is at 0.15, and cofx(0,1) (the normal distribution's 
+maximum) is 0.3989. So, I can safely say:
+
+$$ \frac{f(x)}{g(x)} \leq \frac{0.15}{0.1} \leq 1.5 $$
+
+
+So, to sample from f(x), I'll generate y from g(x), generate a random u from 
+Uniform(0,1), and accept y if $U < \frac{f(y)}{cg(y)}$
+
+The sampling would work like this:
+
+$$ \frac{f(x)}{cg(x)} = \frac{-3(x-5)(x+5)}{500} \times \frac{10}{1.5} = \frac{(x-5)(x+5)}{25} $$
+
+```{r}
+
+rcharleyparabola <- function(n){
+  n <- 1000
+  k <- 0
+  j <- 0
+  y <- numeric(n)
+  
+  while(k < n){
+    u <- runif(1)
+    j <- j+1
+    x <- runif(1,min=-5,max=5)
+    if(-(x-5)*(x+5)/25 > u){
+      k <- k+1
+      y[k] <- x
+    }
+  }
+  
+  return(y)
+  
+}
+```
+
+So lets perform our importance sampling:
+
+```{r}
+
+isfunction <- function(n,D){
+  m <- n*D
+  x <- matrix(rcharleyparabola(m),nrow=n)
+  fg <- apply(x,1,cofx,D=D) / (-3*(x-5)*(x+5)/500)
+  
+  return(fg)
+}
+
+iscreate <- function(D){
+  
+  n <- seq(1000,10000,by=1000)
+  means <- c()
+  sds <- c()
+  coefvars <- c()
+  
+  for(i in n){
+    thetasample <- replicate(100,atfunction(i,D))
+    means <- c(means, mean(thetasample))
+    sds <- c(sds, sd(thetasample))
+    coefvars <- c(coefvars, mean(thetasample)/sd(thetasample))
+  }
+  
+  table <- data.frame(n=n, means=means, sds=sds, coefvars=coefvars, D=D,
+                      method="importancesampling")
+  
+  return(table)
+  
+}
+
+```
+

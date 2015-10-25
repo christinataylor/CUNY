@@ -1,0 +1,846 @@
+---
+title: "IS604_charleyferrari_hw4_fin"
+author: "Charley Ferrari"
+date: "October 16, 2015"
+output: pdf_document
+---
+
+### Question 1 ###
+Variance reduction procedures
+
+```{r}
+#Libraries
+
+library(ggplot2)
+library(abind)
+library(dplyr)
+library(bootstrap)
+library(boot)
+
+```
+
+
+### a. Crude Monte Carlo ###
+
+For sample sizes 1000 to 10000 (in increments of 1000), obtain 100 estimates 
+for E[c(x)] when D = 1, using crude Monte Carlo sampling.
+
+First, lets create a function cofx, that will perform our function. It's meant 
+to take in a D-dimensional vector, and return:
+
+$$ c(x) = \frac{1}{(2 \pi)^{\frac{D}{2}}} e^{-\frac{1}{2} x^{T} x} $$
+
+```{r}
+
+cofx <- function(x,D){
+  theta.hat <- (1/((2*pi)^(D/2)))*exp((-1/2)*(t(x) %*% x))
+  return(theta.hat)
+}
+
+```
+
+For crude monte carlo, I'm going to create a function "crudefunction" that 
+creates a $D \times n$ matrix, applies cofx to each column n times. n in this 
+case is meant to refer to the sample sizes 1000 to 10000 in increments of 1000.
+
+```{r, eval=FALSE}
+
+crudefunction <- function(n,D){
+  
+  m <- D*n
+  x <- matrix(runif(m, min=-5, max=5),nrow=n)
+  
+  return(mean(apply(x,1,cofx,D=D)))
+  
+}
+
+```
+
+Now, we're going to perform our simulation. For our group of sample sizes, I'll 
+perform 100 pulls to get a mean and standard deviation.
+
+```{r, eval=FALSE}
+
+crudecreate <- function(D){
+
+  n <- seq(1000,10000,by=1000)
+  means <- c()
+  sds <- c()
+  coefvars <- c()
+  
+  for(i in n){
+    thetasample <- replicate(100,crudefunction(i,D))
+    means <- c(means, mean(thetasample))
+    sds <- c(sds, sd(thetasample))
+    coefvars <- c(coefvars, mean(thetasample)/sd(thetasample))
+  }
+  
+  table <- data.frame(n=n, means=means, sds=sds, coefvars=coefvars, D=D,
+                      method="Crude")
+  
+  return(table)
+
+}
+
+table <- crudecreate(1)
+
+```
+
+Lets repeat this analysis for D=2
+
+```{r, eval=FALSE}
+
+table <- rbind(table,crudecreate(2))
+
+```
+
+(I'm bringing in this table from a previously saved csv file to speed up the RMD)
+
+```{r}
+
+setwd("E:/Downloads/Courses/CUNY/SPS/Git/IS 604 Simulation and Modeling techniques/Homework 4")
+
+table <- read.csv("variancetable.csv")
+
+ggplot(data=filter(table,method=="Crude",D==1),
+       aes(x=n,y=means)) +
+  geom_line() +
+  geom_hline(yintercept=(1/10))
+
+ggplot(data=filter(table,method=="Crude",D==1),
+       aes(x=n,y=sds,coolor=as.factor(D))) + 
+  geom_line()
+
+```
+
+For D == 1, you can see the standard deviation fall steadily as my sample size 
+increases, while the mean seems to fluctuate slightly closer to the true mean.
+
+```{r}
+
+ggplot(data=filter(table,method=="Crude",D==2),
+       aes(x=n,y=means)) +
+  geom_line() +
+  geom_hline(yintercept=(1/10)^2)
+
+ggplot(data=filter(table,method=="Crude",D==2),
+       aes(x=n,y=sds,coolor=as.factor(D))) + 
+  geom_line()
+
+```
+
+We get similar results for D==2, with less of an indication of the fluctuation 
+about the mean decreasing in the graph.
+
+### b. Quasi-Random Numbers ###
+
+To create the same pull from a sobol distribution, I'll need a few helper 
+functions. Below I defined:
+
+binvec: returns a binary representation of a number
+
+mcalc: returns a vector m, which is used as an input in the generator matrices
+
+vcalc: returns a 3 dimensional vector, with dimensions r,r,d. r is the number 
+of binary digits required to print out the length of the sample n, and 
+d is the number of components of the sobol distribution.
+
+scramblecalc: returns a matrix that is used to scramble the sobol numbers, 
+according to the Uniform Linear Scrambling algorithm.
+
+```{r}
+
+binvec <- function(n){
+  return(rev(as.numeric(intToBits(n))[1:(floor(log(n)/log(2))+1)]))
+}
+
+mcalc <- function(k,r){
+  
+  polys <- c(1,3,7,11,13,19,25,37,59,47,61,55,41,67,97,91,109,103,
+             115,131,193,137,145,143,241,157,185,167,229,171,213,191,
+             253,203,211,239,247,285,369,299,425,301,361,333,357,351,
+             501,355,397,391,451,463,487)
+  
+  ivals <- t(matrix(c(1,1,1,1,1,1,1,1,
+                      1,3,5,15,17,51,85,255,
+                      1,1,7,11,13,61,67,79,
+                      1,3,7,5,7,43,49,147,
+                      1,1,5,3,15,51,125,141,
+                      1,3,1,1,9,59,25,89,
+                      1,1,3,7,31,47,109,173,
+                      1,3,3,9,9,57,43,43,
+                      1,3,7,13,3,35,89,9,
+                      1,1,5,11,27,53,69,25,
+                      1,3,5,1,15,19,113,115,
+                      1,1,7,3,29,51,47,97,
+                      1,3,7,7,21,61,55,19,
+                      1,1,1,9,23,39,97,97,
+                      1,3,3,5,19,33,3,197,
+                      1,1,3,13,11,7,37,101,
+                      1,1,7,13,25,5,83,255,
+                      1,3,5,11,7,11,103,29,
+                      1,1,1,3,13,39,27,203,
+                      1,3,1,15,17,63,13,65),nrow=8))
+  
+  m <- ivals[k,]
+  ppn <- polys[k]
+  c <- tail(binvec(ppn),-1)
+  deg <- length(c)
+  for(i in 8:r){
+    s <- 0
+    for(j in 1:deg){
+      s <- bitwXor(s,(2^j)*c[j]*m[i-j])
+    }
+    m <- c(m,bitwXor(s,m[i-deg]))
+  }
+  
+  return(m[1:r])
+  
+}
+
+vcalc <- function(k,r){
+  V <- diag(r)
+  if(k>=2){
+    for(i in 2:k){
+      m <- mcalc(i,r)
+      vk <- c()
+      for(j in 1:r){
+        h <- binvec(m[j])
+        h <- c(rep(0,j-length(h)), h, rep(0,r-j))
+        vk <- cbind(vk,as.matrix(h,nrow=r))
+      }
+      V <- abind(V,vk,along=3)
+    }
+  }
+  return(array(V,dim=c(r,r,k)))
+}
+
+scramblevcalc <- function(r){
+  
+  scrambleapply <- function(rownum,r){
+    samp <- sample(c(1,0),rownum-1,replace=TRUE)
+    return(c(samp,1,rep(0,r-rownum)))
+  }
+  
+  t(sapply(1:r,scrambleapply, r=r))
+  
+}
+
+```
+
+The sobol function uses these helper functions to generate a sobol sequence. 
+It takes the number of dimensions (or components), n, and a bool of whether 
+or not to scramble the sequence.
+
+```{r}
+
+sobol <- function(d,n,scramble=FALSE){
+  
+  b <- 2
+  N <- 0:(n-1)
+  r <- floor(log(n-1)/log(b))+1
+  bb <- 1/b^(1:r)
+  
+  bitcreate <- function(N,r){
+    return(as.numeric(intToBits(N))[1:r])
+  }
+  
+  a <- t(apply(as.matrix(N,ncol=1),1,bitcreate, r=r))
+  
+  p <- matrix(nrow=n,ncol=d)
+  
+  V <- vcalc(d, r)
+  
+  for(i in 1:d){
+    Vtemp <- V[,,i]
+    atv <- (a%*%t(Vtemp))%%b
+    if(scramble){
+      scramblevec <- scramblevcalc(r)
+      atv <- (atv%*%t(scramblevec))%%b
+    }
+    
+    p[,i] <- bb %*% t(atv)
+  }
+  
+  return(p)
+  
+}
+
+```
+
+Lets use a similar method as before to generate 100 samples each of n=1000 - 
+10000
+
+```{r}
+
+sobolfunction <- function(n,D){
+  
+  x <- sobol(D,n,scramble=TRUE)
+  x <- (x-0.5)*10
+  
+  return(mean(apply(x,1,cofx,D=D)))
+  
+}
+
+sobolcreate <- function(D){
+
+  n <- seq(1000,10000,by=1000)
+  means <- c()
+  sds <- c()
+  coefvars <- c()
+  
+  for(i in n){
+    thetasample <- replicate(100,sobolfunction(i,D))
+    means <- c(means, mean(thetasample))
+    sds <- c(sds, sd(thetasample))
+    coefvars <- c(coefvars, mean(thetasample)/sd(thetasample))
+  }
+  
+  table <- data.frame(n=n, means=means, sds=sds, coefvars=coefvars, D=D,
+                      method="Sobol")
+  
+  return(table)
+
+}
+
+#table <- rbind(table,sobolcreate(1))
+
+```
+
+And lets do this for D=2
+
+```{r, eval=FALSE}
+
+table <- rbind(table,sobolcreate(2))
+
+
+```
+
+```{r}
+
+ggplot(filter(table,method %in% c("Crude","Sobol"),D==1),
+       aes(x=n,y=means,color=method)) + 
+  geom_hline(yintercept=(1/10)) +
+  geom_line()
+
+ggplot(filter(table,method %in% c("Crude","Sobol"),D==1),
+       aes(x=n,y=sds,color=method)) + geom_line()
+
+ggplot(filter(table,method %in% c("Crude","Sobol"),D==2),
+       aes(x=n,y=means,color=method)) + 
+  geom_hline(yintercept=(1/10)^2) +
+  geom_line()
+
+ggplot(filter(table,method %in% c("Crude","Sobol"),D==2),
+       aes(x=n,y=sds,color=method)) + geom_line()
+
+
+```
+
+These graphs clearly show that we ended up with a better estimate of the mean 
+using Sobol numbers, and the variance was lower.
+
+Lets look at the Sobol distribution compared to the random, when scatter- 
+plotted in two dimensions:
+
+```{r}
+sobolfunction(1000,2)
+
+soboldata <- data.frame(sobol(2,1000))
+
+runifdata <- data.frame(x=runif(1000),y=runif(1000))
+
+ggplot(runifdata,aes(x=x,y=y))+geom_point()
+
+ggplot(soboldata,aes(x=X1,y=X2))+geom_point()
+
+```
+
+### c. Antithetic Variables ###
+
+Reducing variance using antithetic variables. Similar in method to part a, I'm 
+dividing my sample in half, and then creating another half by subtracting the 
+first half from 1.
+
+```{r, eval=FALSE}
+
+atfunction <- function(n,D){
+  
+  m <- D*n
+  xhalf1 <- matrix(runif(m/2),nrow=n/2)
+  xhalf2 <- 1-xhalf1
+  xhalf1 <- (xhalf1-0.5)*10
+  xhalf2 <- (xhalf2-0.5)*10
+  
+  fx1 <- apply(xhalf1,1,cofx,D=D)
+  fx2 <- apply(xhalf2,1,cofx,D=D)
+  fx <- (fx1+fx2)/2
+  
+  return(fx)
+  
+}
+
+atcreate <- function(D){
+
+  n <- seq(1000,10000,by=1000)
+  means <- c()
+  sds <- c()
+  coefvars <- c()
+  
+  for(i in n){
+    thetasample <- replicate(100,atfunction(i,D))
+    means <- c(means, mean(thetasample))
+    sds <- c(sds, sd(thetasample))
+    coefvars <- c(coefvars, mean(thetasample)/sd(thetasample))
+  }
+  
+  table <- data.frame(n=n, means=means, sds=sds, coefvars=coefvars, D=D,
+                      method="Antithetic")
+  
+  return(table)
+
+}
+
+table <- rbind(table,atcreate(1))
+
+table <- rbind(table,atcreate(2))
+
+```
+
+```{r}
+
+ggplot(filter(table,method %in% c("Crude","Antithetic"),D==1),
+       aes(x=n,y=means,color=method)) + 
+  geom_hline(yintercept=(1/10)) +
+  geom_line()
+
+ggplot(filter(table,method %in% c("Crude","Antithetic"),D==1),
+       aes(x=n,y=sds,color=method)) + geom_line()
+
+ggplot(filter(table,method %in% c("Crude","Antithetic"),D==2),
+       aes(x=n,y=means,color=method)) + 
+  geom_hline(yintercept=(1/10)^2) +
+  geom_line()
+
+ggplot(filter(table,method %in% c("Crude","Antithetic"),D==2),
+       aes(x=n,y=sds,color=method)) + geom_line()
+
+
+```
+
+It seems the standard deviations of our 100 pulls actually increased in this 
+case, which would seem strange for a variance reduction technique. 
+
+This might be due to the fact that the normal function is not monotonic. The 
+Kroese handbook mentions this is a precondition to the antithetic method being 
+successful.
+
+### d. Latin Hypercube Sampling ###
+
+```{r, eval=FALSE}
+
+lhfunction <- function(n,D,k){
+  
+  m <- D*n/k
+  
+  return(mean(replicate(k,{
+    
+    x  <- matrix(runif(m),nrow=n/k)
+    p <- replicate(D,sample(1:(n/k)))
+    V <- (p+1-x)/(n/k)
+    V <- (V-0.5)*10
+    Y <- mean(apply(V,1,cofx,D=D))
+    
+  })))
+  
+}
+
+lhcreate <- function(D,k){
+
+  n <- seq(1000,10000,by=1000)
+  means <- c()
+  sds <- c()
+  coefvars <- c()
+  
+  for(i in n){
+    thetasample <- replicate(100,lhfunction(i,D,k))
+    means <- c(means, mean(thetasample))
+    sds <- c(sds, sd(thetasample))
+    coefvars <- c(coefvars, mean(thetasample)/sd(thetasample))
+  }
+  
+  table <- data.frame(n=n, means=means, sds=sds, coefvars=coefvars, D=D,
+                      method="LatinHypercube")
+  
+  return(table)
+
+}
+
+table <- rbind(table,lhcreate(1,10),lhcreate(2,10))
+
+```
+
+```{r}
+
+ggplot(filter(table,method %in% c("Crude","LatinHypercube"),D==1),
+       aes(x=n,y=means,color=method)) + 
+  geom_hline(yintercept=(1/10)) +
+  geom_line()
+
+ggplot(filter(table,method %in% c("Crude","LatinHypercube"),D==1),
+       aes(x=n,y=sds,color=method)) + geom_line()
+
+ggplot(filter(table,method %in% c("Crude","LatinHypercube"),D==2),
+       aes(x=n,y=means,color=method)) + 
+  geom_hline(yintercept=(1/10)^2) +
+  geom_line()
+
+ggplot(filter(table,method %in% c("Crude","LatinHypercube"),D==2),
+       aes(x=n,y=sds,color=method)) + geom_line()
+
+
+```
+
+The Latin Hypercube method also seems to have reduced the variance, and gave us 
+a better estimate of the mean.
+
+#### e. Importance Sampling ###
+
+To pick a function here, I wanted to use an upside-down parabola that crossed 
+the x-axis at -5 and 5, which would be $\frac{-3(x-5)(x+5)}{500}$
+
+This would be difficult to solve for an inverse transform, so lets sample from 
+it using acceptance/rejection.
+
+The max of my parabola is at 0.15, and cofx(0,1) (the normal distribution's 
+maximum) is 0.3989. So, I can safely say:
+
+$$ \frac{f(x)}{g(x)} \leq \frac{0.15}{0.1} \leq 1.5 $$
+
+
+So, to sample from f(x), I'll generate y from g(x), generate a random u from 
+Uniform(0,1), and accept y if $U < \frac{f(y)}{cg(y)}$
+
+The sampling would work like this:
+
+$$ \frac{f(x)}{cg(x)} = \frac{-3(x-5)(x+5)}{500} \times \frac{10}{1.5} = \frac{(x-5)(x+5)}{25} $$
+
+```{r, eval=FALSE}
+
+rcharleyparabola <- function(n){
+  n <- 1000
+  k <- 0
+  j <- 0
+  y <- numeric(n)
+  
+  while(k < n){
+    u <- runif(1)
+    j <- j+1
+    x <- runif(1,min=-5,max=5)
+    if(-(x-5)*(x+5)/25 > u){
+      k <- k+1
+      y[k] <- x
+    }
+  }
+  
+  return(y)
+  
+}
+```
+
+So lets perform our importance sampling:
+
+```{r, eval=FALSE}
+
+isfunction <- function(n,D){
+  m <- n*D
+  x <- matrix(rcharleyparabola(m),nrow=n)
+  fg <- apply(x,1,cofx,D=D) / (-3*(x-5)*(x+5)/500)
+  
+  return(fg)
+}
+
+iscreate <- function(D){
+  
+  n <- seq(1000,10000,by=1000)
+  means <- c()
+  sds <- c()
+  coefvars <- c()
+  
+  for(i in n){
+    thetasample <- replicate(100,atfunction(i,D))
+    means <- c(means, mean(thetasample))
+    sds <- c(sds, sd(thetasample))
+    coefvars <- c(coefvars, mean(thetasample)/sd(thetasample))
+  }
+  
+  table <- data.frame(n=n, means=means, sds=sds, coefvars=coefvars, D=D,
+                      method="ImportanceSampling")
+  
+  return(table)
+  
+}
+
+table <- rbind(table,iscreate(1),iscreate(2))
+
+```
+
+```{r}
+
+ggplot(filter(table,method %in% c("Crude","ImportanceSampling"),D==1),
+       aes(x=n,y=means,color=method)) + 
+  geom_hline(yintercept=(1/10)) +
+  geom_line()
+
+ggplot(filter(table,method %in% c("Crude","ImportanceSampling"),D==1),
+       aes(x=n,y=sds,color=method)) + geom_line()
+
+ggplot(filter(table,method %in% c("Crude","ImportanceSampling"),D==2),
+       aes(x=n,y=means,color=method)) + 
+  geom_hline(yintercept=(1/10)^2) +
+  geom_line()
+
+ggplot(filter(table,method %in% c("Crude","ImportanceSampling"),D==2),
+       aes(x=n,y=sds,color=method)) + geom_line()
+
+
+```
+
+Importance Sampling seemed to have not worked in the case I used. Looking 
+online, I found a few interesting takes on how to pick an f(x) to use as your 
+distribution. A few common themes I found was to pick an f(x) greater than the 
+source distribution, and to have it be a similar shape, which is the direction 
+I chose when using this parabola. The slides, and a few other sources I found, 
+seemed better geared towards estimating a certain portion of a distribution. In 
+the normal's case, the tails. There, the goal seemed to choose your f(x) to 
+oversample from the tails, or from the area of interest. If I were looking at a 
+certain portion of my distribution, I'm sure I would be able to find an 
+interesting way to use importance sampling to reduce my variance, or find out 
+what's happening in tail events.
+
+### f. Summary ###
+
+```{r}
+table
+
+ggplot(filter(table,D==1),aes(x=n,y=means,color=method)) + geom_line() +
+  geom_hline(yintercept=(1/10))
+
+ggplot(filter(table,method %in% c("Sobol", "LatinHypercube"),D==1),
+       aes(x=n,y=means,color=method)) + geom_line() +
+  geom_hline(yintercept=(1/10))
+
+```
+
+For D==1, It seems Sobol and Latin Hypercube were the best at guessing the mean. 
+The Latin Hypercube method seemed to work better for higher samples, while the 
+Sobol method seemed to perform steadily throughout.
+
+```{r}
+
+ggplot(filter(table,D==2),aes(x=n,y=means,color=method)) + geom_line() +
+  geom_hline(yintercept=(1/10)^2)
+
+```
+
+
+Oddly enough, for D==2, The Sobol and Latin Hypercube method seemed to perform 
+less well versus other methods. They were still the best at making the 
+prediction however.
+
+
+```{r}
+
+ggplot(filter(table,D==1),aes(x=n,y=sds,color=method)) + geom_line()
+
+ggplot(filter(table,method %in% c("Antithetic","ImportanceSampling"),
+              D==1),aes(x=n,y=sds,color=method)) + geom_line()
+
+ggplot(filter(table,method %in% c("Sobol", "LatinHypercube"),D==1),
+       aes(x=n,y=sds,color=method)) + geom_line()
+
+
+ggplot(filter(table,method %in% c("Crude"),D==1),
+       aes(x=n,y=sds,color=method)) + geom_line()
+
+```
+
+For my standard deviations, Sobol and Latin Hypercube are once again the clear 
+winners, while Antithetic and Importance Sampling methods were significantly 
+higher than the crude. 
+
+```{r}
+ggplot(filter(table,D==2),aes(x=n,y=sds,color=method)) + geom_line()
+
+ggplot(filter(table,method %in% c("Sobol", "LatinHypercube"),D==2),
+       aes(x=n,y=sds,color=method)) + geom_line()
+
+ggplot(filter(table,method %in% c("Antithetic","ImportanceSampling"),
+              D==1),aes(x=n,y=sds,color=method)) + geom_line()
+
+
+ggplot(filter(table,method %in% c("Crude"),D==2),
+       aes(x=n,y=sds,color=method)) + geom_line()
+
+```
+
+For D==2, the postiions of Sobol and the Latin Hypercube switcch positions. It 
+would appear the Sobol estimation algorithm is better at estimating multi-
+dimensional data. 
+
+### SCR Problem 6.3 ###
+
+Plot the power curves for the t-test in Example 6.9 for sample sizes 10, 20, 30, 
+40, and 50, but omit the standard error bars. Plot the curves on the same graph,
+each in a different color or different line type, and include a legend. 
+Comment on the relation between power and sample size.
+
+```{r}
+n <- c(10,20,30,40,50)
+m <- 1000
+mu0 <- 500
+sigma <- 100
+mu <- c(seq(450,650,10))
+M <- length(mu)
+power <- c()
+for(j in n){  
+
+  for(i in 1:M){
+    mu1 <- mu[i]
+    pvalues <- replicate(m,expr={
+      x <- rnorm(j, mean=mu1, sd=sigma)
+      ttest <- t.test(x,
+                      alternative="greater", mu=mu0)
+      ttest$p.value
+    })
+    power <- c(power,mean(pvalues<=0.05))
+  }
+}
+
+table <- expand.grid(mu,n)
+colnames(table) <- c("mu","n")
+table$power <- power
+
+power <- data.frame(power)
+
+ggplot(table,aes(x=mu,y=power,color=as.factor(n))) + geom_line()
+
+```
+
+
+The lines all seem to diverge at around $\mu = 500$, with the power ~0.05. This 
+makes sense, we set our $\alpha$ significance level to 0.05, and the true mean 
+being sampled is 500. Under perfect conditions, we'd expect the function to 
+shoot immediately to 1 once we get past 500. Obviously, we get differing slopes 
+towards 1. As the sample size increases, the function approaches 1 more quickly. 
+This also makes sense, our standard error decreases and n increases, and a 
+low standard error would mean less of a chance of accepting a null hypothesis 
+for a value of $\mu$ drastically greater than 500.
+
+### SCR Problem 6.4 ###
+
+Suppose that $X_1,...,X_n$ are a random sample from a lognormal distribution 
+with unknown parameters. Construct a 95% confidence interval for the parameter 
+$\mu$. Use a Monte Carlo method to obtain an empirical estimate of the 
+confidence level
+
+If we don't know the underlying distribution, then no matter what the 
+distribution is, $\bar{x}$ will be normally distributed, with a standard 
+error $\frac{\sigma}{\sqrt{n}}$
+
+For a two tailed 95% confidence interval, we'd use z=1.96. So:
+
+$$ \bar{x} \pm \frac{\sigma}{\sqrt{n}} $$
+
+Here's an example using the default settings on the lognormal distribution 
+(which are set as meanlog and sdlog)
+
+```{r}
+
+x <- rlnorm(1000)
+
+xbar <- mean(x)
+
+sdbar <- sd(x)
+
+se <- sdbar/sqrt(n)
+
+CI <- c(xbar-se,xbar+se)
+
+CI
+
+```
+
+### SCR Problem 7.1 ###
+
+Compute a jackknife estimate of the bias and the standard error of the 
+correlation statistic in Example 7.2.
+
+```{r}
+n <- nrow(law)
+theta.hat <- cor(law$LSAT, law$GPA)
+
+theta.jack <- numeric(n)
+
+for(i in 1:n){
+  theta.jack[i] <- cor(law$LSAT[-i],law$GPA[-i])
+}
+se.jack <- sd(theta.jack)
+
+bias.jack <- (n-1)*(mean(theta.jack)-theta.hat)
+
+se.jack
+
+bias.jack
+
+
+```
+
+### SCR Problem 7.4 ###
+
+Refer to the air-conditioning data set aircondit provided in the boot package. 
+The 12 observations are the times in hours between failures of air conditioning 
+equipment. Assume that the times between failures follow an exponential model 
+$Exp(\lambda)$. Obtain the MLE of the hazard rate $\lambda$ and use bootstrap 
+to estimate the bias and standard error of the estimate.
+
+The maximum likelihood estimator for $\lambda$ is:
+
+$$ L(\theta,x_i) = \prod_{i=1}^{n} f(\theta,x_i) = \prod_{i=1}^{n} \lambda e^{-\lambda x_i} $$
+
+$$ L(\lambda,x_i) = \lambda^{n} e^{-\lambda \sum_{t=1}^{n} x_t} $$
+
+The log-likelihood, taking the log of both sides for easier calculations, is:
+
+$$ l(\theta,x_i) = n*ln(\lambda) - \lambda \sum_{j=1}^n x_i $$
+
+When trying to find the max of this function in terms of $\theta$, so lets 
+take the derivative $\frac{d}{d \theta}$
+
+$$ \frac{d}{d \lambda} l(\lambda,x_i) = \frac{n}{\lambda} - \sum_{j=1}^n x_i$$
+
+$$ \hat{\lambda} = \frac{n}{\sum_{i=0}^{n} x_i} $$
+
+
+```{r}
+
+lambda.hat <- length(aircondit$hours)/sum(aircondit$hours)
+
+B <- B <- 200
+n <- nrow(aircondit)
+R <- numeric(B)
+
+for(b in 1:B){
+  acsamp <- sample(aircondit$hours,n,replace=TRUE)
+  R[b] <- length(acsamp)/sum(acsamp)
+  
+}
+
+theta.boot <- mean(R)
+
+lambda.hat
+
+theta.boot
+
+```
+
