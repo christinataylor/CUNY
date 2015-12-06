@@ -1,0 +1,280 @@
+---
+output: html_document
+---
+```{r include=FALSE, cache=FALSE}
+# DO NOT REMOVE
+# THIS IS FOR SETTING SOME PLOTTING PARAMETERS SO THAT YOUR PLOTS DON'T TAKE UP TOO MUCH SPACE
+# IF YOU WOULD LIKE TO CHANGE THESE, SEE HELP FILES ON THE par() FUNCTION
+# OR ASK FOR HELP
+library(knitr)
+## set global chunk options
+opts_chunk$set(fig.path='figure/manual-', cache.path='cache/manual-', fig.align='center', fig.show='hold', par=TRUE)
+## tune details of base graphics (http://yihui.name/knitr/hooks)
+knit_hooks$set(par=function(before, options, envir){
+if (before && options$fig.show!='none') par(mar=c(4,4,.2,.1),cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)
+})
+```
+
+```{r echo=FALSE, include=FALSE}
+# load data
+
+setwd("E:/Downloads/Courses/CUNY/SPS/Git/IS 606 Statistics and Probability/Final Project")
+
+load("quandldata.RData")
+
+library(xts)
+library(ggplot2)
+library(dplyr)
+
+```
+
+
+### Part 1 - Introduction:
+
+Decentralized cryptocurrencies such as bitcoin have proliferated in recent years, leading many to wonder if they can be used as a valid alternative to national currencies, especially after the distrust of national banks brought on by the recent financial crisis, and fears of continued quantitative easing and near 0% fed funds rates.
+
+Several monetary regimes have existed in the past. Gold standards were quite common in the Western world before World War II, and the Bretton-Woods system was a system of fixed exchange rates ultimately pegged to a US dollar based gold standard. 
+
+Since 1971, when the Bretton-Woods system fell apart, currencies have been free floating, or fiat currency. Exchange rates are determined on foreign exchange markets, and Central Banks have more direct power in determining the money supply.
+
+Exchange rates determined on the open market react more to macroeconomic fundamentals. Within a country with fiat currency, the money supply is more flexible, and can react to macroeconomic needs. The money supply can be increased during times of recessions, or decreased when inflation is more of an issue. The interaction of this happening between countries, among other macroeconomic factors, are what cause exchange rate fluctuations.
+
+Gold, now that it is not the base of the world's monetary system, functions very similar to a commodity. Supply and demand play key roles in its price, increases in supply can be expected to decrease the price, while more demand for gold can be expected to increase it. It is also subject to more irrational market forces: bubbles and crashes.
+
+While most currencies are fiat today, there is still a debate on the wisdom of a gold standard. Proponents point to the acceptance of inflation as a fact of life, and fears of hyperinflationary episodes completely destroying the value of currencies. Fiat currencies are subject to political whims, while a gold standard imposes a strict discipline on the money supply. Proponents of fiat currency and the role of central banks in the monetary supply will point to past deflationary episodes such as the Great Depression, and comment on how much worse the financial crisis of 2008 could have been if the Federal Reserve hadn't reacted in the way it had.
+
+Bitcoin is being portrayed as both a competitor for national currencies, and as a replacement for an investment grade commodity such as gold. Like a currency, it is designed to be a medium of exchange.
+
+However, the designer of bitcoin built supply constraints into its algorithm. Bitcoins are "mined" by computers solving math problems of ever increasing complexity. The rate at which these can be solved is designed to assymptotically approach 0. In this way, Bitcoin is meant to mirror the supply of gold. There is a fixed supply of gold on earth, the easiest to reach caches of gold are mined first, and gold becomes harder and harder to mine as time goes on. Innovations in gold mining can lead to short term spikes in supply, just as one can imagine a new computing technology being able to more quickly solve these problems for bitcoin. However, there is still a fundamental restriction on the supply of gold and bitcoin. Bitcoin, if it becomes a major unit of currency, will be subject to the same deflationary problems that faced currencies on the gold standard.
+
+Dogecoin is a rivil cryptocurrency that takes an alternative approach. Recognizing the problems with a fixed supply, Dogecoin is adopting a fixed rate of inflation, targeting the number of coins in circulation. [This](http://arstechnica.com/business/2014/02/dogecoin-to-allow-annual-inflation-of-5-billion-coins-each-year-forever/) article on Ars Technica explains a few of the basics on the discussions that led to this, as well as some statistics on hoarding behavior observed with bitcoin that is attributed to its deflationary nature.
+
+Given these four different types of currencies and/or commodities, I wanted to compare their behavior using two-sample t-tests. Comparisons between all of these instruments will be interesting, but in particular I would like to look at how Dogecoin and Bitcoin compare to a representative fiat currency (the British Pound) and gold.
+
+### Part 2 - Data:
+
+Depending on how one looks at these instruments, the data obtained can be thought of as either exchange rates or prices. I'm basing all measurements in the US dollar to ensure comparability.
+
+The price levels themselves can be arbitrary, so I'm going to instead look at the percent changes over time. The exchange rates are daily, and these percent changes are calculated off of the previous day's rate. So:
+
+$$ PC = \frac{X_{today} - X_{yesterday}}{X_{yesterday}} \times 100 $$
+
+I'll consider the "price" of all of these instruments in USD. The rate given in gbpusd is the inverse exchange rate, pounds per US Dollar. So,  I'll have to take the inverse to get the price I would like:
+
+```{r}
+
+invpcgbpusd <- ((tail(1/gbpusd$Rate,-1)-head(1/gbpusd$Rate,-1))/
+               head(1/gbpusd$Rate,-1))*100
+
+```
+
+Bitcoin and Gold are already expressed in the correct format, so I can calculate the percent changes there without taking the inverse:
+
+```{r}
+
+pcbcusd <- ((tail(bcusd$Close,-1)-head(bcusd$Close,-1))/
+              head(bcusd$Close,-1))*100
+
+pcgldusd <- ((tail(gldusd$Value,-1)-head(gldusd$Value,-1))/
+               head(gldusd$Value,-1))*100
+
+```
+
+The only exchange rate for Dogecoin I could find was a bitcoin per dogecoin rate, so I used that, with my calculated bitcoin/USD rate to get a dogecoin/USD rate:
+
+```{r}
+bcdc.bcusd <- merge(bcdc,bcusd)
+
+dcusd <- (bcdc.bcusd$Price * bcdc.bcusd$Close)
+
+pcdcusd  <- ((tail(dcusd,-1)-head(dcusd,-1))/head(dcusd,-1))*100
+
+```
+
+
+### Part 3 - Exploratory data analysis:
+
+First, lets just plot out our time series
+
+```{r}
+
+par(mfrow=c(2,2))
+
+plot(xts(gldusd$Value,gldusd$Year),main="Gold")
+
+plot(xts(bcusd$Close,bcusd$Date),main="Bitcoin")
+
+plot(xts(1/gbpusd$Rate,gbpusd$Date),main="British Pound")
+
+plot(xts(bcdc.bcusd$Price*bcdc.bcusd$Close,bcdc.bcusd$Date),main="Dogecoin")
+
+par(mfrow=c(1,1))
+
+```
+
+There are some missing values in the bitcoin and dogecoin rates, but because I'm looking at groups of percent changes this shouldn't affect my results too much. I'm simply looking at the daily percent changes as a group of independent observations. The fact that Bitcoin reports on weekends actually makes up for this when I'm looking at the number of observations.
+
+The 0 values in Dogecoin rates are probably more problematic, so I'll remove those:
+
+```{r}
+
+dcusd <- dcusd[dcusd!=0]
+
+pcdcusd  <- ((tail(dcusd,-1)-head(dcusd,-1))/head(dcusd,-1))*100
+
+```
+
+Now lets take a look at the histograms of our observations:
+
+```{r}
+
+par(mfrow=c(2,2))
+
+hist(invpcgbpusd,main="British Pound",breaks=50)
+
+hist(pcbcusd,main="Bitcoin",breaks=50)
+
+hist(pcdcusd,main="Dogecoin",breaks=50)
+
+hist(pcgldusd,main="Gold",breaks=50)
+
+par(mfrow=c(1,1))
+
+pcdata <- data.frame(type = "British Pound", percent.change = invpcgbpusd)
+pcdata <- rbind(pcdata, data.frame(type = "Bitcoin", percent.change = pcbcusd))
+pcdata <- rbind(pcdata, data.frame(type = "Dogecoin", percent.change = pcdcusd))
+pcdata <- rbind(pcdata, data.frame(type = "Gold", percent.change = pcgldusd))
+
+ggplot(pcdata, aes(x = type, y = percent.change)) + geom_boxplot()
+
+```
+
+Visually these seem interesting. Looking at the histograms, It looks like Dogecoin, despite controling for inflation, seems to be behaving more like gold. Bitcoin, despite its fixed supply, has a wider distribution that's more similar to the British Pound.
+
+The boxplots, however, tell another story. Both Bitcoin and Dogecoin have wider interquartile ranges than gold and the British Pound. This suggests that perhaps both these comparisons are wrong: the British Pound and Gold are more similar to eachother than to these newer currencies.
+
+
+
+### Part 4 - Inference:
+
+I'll use two inference tests to test which mean percent changes are similar to which: A paired T-test and Anova.
+
+First let me create a matrix of t-scores pair by pair. For each pair, p1 and p2, my null and alternative hypotheses will be:
+
+$H_0$: $\mu_{p1} = \mu_{p2}$
+
+$H_a$: $\mu_{p1} \neq \mu_{p2}$
+
+```{r}
+
+combinedmeans <- c(mean(invpcgbpusd),mean(pcbcusd),mean(pcdcusd),mean(pcgldusd))
+
+combinedvars <- c(var(invpcgbpusd),var(pcbcusd),var(pcdcusd),var(pcgldusd))
+combinedns <- c(length(invpcgbpusd),length(pcbcusd),length(pcdcusd),
+                length(pcgldusd))
+
+combinedses <- combinedvars/combinedns
+
+meandiffmat <- matrix(nrow=4,ncol=4)
+
+meandiffmat[1,] <- mean(invpcgbpusd) - combinedmeans
+meandiffmat[2,] <- mean(pcbcusd) - combinedmeans
+meandiffmat[3,] <- mean(pcdcusd) - combinedmeans
+meandiffmat[4,] <- mean(pcgldusd) - combinedmeans
+
+sddiffmat <- matrix(nrow=4,ncol=4)
+
+sddiffmat[1,] <- var(invpcgbpusd)/length(invpcgbpusd) + combinedses
+sddiffmat[2,] <- var(pcbcusd)/length(pcbcusd) + combinedses
+sddiffmat[3,] <- var(pcdcusd)/length(pcdcusd) + combinedses
+sddiffmat[4,] <- var(pcgldusd)/length(pcgldusd) + combinedses
+
+tmat <- meandiffmat/sddiffmat
+
+rownames(tmat) <- c("Pound", "Bitcoin", "Dogecoin", "Gold")
+colnames(tmat) <- rownames(tmat)
+
+tmat
+
+```
+
+Now that we have our t-scores, we can calculate the critical t-values, 
+
+```{r}
+
+smallestn <- matrix(nrow=4,ncol=4)
+rownames(smallestn) <- rownames(tmat)
+colnames(smallestn) <- colnames(tmat)
+
+for(i in 1:4){
+  for(j in 1:4){
+    smallestn[i,j] <- min(combinedns[i],combinedns[j])
+  }
+}
+
+criticalt <- qt(0.975,df=smallestn)
+
+ifelse(abs(tmat) > criticalt,"Reject","Accept")
+
+```
+
+These results haven't really given me any insight into whether or not Bitcoin or Dogecoin are more similar to Gold or the British Pound. Bitcoin seems to be different from both the Pound and Gold, while Dogecoin seems to be similar to both of these.
+
+While we have a few rejects, it's worth to look at what an anova table would tell us about these four means. For an anova f-test, we're comparing all four means at the same time, with the below null and alternative hypotheses:
+
+$H_0$: $\mu_{Pound} = \mu_{Bitcoin} = \mu_{Dogecoin} = \mu_{Gold}$
+
+$H_a$: At least one of these means are different.
+
+```{r}
+
+mod <- lm(percent.change ~ type, data=pcdata)
+
+anova(mod)
+
+```
+
+As expected, we reject thee null hypothesis in this case. At least one of the means is different.
+
+
+### Part 5 - Conclusion: 
+
+The conclusion of these inference tests were unexpected! I went into this project with the goal of taking two known currency types, two cryptocurrencies with different money supply strategies, and testing which of these two known types of currencies the cryptocurrencies behave like. 
+
+My t-tests gave mixed results, saying that the mean of the Dogecoin percent changes was similar to both the British Pound and Gold, while the mean of the Bitcoin percent changes was different from both the Pound and Gold.
+
+The exploratory data analysis sheds some light on what might be going on. The Dogecoin percent changes had the widest inter-quartile range, suggesting that it would be more likely to be similar to the other means it's being compared to. Comparing just Dogecoin and Bitcoin, Dogecoin's IQR is larger than Bitcoin's, with more outliers:
+
+```{r}
+
+ggplot(filter(pcdata, type %in% c("Bitcoin", "Dogecoin")), 
+              aes(x = type, y = percent.change)) + geom_boxplot()
+
+```
+
+It would be worth it to perform more research on these currencies. Perhaps comparing Dogecoin and Bitcoin to different time periods to see if they match the behavior of currencies or commodities at certain times, and to compare booms or busts of these currencies. Perhaps they can be compared to other currencies (silver is more volatile than gold, for example.)
+
+Despite the acceptance of the null hypothesis that Dogecoin is similar to all currencies it was compared to, this high variance leads me to say that Bitcoin and Dogecoin are both different from existing currencies or commodities. Their wide variability sets them apart from existing financial innovations.
+
+
+### References:
+
+The data was all pulled from [Quandl](http://www.quandl.com), an excellent resource for financial and economic data. Below is the code I used to pull this data, which can be crosschecked with Quandl:
+
+```{r eval=FALSE}
+
+bcusd <- Quandl("BITCOIN/CBXUSD", authcode="autocode goes here",
+                trim_start="2015-01-01", trim_end="2015-06-01")
+
+gbpusd <- Quandl("CURRFX/USDGBP", authcode="autocode goes here",
+                 trim_start="2015-01-01", trim_end="2015-06-01")
+
+gldusd <- Quandl("WGC/GOLD_DAILY_USD", authcode="autocode goes here",
+                 trim_start="2015-01-01", trim_end="2015-06-01")
+
+bcdc <- Quandl("CRYPTOCHART/DOGE", authcode="autocode goes here",
+               trim_start="2015-01-01", trim_end="2015-06-01")
+
+```
+
+The only other reference was linked in the article: The Ars Technica article that references Dogecoin as an inflationary cryptocurrency.

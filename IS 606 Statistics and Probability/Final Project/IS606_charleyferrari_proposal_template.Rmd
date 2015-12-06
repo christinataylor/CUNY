@@ -18,6 +18,10 @@ if (before && options$fig.show!='none') par(mar=c(4,4,.2,.1),cex.lab=.95,cex.axi
 ```{r}
 # load data
 
+setwd("E:/Downloads/Courses/CUNY/SPS/Git/IS 606 Statistics and Probability/Final Project")
+
+load("quandldata.RData")
+
 ```
 
 

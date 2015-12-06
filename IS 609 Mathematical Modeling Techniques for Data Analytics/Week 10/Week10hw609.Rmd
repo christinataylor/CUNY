@@ -1,0 +1,97 @@
+---
+title: "Week10hw609"
+author: "Charley Ferrari"
+date: "October 26, 2015"
+output: pdf_document
+---
+
+### Page 469, Question 3 ###
+
+The following data were obtained for thee growth of a sheep population introduced 
+into a new environment on the island of Tasmania.
+
+a. Make an estimate of M by graphing P(t).
+
+```{r}
+
+library(ggplot2)
+
+t <- c(1814, 1824, 1834, 1844, 1854, 1864)
+tminus0 <- t-t[1]
+p <- c(125, 275, 830, 1200, 1750, 1650)
+
+ggplot(data.frame(x=tminus0,y=p),aes(x=x,y=y)) + geom_line()
+
+```
+
+Lets assume that the model isn't perfect, and the decrease to 1650 doesn't imply 
+the cap has been reached already, but rather that the maximum population is being 
+approached. We'll estimate a max population of around 1900.
+
+b. Plot ln[P/(M-P)] against T. If a logistic curve seems reasonable, estimate 
+rM and $t^{*}$.
+
+```{r}
+
+m <- 1900
+lnpmp <- log(p/(m-p))
+
+ggplot(data.frame(x=tminus0,y=lnpmp),aes(x=x,y=y)) + geom_point() +
+  stat_smooth(method="lm")
+
+rm <- lm(lnpmp~t)$coefficients["t"]
+rm
+
+tstar <- -(1/rm)*log(p[1]/(m-p[1]))
+
+tstar + t[1]
+
+```
+
+This checks out. The 1834 population is 830, and the 1844 population is 
+1200, and half our estimated M is 950.
+
+### Page 478, Question 6 ### 
+
+Suggest other phenomena for which the model described in the text might be used.
+
+This model could be used for any situation where something external is being 
+added, and there's a time that the system takes to "digest" the external 
+variable.
+
+One example could be an electrical system. There could be a safe range of power 
+flow. If you go above this rate, the system could overload, and if you're below
+the system might not have enough power. This is less of a "dose" problem and more 
+of an analysis of what sort of electrical flow is needed, but it can be modeled 
+in a similar way.
+
+### Page 481, Question 1 ###
+
+a. Using the estimate that $d_b = 0.054v^2$, where 0.054 has the dimension 
+$\frac{ft*hr^2}{mi^2}$, show that the constant k has the value 
+19.9 $\frac{ft}{sec^2}$
+
+0.054 isn't in the correct units, so we'll have to correct them first:
+
+$$ 0.054 \frac{ft*hr^2}{mi^2} \times 12960000 \frac{sec^2}{hr^2} \times \frac{1}{27878400} \frac{ft^2}{mi^2} $$
+
+```{r}
+
+c <- 0.054*12960000/27878400
+c
+
+```
+
+Then we just solve for k:
+
+$$ d_b = 0.025v^2 = \frac{v*}{2k} $$
+$$ 0.025 = \frac{1}{2k} $$
+
+```{r}
+
+k <- 1/(2*c)
+
+k
+
+```
+

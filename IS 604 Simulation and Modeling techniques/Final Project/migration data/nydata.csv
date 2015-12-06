@@ -1,0 +1,909 @@
+"","src.state","src.county","dest.state","dest.county","fips","migration"
+"1","Connecticut","Fairfield County","New York","Nassau County",36059009001,344
+"2","Connecticut","Fairfield County","New York","Putnam County",36079009001,94
+"3","Connecticut","Fairfield County","Pennsylvania","Monroe County",42089009001,10
+"4","Connecticut","Fairfield County","New Jersey","Union County",34039009001,87
+"5","Connecticut","Fairfield County","New Jersey","Bergen County",34003009001,416
+"6","Connecticut","Fairfield County","New Jersey","Middlesex County",34023009001,98
+"7","Connecticut","Fairfield County","New Jersey","Morris County",34027009001,85
+"8","Connecticut","Fairfield County","New Jersey","Essex County",34013009001,159
+"9","Connecticut","Fairfield County","Connecticut","New Haven County",9009009001,6597
+"10","Connecticut","Fairfield County","New York","Kings County",36047009001,132
+"11","Connecticut","Fairfield County","Connecticut","Litchfield County",9005009001,2037
+"12","Connecticut","Fairfield County","New York","Westchester County",36119009001,836
+"13","Connecticut","Fairfield County","Pennsylvania","Lehigh County",42077009001,69
+"14","Connecticut","Fairfield County","New Jersey","Passaic County",34031009001,41
+"15","Connecticut","Fairfield County","Pennsylvania","Northampton County",42095009001,35
+"16","Connecticut","Fairfield County","New Jersey","Mercer County",34021009001,207
+"17","Connecticut","Fairfield County","New York","Richmond County",36085009001,21
+"18","Connecticut","Fairfield County","New York","Dutchess County",36027009001,182
+"19","Connecticut","Fairfield County","New York","Rockland County",36087009001,212
+"20","Connecticut","Fairfield County","New York","Queens County",36081009001,475
+"21","Connecticut","Fairfield County","New Jersey","Monmouth County",34025009001,69
+"22","Connecticut","Fairfield County","New York","New York County",36061009001,1361
+"23","Connecticut","Fairfield County","New Jersey","Somerset County",34035009001,46
+"24","Connecticut","Fairfield County","New York","Ulster County",36111009001,60
+"25","Connecticut","Fairfield County","New Jersey","Hudson County",34017009001,115
+"26","Connecticut","Fairfield County","New Jersey","Ocean County",34029009001,43
+"27","Connecticut","Fairfield County","New York","Bronx County",36005009001,624
+"28","Connecticut","Fairfield County","New York","Orange County",36071009001,74
+"29","Connecticut","Fairfield County","New York","Suffolk County",36103009001,144
+"30","Connecticut","Litchfield County","New York","Bronx County",36005009005,15
+"31","Connecticut","Litchfield County","Pennsylvania","Northampton County",42095009005,19
+"32","Connecticut","Litchfield County","New York","Putnam County",36079009005,37
+"33","Connecticut","Litchfield County","New Jersey","Mercer County",34021009005,19
+"34","Connecticut","Litchfield County","New York","Rockland County",36087009005,141
+"35","Connecticut","Litchfield County","New Jersey","Hudson County",34017009005,51
+"36","Connecticut","Litchfield County","Connecticut","New Haven County",9009009005,1342
+"37","Connecticut","Litchfield County","New York","Queens County",36081009005,31
+"38","Connecticut","Litchfield County","New York","Suffolk County",36103009005,20
+"39","Connecticut","Litchfield County","New Jersey","Passaic County",34031009005,24
+"40","Connecticut","Litchfield County","New York","Nassau County",36059009005,40
+"41","Connecticut","Litchfield County","New York","Ulster County",36111009005,64
+"42","Connecticut","Litchfield County","New Jersey","Warren County",34041009005,3
+"43","Connecticut","Litchfield County","New York","Kings County",36047009005,25
+"44","Connecticut","Litchfield County","Connecticut","Fairfield County",9001009005,668
+"45","Connecticut","Litchfield County","New York","New York County",36061009005,194
+"46","Connecticut","Litchfield County","New York","Dutchess County",36027009005,76
+"47","Connecticut","Litchfield County","New Jersey","Somerset County",34035009005,23
+"48","Connecticut","Litchfield County","New Jersey","Essex County",34013009005,10
+"49","Connecticut","New Haven County","Connecticut","Litchfield County",9005009009,1087
+"50","Connecticut","New Haven County","New York","Orange County",36071009009,67
+"51","Connecticut","New Haven County","New Jersey","Mercer County",34021009009,67
+"52","Connecticut","New Haven County","New York","Kings County",36047009009,470
+"53","Connecticut","New Haven County","New York","Queens County",36081009009,134
+"54","Connecticut","New Haven County","New Jersey","Essex County",34013009009,132
+"55","Connecticut","New Haven County","New York","Nassau County",36059009009,337
+"56","Connecticut","New Haven County","New York","Rockland County",36087009009,42
+"57","Connecticut","New Haven County","New Jersey","Passaic County",34031009009,14
+"58","Connecticut","New Haven County","New York","New York County",36061009009,1068
+"59","Connecticut","New Haven County","New York","Dutchess County",36027009009,102
+"60","Connecticut","New Haven County","New Jersey","Hudson County",34017009009,55
+"61","Connecticut","New Haven County","New Jersey","Bergen County",34003009009,34
+"62","Connecticut","New Haven County","New York","Bronx County",36005009009,400
+"63","Connecticut","New Haven County","New Jersey","Middlesex County",34023009009,79
+"64","Connecticut","New Haven County","Connecticut","Fairfield County",9001009009,4096
+"65","Connecticut","New Haven County","New York","Suffolk County",36103009009,168
+"66","Connecticut","New Haven County","Pennsylvania","Monroe County",42089009009,154
+"67","Connecticut","New Haven County","Pennsylvania","Lehigh County",42077009009,12
+"68","Connecticut","New Haven County","New Jersey","Monmouth County",34025009009,18
+"69","Connecticut","New Haven County","New Jersey","Ocean County",34029009009,32
+"70","Connecticut","New Haven County","New Jersey","Somerset County",34035009009,28
+"71","Connecticut","New Haven County","New York","Putnam County",36079009009,65
+"72","Connecticut","New Haven County","New Jersey","Morris County",34027009009,128
+"73","Connecticut","New Haven County","New York","Westchester County",36119009009,172
+"74","New Jersey","Bergen County","New York","Rockland County",36087034003,807
+"75","New Jersey","Bergen County","New Jersey","Hunterdon County",34019034003,96
+"76","New Jersey","Bergen County","New York","Bronx County",36005034003,371
+"77","New Jersey","Bergen County","Connecticut","Litchfield County",9005034003,107
+"78","New Jersey","Bergen County","Connecticut","Fairfield County",9001034003,460
+"79","New Jersey","Bergen County","New Jersey","Hudson County",34017034003,1825
+"80","New Jersey","Bergen County","New York","Nassau County",36059034003,104
+"81","New Jersey","Bergen County","New Jersey","Middlesex County",34023034003,1360
+"82","New Jersey","Bergen County","New Jersey","Monmouth County",34025034003,1029
+"83","New Jersey","Bergen County","New Jersey","Somerset County",34035034003,299
+"84","New Jersey","Bergen County","New York","New York County",36061034003,2339
+"85","New Jersey","Bergen County","New York","Suffolk County",36103034003,158
+"86","New Jersey","Bergen County","New Jersey","Ocean County",34029034003,1347
+"87","New Jersey","Bergen County","New York","Queens County",36081034003,382
+"88","New Jersey","Bergen County","New Jersey","Passaic County",34031034003,2989
+"89","New Jersey","Bergen County","New York","Putnam County",36079034003,75
+"90","New Jersey","Bergen County","New York","Dutchess County",36027034003,93
+"91","New Jersey","Bergen County","New Jersey","Mercer County",34021034003,339
+"92","New Jersey","Bergen County","Pennsylvania","Northampton County",42095034003,169
+"93","New Jersey","Bergen County","New York","Orange County",36071034003,389
+"94","New Jersey","Bergen County","New Jersey","Essex County",34013034003,1444
+"95","New Jersey","Bergen County","Pennsylvania","Lehigh County",42077034003,72
+"96","New Jersey","Bergen County","Pennsylvania","Monroe County",42089034003,301
+"97","New Jersey","Bergen County","New York","Ulster County",36111034003,20
+"98","New Jersey","Bergen County","Connecticut","New Haven County",9009034003,222
+"99","New Jersey","Bergen County","New Jersey","Warren County",34041034003,238
+"100","New Jersey","Bergen County","New Jersey","Morris County",34027034003,1442
+"101","New Jersey","Bergen County","New Jersey","Union County",34039034003,399
+"102","New Jersey","Bergen County","Pennsylvania","Pike County",42103034003,58
+"103","New Jersey","Bergen County","New York","Kings County",36047034003,459
+"104","New Jersey","Bergen County","New York","Richmond County",36085034003,50
+"105","New Jersey","Bergen County","New York","Westchester County",36119034003,347
+"106","New Jersey","Essex County","New York","Nassau County",36059034013,26
+"107","New Jersey","Essex County","New York","Bronx County",36005034013,486
+"108","New Jersey","Essex County","New York","Dutchess County",36027034013,69
+"109","New Jersey","Essex County","New York","Rockland County",36087034013,30
+"110","New Jersey","Essex County","New York","Orange County",36071034013,118
+"111","New Jersey","Essex County","New Jersey","Hudson County",34017034013,2466
+"112","New Jersey","Essex County","New Jersey","Monmouth County",34025034013,825
+"113","New Jersey","Essex County","New Jersey","Bergen County",34003034013,1722
+"114","New Jersey","Essex County","New York","Ulster County",36111034013,9
+"115","New Jersey","Essex County","New Jersey","Somerset County",34035034013,721
+"116","New Jersey","Essex County","New Jersey","Union County",34039034013,4394
+"117","New Jersey","Essex County","Pennsylvania","Monroe County",42089034013,295
+"118","New Jersey","Essex County","Connecticut","Fairfield County",9001034013,450
+"119","New Jersey","Essex County","New York","Westchester County",36119034013,269
+"120","New Jersey","Essex County","Pennsylvania","Pike County",42103034013,72
+"121","New Jersey","Essex County","New Jersey","Middlesex County",34023034013,1681
+"122","New Jersey","Essex County","New York","Queens County",36081034013,606
+"123","New Jersey","Essex County","New Jersey","Passaic County",34031034013,1636
+"124","New Jersey","Essex County","New York","Putnam County",36079034013,36
+"125","New Jersey","Essex County","Connecticut","New Haven County",9009034013,85
+"126","New Jersey","Essex County","New Jersey","Warren County",34041034013,428
+"127","New Jersey","Essex County","New York","Kings County",36047034013,366
+"128","New Jersey","Essex County","New York","Richmond County",36085034013,39
+"129","New Jersey","Essex County","New Jersey","Mercer County",34021034013,1043
+"130","New Jersey","Essex County","New Jersey","Ocean County",34029034013,861
+"131","New Jersey","Essex County","New York","Suffolk County",36103034013,85
+"132","New Jersey","Essex County","New Jersey","Morris County",34027034013,2598
+"133","New Jersey","Essex County","New York","New York County",36061034013,962
+"134","New Jersey","Essex County","Pennsylvania","Lehigh County",42077034013,108
+"135","New Jersey","Essex County","New Jersey","Hunterdon County",34019034013,279
+"136","New Jersey","Essex County","Pennsylvania","Northampton County",42095034013,390
+"137","New Jersey","Hudson County","New Jersey","Warren County",34041034017,188
+"138","New Jersey","Hudson County","New York","Westchester County",36119034017,64
+"139","New Jersey","Hudson County","New York","Dutchess County",36027034017,159
+"140","New Jersey","Hudson County","New York","Richmond County",36085034017,220
+"141","New Jersey","Hudson County","Pennsylvania","Pike County",42103034017,76
+"142","New Jersey","Hudson County","New York","Queens County",36081034017,788
+"143","New Jersey","Hudson County","New York","New York County",36061034017,2817
+"144","New Jersey","Hudson County","New York","Bronx County",36005034017,597
+"145","New Jersey","Hudson County","Pennsylvania","Monroe County",42089034017,185
+"146","New Jersey","Hudson County","New York","Rockland County",36087034017,34
+"147","New Jersey","Hudson County","New Jersey","Morris County",34027034017,617
+"148","New Jersey","Hudson County","New York","Orange County",36071034017,90
+"149","New Jersey","Hudson County","New Jersey","Passaic County",34031034017,747
+"150","New Jersey","Hudson County","New York","Ulster County",36111034017,28
+"151","New Jersey","Hudson County","New Jersey","Essex County",34013034017,2642
+"152","New Jersey","Hudson County","New York","Nassau County",36059034017,87
+"153","New Jersey","Hudson County","Pennsylvania","Lehigh County",42077034017,286
+"154","New Jersey","Hudson County","New Jersey","Ocean County",34029034017,914
+"155","New Jersey","Hudson County","New Jersey","Middlesex County",34023034017,1840
+"156","New Jersey","Hudson County","New Jersey","Monmouth County",34025034017,1578
+"157","New Jersey","Hudson County","Pennsylvania","Northampton County",42095034017,237
+"158","New Jersey","Hudson County","New Jersey","Somerset County",34035034017,711
+"159","New Jersey","Hudson County","Connecticut","New Haven County",9009034017,39
+"160","New Jersey","Hudson County","New Jersey","Bergen County",34003034017,4573
+"161","New Jersey","Hudson County","New Jersey","Mercer County",34021034017,433
+"162","New Jersey","Hudson County","New York","Kings County",36047034017,879
+"163","New Jersey","Hudson County","New Jersey","Union County",34039034017,1152
+"164","New Jersey","Hudson County","New Jersey","Hunterdon County",34019034017,311
+"165","New Jersey","Hudson County","New York","Suffolk County",36103034017,207
+"166","New Jersey","Hudson County","Connecticut","Fairfield County",9001034017,140
+"167","New Jersey","Hunterdon County","New Jersey","Monmouth County",34025034019,184
+"168","New Jersey","Hunterdon County","New York","Dutchess County",36027034019,52
+"169","New Jersey","Hunterdon County","New York","Rockland County",36087034019,12
+"170","New Jersey","Hunterdon County","New York","Kings County",36047034019,28
+"171","New Jersey","Hunterdon County","New Jersey","Warren County",34041034019,604
+"172","New Jersey","Hunterdon County","New Jersey","Somerset County",34035034019,648
+"173","New Jersey","Hunterdon County","New Jersey","Ocean County",34029034019,160
+"174","New Jersey","Hunterdon County","New Jersey","Hudson County",34017034019,90
+"175","New Jersey","Hunterdon County","Pennsylvania","Monroe County",42089034019,61
+"176","New Jersey","Hunterdon County","New Jersey","Bergen County",34003034019,146
+"177","New Jersey","Hunterdon County","Pennsylvania","Lehigh County",42077034019,16
+"178","New Jersey","Hunterdon County","Connecticut","New Haven County",9009034019,17
+"179","New Jersey","Hunterdon County","New York","New York County",36061034019,54
+"180","New Jersey","Hunterdon County","New Jersey","Morris County",34027034019,180
+"181","New Jersey","Hunterdon County","Pennsylvania","Pike County",42103034019,19
+"182","New Jersey","Hunterdon County","Pennsylvania","Northampton County",42095034019,484
+"183","New Jersey","Hunterdon County","New Jersey","Union County",34039034019,143
+"184","New Jersey","Hunterdon County","New York","Nassau County",36059034019,8
+"185","New Jersey","Hunterdon County","New York","Westchester County",36119034019,99
+"186","New Jersey","Hunterdon County","New Jersey","Essex County",34013034019,127
+"187","New Jersey","Hunterdon County","New Jersey","Middlesex County",34023034019,315
+"188","New Jersey","Hunterdon County","New Jersey","Mercer County",34021034019,503
+"189","New Jersey","Hunterdon County","New Jersey","Passaic County",34031034019,134
+"190","New Jersey","Mercer County","New Jersey","Hudson County",34017034021,197
+"191","New Jersey","Mercer County","Pennsylvania","Monroe County",42089034021,9
+"192","New Jersey","Mercer County","Connecticut","New Haven County",9009034021,131
+"193","New Jersey","Mercer County","New York","Suffolk County",36103034021,25
+"194","New Jersey","Mercer County","Connecticut","Fairfield County",9001034021,201
+"195","New Jersey","Mercer County","New York","Bronx County",36005034021,44
+"196","New Jersey","Mercer County","New Jersey","Essex County",34013034021,395
+"197","New Jersey","Mercer County","New York","Kings County",36047034021,157
+"198","New Jersey","Mercer County","New York","New York County",36061034021,479
+"199","New Jersey","Mercer County","New Jersey","Somerset County",34035034021,364
+"200","New Jersey","Mercer County","New Jersey","Hunterdon County",34019034021,619
+"201","New Jersey","Mercer County","New Jersey","Passaic County",34031034021,171
+"202","New Jersey","Mercer County","New York","Dutchess County",36027034021,18
+"203","New Jersey","Mercer County","New Jersey","Warren County",34041034021,64
+"204","New Jersey","Mercer County","New Jersey","Morris County",34027034021,128
+"205","New Jersey","Mercer County","Pennsylvania","Lehigh County",42077034021,46
+"206","New Jersey","Mercer County","New Jersey","Middlesex County",34023034021,2001
+"207","New Jersey","Mercer County","New York","Westchester County",36119034021,22
+"208","New Jersey","Mercer County","Pennsylvania","Pike County",42103034021,5
+"209","New Jersey","Mercer County","New Jersey","Monmouth County",34025034021,811
+"210","New Jersey","Mercer County","New York","Richmond County",36085034021,27
+"211","New Jersey","Mercer County","New Jersey","Bergen County",34003034021,158
+"212","New Jersey","Mercer County","New Jersey","Union County",34039034021,108
+"213","New Jersey","Mercer County","New Jersey","Ocean County",34029034021,397
+"214","New Jersey","Mercer County","New York","Queens County",36081034021,15
+"215","New Jersey","Middlesex County","New Jersey","Passaic County",34031034023,438
+"216","New Jersey","Middlesex County","New York","Bronx County",36005034023,259
+"217","New Jersey","Middlesex County","New York","Suffolk County",36103034023,91
+"218","New Jersey","Middlesex County","New Jersey","Essex County",34013034023,971
+"219","New Jersey","Middlesex County","New York","Nassau County",36059034023,64
+"220","New Jersey","Middlesex County","New Jersey","Ocean County",34029034023,1257
+"221","New Jersey","Middlesex County","New Jersey","Bergen County",34003034023,779
+"222","New Jersey","Middlesex County","New Jersey","Monmouth County",34025034023,3468
+"223","New Jersey","Middlesex County","New York","Kings County",36047034023,208
+"224","New Jersey","Middlesex County","Connecticut","New Haven County",9009034023,130
+"225","New Jersey","Middlesex County","New Jersey","Warren County",34041034023,171
+"226","New Jersey","Middlesex County","Pennsylvania","Monroe County",42089034023,61
+"227","New Jersey","Middlesex County","Connecticut","Fairfield County",9001034023,124
+"228","New Jersey","Middlesex County","New York","Rockland County",36087034023,16
+"229","New Jersey","Middlesex County","New York","Queens County",36081034023,605
+"230","New Jersey","Middlesex County","New Jersey","Morris County",34027034023,751
+"231","New Jersey","Middlesex County","New York","Dutchess County",36027034023,131
+"232","New Jersey","Middlesex County","Pennsylvania","Lehigh County",42077034023,304
+"233","New Jersey","Middlesex County","Pennsylvania","Northampton County",42095034023,557
+"234","New Jersey","Middlesex County","New York","New York County",36061034023,547
+"235","New Jersey","Middlesex County","New Jersey","Somerset County",34035034023,3572
+"236","New Jersey","Middlesex County","Pennsylvania","Pike County",42103034023,22
+"237","New Jersey","Middlesex County","New York","Orange County",36071034023,8
+"238","New Jersey","Middlesex County","New Jersey","Hudson County",34017034023,1239
+"239","New Jersey","Middlesex County","New Jersey","Union County",34039034023,2167
+"240","New Jersey","Middlesex County","New York","Westchester County",36119034023,178
+"241","New Jersey","Middlesex County","New Jersey","Mercer County",34021034023,3387
+"242","New Jersey","Middlesex County","New Jersey","Hunterdon County",34019034023,1006
+"243","New Jersey","Middlesex County","New York","Richmond County",36085034023,363
+"244","New Jersey","Monmouth County","New Jersey","Passaic County",34031034025,589
+"245","New Jersey","Monmouth County","Pennsylvania","Pike County",42103034025,35
+"246","New Jersey","Monmouth County","New Jersey","Bergen County",34003034025,278
+"247","New Jersey","Monmouth County","New Jersey","Mercer County",34021034025,739
+"248","New Jersey","Monmouth County","New York","Nassau County",36059034025,29
+"249","New Jersey","Monmouth County","New Jersey","Union County",34039034025,403
+"250","New Jersey","Monmouth County","New Jersey","Hudson County",34017034025,289
+"251","New Jersey","Monmouth County","Connecticut","Fairfield County",9001034025,113
+"252","New Jersey","Monmouth County","New Jersey","Essex County",34013034025,551
+"253","New Jersey","Monmouth County","New York","Kings County",36047034025,422
+"254","New Jersey","Monmouth County","New Jersey","Middlesex County",34023034025,2500
+"255","New Jersey","Monmouth County","New York","Bronx County",36005034025,93
+"256","New Jersey","Monmouth County","Pennsylvania","Lehigh County",42077034025,59
+"257","New Jersey","Monmouth County","Connecticut","New Haven County",9009034025,62
+"258","New Jersey","Monmouth County","New Jersey","Hunterdon County",34019034025,198
+"259","New Jersey","Monmouth County","New Jersey","Somerset County",34035034025,125
+"260","New Jersey","Monmouth County","New York","Dutchess County",36027034025,49
+"261","New Jersey","Monmouth County","New York","Orange County",36071034025,219
+"262","New Jersey","Monmouth County","Pennsylvania","Northampton County",42095034025,157
+"263","New Jersey","Monmouth County","New York","Suffolk County",36103034025,88
+"264","New Jersey","Monmouth County","New Jersey","Ocean County",34029034025,5167
+"265","New Jersey","Monmouth County","New York","Rockland County",36087034025,207
+"266","New Jersey","Monmouth County","New York","Richmond County",36085034025,133
+"267","New Jersey","Monmouth County","New York","Queens County",36081034025,93
+"268","New Jersey","Monmouth County","New York","Westchester County",36119034025,27
+"269","New Jersey","Monmouth County","New York","New York County",36061034025,648
+"270","New Jersey","Monmouth County","New Jersey","Morris County",34027034025,692
+"271","New Jersey","Monmouth County","Pennsylvania","Monroe County",42089034025,85
+"272","New Jersey","Monmouth County","New Jersey","Warren County",34041034025,55
+"273","New Jersey","Morris County","Pennsylvania","Monroe County",42089034027,332
+"274","New Jersey","Morris County","New Jersey","Bergen County",34003034027,940
+"275","New Jersey","Morris County","New Jersey","Middlesex County",34023034027,717
+"276","New Jersey","Morris County","New York","Putnam County",36079034027,49
+"277","New Jersey","Morris County","New Jersey","Passaic County",34031034027,1193
+"278","New Jersey","Morris County","New York","Nassau County",36059034027,9
+"279","New Jersey","Morris County","Pennsylvania","Pike County",42103034027,80
+"280","New Jersey","Morris County","New York","New York County",36061034027,497
+"281","New Jersey","Morris County","Connecticut","New Haven County",9009034027,59
+"282","New Jersey","Morris County","New York","Suffolk County",36103034027,128
+"283","New Jersey","Morris County","New York","Dutchess County",36027034027,30
+"284","New Jersey","Morris County","New Jersey","Somerset County",34035034027,968
+"285","New Jersey","Morris County","Connecticut","Fairfield County",9001034027,79
+"286","New Jersey","Morris County","New Jersey","Hudson County",34017034027,860
+"287","New Jersey","Morris County","New Jersey","Mercer County",34021034027,262
+"288","New Jersey","Morris County","New York","Westchester County",36119034027,89
+"289","New Jersey","Morris County","New York","Richmond County",36085034027,130
+"290","New Jersey","Morris County","New Jersey","Union County",34039034027,850
+"291","New Jersey","Morris County","New Jersey","Monmouth County",34025034027,379
+"292","New Jersey","Morris County","New York","Rockland County",36087034027,64
+"293","New Jersey","Morris County","Pennsylvania","Northampton County",42095034027,410
+"294","New Jersey","Morris County","Pennsylvania","Lehigh County",42077034027,60
+"295","New Jersey","Morris County","New Jersey","Warren County",34041034027,1139
+"296","New Jersey","Morris County","New Jersey","Ocean County",34029034027,558
+"297","New Jersey","Morris County","New York","Kings County",36047034027,145
+"298","New Jersey","Morris County","New York","Queens County",36081034027,211
+"299","New Jersey","Morris County","New York","Orange County",36071034027,159
+"300","New Jersey","Morris County","New Jersey","Hunterdon County",34019034027,320
+"301","New Jersey","Morris County","New Jersey","Essex County",34013034027,1518
+"302","New Jersey","Ocean County","Pennsylvania","Northampton County",42095034029,79
+"303","New Jersey","Ocean County","Connecticut","New Haven County",9009034029,23
+"304","New Jersey","Ocean County","New York","Orange County",36071034029,13
+"305","New Jersey","Ocean County","New Jersey","Somerset County",34035034029,244
+"306","New Jersey","Ocean County","New Jersey","Essex County",34013034029,284
+"307","New Jersey","Ocean County","New Jersey","Mercer County",34021034029,395
+"308","New Jersey","Ocean County","Pennsylvania","Monroe County",42089034029,12
+"309","New Jersey","Ocean County","New York","Rockland County",36087034029,12
+"310","New Jersey","Ocean County","New Jersey","Monmouth County",34025034029,3131
+"311","New Jersey","Ocean County","New Jersey","Middlesex County",34023034029,1323
+"312","New Jersey","Ocean County","New York","Suffolk County",36103034029,5
+"313","New Jersey","Ocean County","New Jersey","Warren County",34041034029,90
+"314","New Jersey","Ocean County","New York","New York County",36061034029,120
+"315","New Jersey","Ocean County","New York","Kings County",36047034029,145
+"316","New Jersey","Ocean County","New York","Richmond County",36085034029,11
+"317","New Jersey","Ocean County","New Jersey","Passaic County",34031034029,1275
+"318","New Jersey","Ocean County","New York","Westchester County",36119034029,18
+"319","New Jersey","Ocean County","New Jersey","Hudson County",34017034029,141
+"320","New Jersey","Ocean County","New Jersey","Hunterdon County",34019034029,72
+"321","New Jersey","Ocean County","New York","Dutchess County",36027034029,24
+"322","New Jersey","Ocean County","Pennsylvania","Carbon County",42025034029,8
+"323","New Jersey","Ocean County","New York","Queens County",36081034029,21
+"324","New Jersey","Ocean County","New Jersey","Bergen County",34003034029,417
+"325","New Jersey","Ocean County","New Jersey","Morris County",34027034029,329
+"326","New Jersey","Ocean County","New York","Ulster County",36111034029,8
+"327","New Jersey","Ocean County","New York","Bronx County",36005034029,43
+"328","New Jersey","Ocean County","New York","Nassau County",36059034029,71
+"329","New Jersey","Ocean County","Pennsylvania","Lehigh County",42077034029,228
+"330","New Jersey","Ocean County","New Jersey","Union County",34039034029,144
+"331","New Jersey","Passaic County","New York","Nassau County",36059034031,12
+"332","New Jersey","Passaic County","New York","Westchester County",36119034031,196
+"333","New Jersey","Passaic County","New Jersey","Somerset County",34035034031,261
+"334","New Jersey","Passaic County","New Jersey","Mercer County",34021034031,195
+"335","New Jersey","Passaic County","New Jersey","Morris County",34027034031,2135
+"336","New Jersey","Passaic County","New Jersey","Monmouth County",34025034031,230
+"337","New Jersey","Passaic County","Pennsylvania","Lehigh County",42077034031,134
+"338","New Jersey","Passaic County","Pennsylvania","Northampton County",42095034031,12
+"339","New Jersey","Passaic County","New York","Dutchess County",36027034031,13
+"340","New Jersey","Passaic County","New York","Kings County",36047034031,188
+"341","New Jersey","Passaic County","New Jersey","Middlesex County",34023034031,752
+"342","New Jersey","Passaic County","New Jersey","Hudson County",34017034031,520
+"343","New Jersey","Passaic County","Pennsylvania","Monroe County",42089034031,78
+"344","New Jersey","Passaic County","New York","Richmond County",36085034031,14
+"345","New Jersey","Passaic County","New York","Ulster County",36111034031,11
+"346","New Jersey","Passaic County","New York","Bronx County",36005034031,198
+"347","New Jersey","Passaic County","New York","Orange County",36071034031,355
+"348","New Jersey","Passaic County","New York","Queens County",36081034031,364
+"349","New Jersey","Passaic County","New York","Suffolk County",36103034031,9
+"350","New Jersey","Passaic County","New Jersey","Essex County",34013034031,1691
+"351","New Jersey","Passaic County","Connecticut","Fairfield County",9001034031,93
+"352","New Jersey","Passaic County","New York","New York County",36061034031,466
+"353","New Jersey","Passaic County","New Jersey","Ocean County",34029034031,661
+"354","New Jersey","Passaic County","New Jersey","Warren County",34041034031,238
+"355","New Jersey","Passaic County","Connecticut","New Haven County",9009034031,62
+"356","New Jersey","Passaic County","Pennsylvania","Pike County",42103034031,12
+"357","New Jersey","Passaic County","New Jersey","Bergen County",34003034031,3632
+"358","New Jersey","Passaic County","New Jersey","Union County",34039034031,491
+"359","New Jersey","Passaic County","New Jersey","Hunterdon County",34019034031,143
+"360","New Jersey","Passaic County","New York","Rockland County",36087034031,19
+"361","New Jersey","Somerset County","New York","Suffolk County",36103034035,63
+"362","New Jersey","Somerset County","New York","Dutchess County",36027034035,16
+"363","New Jersey","Somerset County","New Jersey","Monmouth County",34025034035,394
+"364","New Jersey","Somerset County","New York","Kings County",36047034035,47
+"365","New Jersey","Somerset County","Pennsylvania","Lehigh County",42077034035,287
+"366","New Jersey","Somerset County","New York","Richmond County",36085034035,11
+"367","New Jersey","Somerset County","New Jersey","Essex County",34013034035,391
+"368","New Jersey","Somerset County","New Jersey","Mercer County",34021034035,1156
+"369","New Jersey","Somerset County","Pennsylvania","Pike County",42103034035,145
+"370","New Jersey","Somerset County","New York","Nassau County",36059034035,77
+"371","New Jersey","Somerset County","New York","Queens County",36081034035,9
+"372","New Jersey","Somerset County","New Jersey","Bergen County",34003034035,303
+"373","New Jersey","Somerset County","New Jersey","Warren County",34041034035,559
+"374","New Jersey","Somerset County","New Jersey","Hunterdon County",34019034035,1219
+"375","New Jersey","Somerset County","New York","Orange County",36071034035,16
+"376","New Jersey","Somerset County","Pennsylvania","Northampton County",42095034035,466
+"377","New Jersey","Somerset County","New Jersey","Passaic County",34031034035,135
+"378","New Jersey","Somerset County","New York","Rockland County",36087034035,9
+"379","New Jersey","Somerset County","New York","Bronx County",36005034035,54
+"380","New Jersey","Somerset County","New Jersey","Union County",34039034035,891
+"381","New Jersey","Somerset County","Connecticut","Fairfield County",9001034035,12
+"382","New Jersey","Somerset County","New York","New York County",36061034035,376
+"383","New Jersey","Somerset County","New Jersey","Morris County",34027034035,634
+"384","New Jersey","Somerset County","Connecticut","New Haven County",9009034035,108
+"385","New Jersey","Somerset County","New Jersey","Ocean County",34029034035,427
+"386","New Jersey","Somerset County","Pennsylvania","Monroe County",42089034035,17
+"387","New Jersey","Somerset County","New Jersey","Hudson County",34017034035,475
+"388","New Jersey","Somerset County","New Jersey","Middlesex County",34023034035,2243
+"389","New Jersey","Somerset County","New York","Westchester County",36119034035,33
+"390","New Jersey","Union County","New York","Nassau County",36059034039,91
+"391","New Jersey","Union County","New Jersey","Hudson County",34017034039,805
+"392","New Jersey","Union County","New York","Kings County",36047034039,71
+"393","New Jersey","Union County","New Jersey","Mercer County",34021034039,558
+"394","New Jersey","Union County","Connecticut","Fairfield County",9001034039,105
+"395","New Jersey","Union County","New York","Bronx County",36005034039,31
+"396","New Jersey","Union County","New Jersey","Monmouth County",34025034039,992
+"397","New Jersey","Union County","New Jersey","Essex County",34013034039,2866
+"398","New Jersey","Union County","Pennsylvania","Lehigh County",42077034039,403
+"399","New Jersey","Union County","New Jersey","Warren County",34041034039,197
+"400","New Jersey","Union County","Pennsylvania","Pike County",42103034039,11
+"401","New Jersey","Union County","New Jersey","Morris County",34027034039,940
+"402","New Jersey","Union County","New York","Rockland County",36087034039,29
+"403","New Jersey","Union County","Pennsylvania","Monroe County",42089034039,63
+"404","New Jersey","Union County","New Jersey","Somerset County",34035034039,2417
+"405","New Jersey","Union County","New York","Orange County",36071034039,38
+"406","New Jersey","Union County","New Jersey","Bergen County",34003034039,608
+"407","New Jersey","Union County","Connecticut","New Haven County",9009034039,28
+"408","New Jersey","Union County","New Jersey","Hunterdon County",34019034039,404
+"409","New Jersey","Union County","New York","Richmond County",36085034039,35
+"410","New Jersey","Union County","New York","Queens County",36081034039,103
+"411","New Jersey","Union County","New Jersey","Passaic County",34031034039,417
+"412","New Jersey","Union County","New Jersey","Middlesex County",34023034039,3701
+"413","New Jersey","Union County","New York","New York County",36061034039,843
+"414","New Jersey","Union County","New York","Suffolk County",36103034039,18
+"415","New Jersey","Union County","New York","Westchester County",36119034039,16
+"416","New Jersey","Union County","New York","Ulster County",36111034039,110
+"417","New Jersey","Union County","New York","Dutchess County",36027034039,16
+"418","New Jersey","Union County","Pennsylvania","Northampton County",42095034039,351
+"419","New Jersey","Union County","New Jersey","Ocean County",34029034039,678
+"420","New Jersey","Warren County","New Jersey","Bergen County",34003034041,86
+"421","New Jersey","Warren County","New Jersey","Hunterdon County",34019034041,355
+"422","New Jersey","Warren County","New Jersey","Monmouth County",34025034041,21
+"423","New Jersey","Warren County","Pennsylvania","Northampton County",42095034041,951
+"424","New Jersey","Warren County","New Jersey","Middlesex County",34023034041,101
+"425","New Jersey","Warren County","Connecticut","New Haven County",9009034041,19
+"426","New Jersey","Warren County","Pennsylvania","Monroe County",42089034041,111
+"427","New Jersey","Warren County","New York","Suffolk County",36103034041,22
+"428","New Jersey","Warren County","New York","Bronx County",36005034041,17
+"429","New Jersey","Warren County","New Jersey","Morris County",34027034041,410
+"430","New Jersey","Warren County","New Jersey","Mercer County",34021034041,29
+"431","New Jersey","Warren County","New Jersey","Hudson County",34017034041,13
+"432","New Jersey","Warren County","Pennsylvania","Carbon County",42025034041,22
+"433","New Jersey","Warren County","Pennsylvania","Pike County",42103034041,36
+"434","New Jersey","Warren County","New Jersey","Union County",34039034041,17
+"435","New Jersey","Warren County","New Jersey","Passaic County",34031034041,164
+"436","New Jersey","Warren County","New Jersey","Somerset County",34035034041,9
+"437","New Jersey","Warren County","Pennsylvania","Lehigh County",42077034041,54
+"438","New Jersey","Warren County","New Jersey","Ocean County",34029034041,117
+"439","New Jersey","Warren County","New York","New York County",36061034041,80
+"440","New Jersey","Warren County","New York","Dutchess County",36027034041,20
+"441","New Jersey","Warren County","New Jersey","Essex County",34013034041,33
+"442","New York","Bronx County","New Jersey","Ocean County",34029036005,115
+"443","New York","Bronx County","New Jersey","Morris County",34027036005,229
+"444","New York","Bronx County","New Jersey","Monmouth County",34025036005,184
+"445","New York","Bronx County","Pennsylvania","Pike County",42103036005,81
+"446","New York","Bronx County","New Jersey","Essex County",34013036005,600
+"447","New York","Bronx County","New Jersey","Bergen County",34003036005,789
+"448","New York","Bronx County","New Jersey","Warren County",34041036005,13
+"449","New York","Bronx County","New York","Richmond County",36085036005,661
+"450","New York","Bronx County","Connecticut","Fairfield County",9001036005,846
+"451","New York","Bronx County","Pennsylvania","Monroe County",42089036005,891
+"452","New York","Bronx County","New Jersey","Passaic County",34031036005,547
+"453","New York","Bronx County","New Jersey","Union County",34039036005,186
+"454","New York","Bronx County","New Jersey","Hunterdon County",34019036005,57
+"455","New York","Bronx County","New York","Dutchess County",36027036005,752
+"456","New York","Bronx County","New Jersey","Mercer County",34021036005,173
+"457","New York","Bronx County","New York","Westchester County",36119036005,5653
+"458","New York","Bronx County","New Jersey","Hudson County",34017036005,1499
+"459","New York","Bronx County","New Jersey","Somerset County",34035036005,35
+"460","New York","Bronx County","New York","Rockland County",36087036005,785
+"461","New York","Bronx County","New York","Kings County",36047036005,3234
+"462","New York","Bronx County","New York","Nassau County",36059036005,464
+"463","New York","Bronx County","New York","Putnam County",36079036005,381
+"464","New York","Bronx County","New York","Queens County",36081036005,5105
+"465","New York","Bronx County","New York","Ulster County",36111036005,302
+"466","New York","Bronx County","Connecticut","New Haven County",9009036005,513
+"467","New York","Bronx County","New York","Suffolk County",36103036005,985
+"468","New York","Bronx County","New York","New York County",36061036005,7842
+"469","New York","Bronx County","New York","Orange County",36071036005,2322
+"470","New York","Bronx County","Pennsylvania","Lehigh County",42077036005,433
+"471","New York","Bronx County","New Jersey","Middlesex County",34023036005,480
+"472","New York","Bronx County","Pennsylvania","Northampton County",42095036005,175
+"473","New York","Dutchess County","New Jersey","Ocean County",34029036027,12
+"474","New York","Dutchess County","New York","Ulster County",36111036027,1843
+"475","New York","Dutchess County","New York","Queens County",36081036027,429
+"476","New York","Dutchess County","New York","Orange County",36071036027,785
+"477","New York","Dutchess County","New York","Bronx County",36005036027,327
+"478","New York","Dutchess County","New York","Rockland County",36087036027,49
+"479","New York","Dutchess County","New York","Suffolk County",36103036027,167
+"480","New York","Dutchess County","New Jersey","Morris County",34027036027,15
+"481","New York","Dutchess County","Pennsylvania","Northampton County",42095036027,13
+"482","New York","Dutchess County","New Jersey","Passaic County",34031036027,41
+"483","New York","Dutchess County","Pennsylvania","Monroe County",42089036027,35
+"484","New York","Dutchess County","New York","Westchester County",36119036027,879
+"485","New York","Dutchess County","New Jersey","Essex County",34013036027,42
+"486","New York","Dutchess County","New Jersey","Hudson County",34017036027,61
+"487","New York","Dutchess County","New Jersey","Middlesex County",34023036027,13
+"488","New York","Dutchess County","New York","New York County",36061036027,547
+"489","New York","Dutchess County","New Jersey","Monmouth County",34025036027,27
+"490","New York","Dutchess County","Connecticut","Litchfield County",9005036027,126
+"491","New York","Dutchess County","New York","Nassau County",36059036027,51
+"492","New York","Dutchess County","New York","Richmond County",36085036027,19
+"493","New York","Dutchess County","New York","Putnam County",36079036027,485
+"494","New York","Dutchess County","New Jersey","Union County",34039036027,10
+"495","New York","Dutchess County","Connecticut","New Haven County",9009036027,111
+"496","New York","Dutchess County","New York","Kings County",36047036027,268
+"497","New York","Dutchess County","Connecticut","Fairfield County",9001036027,269
+"498","New York","Kings County","Pennsylvania","Carbon County",42025036047,112
+"499","New York","Kings County","Connecticut","New Haven County",9009036047,770
+"500","New York","Kings County","New Jersey","Morris County",34027036047,282
+"501","New York","Kings County","New Jersey","Monmouth County",34025036047,952
+"502","New York","Kings County","Pennsylvania","Monroe County",42089036047,619
+"503","New York","Kings County","New York","Ulster County",36111036047,618
+"504","New York","Kings County","New York","New York County",36061036047,11300
+"505","New York","Kings County","New Jersey","Somerset County",34035036047,66
+"506","New York","Kings County","New Jersey","Hunterdon County",34019036047,26
+"507","New York","Kings County","New York","Queens County",36081036047,18041
+"508","New York","Kings County","Connecticut","Fairfield County",9001036047,1206
+"509","New York","Kings County","Pennsylvania","Lehigh County",42077036047,493
+"510","New York","Kings County","New Jersey","Ocean County",34029036047,1289
+"511","New York","Kings County","Pennsylvania","Northampton County",42095036047,350
+"512","New York","Kings County","New Jersey","Mercer County",34021036047,389
+"513","New York","Kings County","New Jersey","Essex County",34013036047,2055
+"514","New York","Kings County","Pennsylvania","Pike County",42103036047,125
+"515","New York","Kings County","New Jersey","Bergen County",34003036047,645
+"516","New York","Kings County","New York","Nassau County",36059036047,3221
+"517","New York","Kings County","New York","Richmond County",36085036047,5665
+"518","New York","Kings County","New Jersey","Middlesex County",34023036047,1086
+"519","New York","Kings County","New York","Westchester County",36119036047,1536
+"520","New York","Kings County","New Jersey","Union County",34039036047,736
+"521","New York","Kings County","New York","Putnam County",36079036047,343
+"522","New York","Kings County","New York","Suffolk County",36103036047,2310
+"523","New York","Kings County","New Jersey","Passaic County",34031036047,319
+"524","New York","Kings County","New York","Rockland County",36087036047,728
+"525","New York","Kings County","Connecticut","Litchfield County",9005036047,34
+"526","New York","Kings County","New Jersey","Hudson County",34017036047,2115
+"527","New York","Kings County","New York","Dutchess County",36027036047,470
+"528","New York","Kings County","New York","Bronx County",36005036047,9254
+"529","New York","Kings County","New York","Orange County",36071036047,877
+"530","New York","Nassau County","Pennsylvania","Lehigh County",42077036059,89
+"531","New York","Nassau County","Pennsylvania","Northampton County",42095036059,184
+"532","New York","Nassau County","New York","Westchester County",36119036059,380
+"533","New York","Nassau County","New York","Queens County",36081036059,6073
+"534","New York","Nassau County","New Jersey","Essex County",34013036059,91
+"535","New York","Nassau County","New Jersey","Hunterdon County",34019036059,11
+"536","New York","Nassau County","New York","Ulster County",36111036059,188
+"537","New York","Nassau County","New Jersey","Morris County",34027036059,211
+"538","New York","Nassau County","New York","Bronx County",36005036059,485
+"539","New York","Nassau County","New York","New York County",36061036059,3879
+"540","New York","Nassau County","Pennsylvania","Monroe County",42089036059,42
+"541","New York","Nassau County","New York","Orange County",36071036059,172
+"542","New York","Nassau County","New York","Dutchess County",36027036059,238
+"543","New York","Nassau County","Connecticut","New Haven County",9009036059,159
+"544","New York","Nassau County","New York","Putnam County",36079036059,191
+"545","New York","Nassau County","New Jersey","Passaic County",34031036059,91
+"546","New York","Nassau County","Pennsylvania","Pike County",42103036059,54
+"547","New York","Nassau County","New Jersey","Hudson County",34017036059,315
+"548","New York","Nassau County","Connecticut","Fairfield County",9001036059,397
+"549","New York","Nassau County","New York","Suffolk County",36103036059,10483
+"550","New York","Nassau County","New York","Rockland County",36087036059,151
+"551","New York","Nassau County","New Jersey","Middlesex County",34023036059,218
+"552","New York","Nassau County","New York","Richmond County",36085036059,128
+"553","New York","Nassau County","New Jersey","Bergen County",34003036059,315
+"554","New York","Nassau County","New Jersey","Ocean County",34029036059,93
+"555","New York","Nassau County","New Jersey","Somerset County",34035036059,47
+"556","New York","Nassau County","New Jersey","Mercer County",34021036059,14
+"557","New York","Nassau County","New Jersey","Monmouth County",34025036059,110
+"558","New York","Nassau County","New Jersey","Union County",34039036059,28
+"559","New York","Nassau County","New York","Kings County",36047036059,1123
+"560","New York","New York County","New Jersey","Hunterdon County",34019036061,155
+"561","New York","New York County","New York","Queens County",36081036061,8782
+"562","New York","New York County","New York","Suffolk County",36103036061,1595
+"563","New York","New York County","New Jersey","Morris County",34027036061,502
+"564","New York","New York County","New Jersey","Monmouth County",34025036061,586
+"565","New York","New York County","Connecticut","New Haven County",9009036061,665
+"566","New York","New York County","Pennsylvania","Northampton County",42095036061,155
+"567","New York","New York County","Connecticut","Fairfield County",9001036061,2231
+"568","New York","New York County","New Jersey","Ocean County",34029036061,181
+"569","New York","New York County","New York","Nassau County",36059036061,1620
+"570","New York","New York County","Pennsylvania","Monroe County",42089036061,534
+"571","New York","New York County","New Jersey","Bergen County",34003036061,2682
+"572","New York","New York County","New Jersey","Mercer County",34021036061,496
+"573","New York","New York County","Connecticut","Litchfield County",9005036061,199
+"574","New York","New York County","New York","Dutchess County",36027036061,700
+"575","New York","New York County","Pennsylvania","Pike County",42103036061,60
+"576","New York","New York County","New Jersey","Somerset County",34035036061,312
+"577","New York","New York County","New York","Ulster County",36111036061,374
+"578","New York","New York County","New York","Putnam County",36079036061,246
+"579","New York","New York County","New York","Orange County",36071036061,186
+"580","New York","New York County","New Jersey","Union County",34039036061,770
+"581","New York","New York County","Pennsylvania","Lehigh County",42077036061,355
+"582","New York","New York County","New Jersey","Passaic County",34031036061,118
+"583","New York","New York County","New Jersey","Warren County",34041036061,10
+"584","New York","New York County","New York","Westchester County",36119036061,4464
+"585","New York","New York County","New Jersey","Hudson County",34017036061,4594
+"586","New York","New York County","New Jersey","Essex County",34013036061,1694
+"587","New York","New York County","New York","Richmond County",36085036061,516
+"588","New York","New York County","New York","Rockland County",36087036061,680
+"589","New York","New York County","New York","Bronx County",36005036061,16686
+"590","New York","New York County","New Jersey","Middlesex County",34023036061,519
+"591","New York","New York County","New York","Kings County",36047036061,15020
+"592","New York","Orange County","New Jersey","Monmouth County",34025036071,9
+"593","New York","Orange County","New York","Putnam County",36079036071,72
+"594","New York","Orange County","Pennsylvania","Northampton County",42095036071,19
+"595","New York","Orange County","Pennsylvania","Monroe County",42089036071,37
+"596","New York","Orange County","New York","Rockland County",36087036071,566
+"597","New York","Orange County","New Jersey","Mercer County",34021036071,40
+"598","New York","Orange County","New York","Kings County",36047036071,177
+"599","New York","Orange County","Connecticut","Fairfield County",9001036071,66
+"600","New York","Orange County","New York","Westchester County",36119036071,348
+"601","New York","Orange County","New York","New York County",36061036071,462
+"602","New York","Orange County","New York","Richmond County",36085036071,73
+"603","New York","Orange County","New York","Nassau County",36059036071,121
+"604","New York","Orange County","New York","Ulster County",36111036071,1684
+"605","New York","Orange County","New York","Suffolk County",36103036071,76
+"606","New York","Orange County","New Jersey","Ocean County",34029036071,52
+"607","New York","Orange County","New York","Bronx County",36005036071,247
+"608","New York","Orange County","New Jersey","Morris County",34027036071,54
+"609","New York","Orange County","New York","Dutchess County",36027036071,779
+"610","New York","Orange County","Pennsylvania","Pike County",42103036071,500
+"611","New York","Orange County","New Jersey","Somerset County",34035036071,30
+"612","New York","Orange County","New Jersey","Hudson County",34017036071,24
+"613","New York","Orange County","New York","Queens County",36081036071,506
+"614","New York","Orange County","New Jersey","Bergen County",34003036071,264
+"615","New York","Orange County","New Jersey","Passaic County",34031036071,112
+"616","New York","Orange County","Connecticut","Litchfield County",9005036071,103
+"617","New York","Putnam County","New York","Suffolk County",36103036079,196
+"618","New York","Putnam County","New Jersey","Monmouth County",34025036079,26
+"619","New York","Putnam County","New Jersey","Ocean County",34029036079,25
+"620","New York","Putnam County","Pennsylvania","Lehigh County",42077036079,14
+"621","New York","Putnam County","Pennsylvania","Monroe County",42089036079,17
+"622","New York","Putnam County","Pennsylvania","Pike County",42103036079,25
+"623","New York","Putnam County","Connecticut","Fairfield County",9001036079,495
+"624","New York","Putnam County","New York","Orange County",36071036079,97
+"625","New York","Putnam County","New York","Rockland County",36087036079,20
+"626","New York","Putnam County","New York","Kings County",36047036079,29
+"627","New York","Putnam County","New York","New York County",36061036079,51
+"628","New York","Putnam County","Connecticut","Litchfield County",9005036079,76
+"629","New York","Putnam County","New York","Dutchess County",36027036079,847
+"630","New York","Putnam County","New York","Ulster County",36111036079,123
+"631","New York","Putnam County","New Jersey","Essex County",34013036079,3
+"632","New York","Putnam County","New York","Bronx County",36005036079,87
+"633","New York","Putnam County","New Jersey","Passaic County",34031036079,7
+"634","New York","Putnam County","New York","Westchester County",36119036079,1156
+"635","New York","Putnam County","Connecticut","New Haven County",9009036079,36
+"636","New York","Putnam County","New York","Queens County",36081036079,31
+"637","New York","Queens County","New Jersey","Bergen County",34003036081,1595
+"638","New York","Queens County","New Jersey","Ocean County",34029036081,354
+"639","New York","Queens County","New Jersey","Essex County",34013036081,959
+"640","New York","Queens County","New Jersey","Hudson County",34017036081,1317
+"641","New York","Queens County","New Jersey","Warren County",34041036081,126
+"642","New York","Queens County","New York","Nassau County",36059036081,12537
+"643","New York","Queens County","New Jersey","Passaic County",34031036081,145
+"644","New York","Queens County","Connecticut","New Haven County",9009036081,416
+"645","New York","Queens County","New York","New York County",36061036081,7742
+"646","New York","Queens County","Pennsylvania","Monroe County",42089036081,517
+"647","New York","Queens County","New York","Ulster County",36111036081,245
+"648","New York","Queens County","New Jersey","Monmouth County",34025036081,183
+"649","New York","Queens County","Connecticut","Litchfield County",9005036081,22
+"650","New York","Queens County","New York","Orange County",36071036081,604
+"651","New York","Queens County","New Jersey","Morris County",34027036081,310
+"652","New York","Queens County","Pennsylvania","Lehigh County",42077036081,316
+"653","New York","Queens County","New Jersey","Middlesex County",34023036081,1216
+"654","New York","Queens County","New Jersey","Mercer County",34021036081,343
+"655","New York","Queens County","Connecticut","Fairfield County",9001036081,1420
+"656","New York","Queens County","New Jersey","Union County",34039036081,398
+"657","New York","Queens County","Pennsylvania","Northampton County",42095036081,333
+"658","New York","Queens County","New Jersey","Somerset County",34035036081,326
+"659","New York","Queens County","New York","Bronx County",36005036081,6312
+"660","New York","Queens County","New York","Dutchess County",36027036081,820
+"661","New York","Queens County","Pennsylvania","Pike County",42103036081,109
+"662","New York","Queens County","New York","Richmond County",36085036081,1371
+"663","New York","Queens County","New York","Rockland County",36087036081,256
+"664","New York","Queens County","New York","Putnam County",36079036081,307
+"665","New York","Queens County","New Jersey","Hunterdon County",34019036081,16
+"666","New York","Queens County","Pennsylvania","Carbon County",42025036081,45
+"667","New York","Queens County","New York","Kings County",36047036081,9633
+"668","New York","Queens County","New York","Suffolk County",36103036081,5743
+"669","New York","Queens County","New York","Westchester County",36119036081,1683
+"670","New York","Richmond County","Pennsylvania","Northampton County",42095036085,79
+"671","New York","Richmond County","New York","Suffolk County",36103036085,534
+"672","New York","Richmond County","New York","Putnam County",36079036085,67
+"673","New York","Richmond County","New Jersey","Middlesex County",34023036085,463
+"674","New York","Richmond County","New Jersey","Ocean County",34029036085,462
+"675","New York","Richmond County","New York","Kings County",36047036085,1832
+"676","New York","Richmond County","New Jersey","Morris County",34027036085,77
+"677","New York","Richmond County","New York","Rockland County",36087036085,54
+"678","New York","Richmond County","Pennsylvania","Lehigh County",42077036085,38
+"679","New York","Richmond County","New Jersey","Passaic County",34031036085,92
+"680","New York","Richmond County","Connecticut","Fairfield County",9001036085,109
+"681","New York","Richmond County","New Jersey","Hunterdon County",34019036085,100
+"682","New York","Richmond County","New Jersey","Union County",34039036085,115
+"683","New York","Richmond County","New Jersey","Essex County",34013036085,265
+"684","New York","Richmond County","New Jersey","Monmouth County",34025036085,1571
+"685","New York","Richmond County","New Jersey","Somerset County",34035036085,137
+"686","New York","Richmond County","New Jersey","Mercer County",34021036085,234
+"687","New York","Richmond County","New York","Orange County",36071036085,218
+"688","New York","Richmond County","New York","New York County",36061036085,842
+"689","New York","Richmond County","New York","Ulster County",36111036085,134
+"690","New York","Richmond County","Connecticut","New Haven County",9009036085,37
+"691","New York","Richmond County","New York","Bronx County",36005036085,678
+"692","New York","Richmond County","New York","Westchester County",36119036085,88
+"693","New York","Richmond County","New York","Queens County",36081036085,734
+"694","New York","Richmond County","New Jersey","Hudson County",34017036085,278
+"695","New York","Richmond County","New Jersey","Bergen County",34003036085,161
+"696","New York","Richmond County","Pennsylvania","Carbon County",42025036085,64
+"697","New York","Richmond County","New Jersey","Warren County",34041036085,70
+"698","New York","Richmond County","Pennsylvania","Monroe County",42089036085,190
+"699","New York","Richmond County","New York","Nassau County",36059036085,177
+"700","New York","Richmond County","Pennsylvania","Pike County",42103036085,22
+"701","New York","Richmond County","New York","Dutchess County",36027036085,83
+"702","New York","Rockland County","New Jersey","Passaic County",34031036087,87
+"703","New York","Rockland County","New Jersey","Monmouth County",34025036087,7
+"704","New York","Rockland County","New Jersey","Bergen County",34003036087,886
+"705","New York","Rockland County","New Jersey","Hudson County",34017036087,133
+"706","New York","Rockland County","Pennsylvania","Northampton County",42095036087,53
+"707","New York","Rockland County","New Jersey","Middlesex County",34023036087,33
+"708","New York","Rockland County","New Jersey","Union County",34039036087,6
+"709","New York","Rockland County","Connecticut","Fairfield County",9001036087,130
+"710","New York","Rockland County","New Jersey","Hunterdon County",34019036087,37
+"711","New York","Rockland County","New York","Orange County",36071036087,1169
+"712","New York","Rockland County","New York","Suffolk County",36103036087,75
+"713","New York","Rockland County","Connecticut","Litchfield County",9005036087,55
+"714","New York","Rockland County","New York","Richmond County",36085036087,12
+"715","New York","Rockland County","New York","Dutchess County",36027036087,335
+"716","New York","Rockland County","New Jersey","Somerset County",34035036087,13
+"717","New York","Rockland County","Pennsylvania","Pike County",42103036087,6
+"718","New York","Rockland County","New Jersey","Ocean County",34029036087,111
+"719","New York","Rockland County","New York","Kings County",36047036087,282
+"720","New York","Rockland County","New York","Ulster County",36111036087,239
+"721","New York","Rockland County","New Jersey","Warren County",34041036087,7
+"722","New York","Rockland County","New York","Bronx County",36005036087,323
+"723","New York","Rockland County","New York","Westchester County",36119036087,732
+"724","New York","Rockland County","Connecticut","New Haven County",9009036087,94
+"725","New York","Rockland County","New Jersey","Morris County",34027036087,22
+"726","New York","Rockland County","New York","Queens County",36081036087,272
+"727","New York","Rockland County","New Jersey","Essex County",34013036087,64
+"728","New York","Rockland County","New York","Nassau County",36059036087,67
+"729","New York","Rockland County","New York","Putnam County",36079036087,182
+"730","New York","Rockland County","New York","New York County",36061036087,714
+"731","New York","Suffolk County","New Jersey","Middlesex County",34023036103,170
+"732","New York","Suffolk County","New Jersey","Somerset County",34035036103,35
+"733","New York","Suffolk County","New York","Queens County",36081036103,2459
+"734","New York","Suffolk County","New Jersey","Monmouth County",34025036103,48
+"735","New York","Suffolk County","Pennsylvania","Carbon County",42025036103,44
+"736","New York","Suffolk County","New York","Putnam County",36079036103,88
+"737","New York","Suffolk County","Connecticut","Fairfield County",9001036103,446
+"738","New York","Suffolk County","New Jersey","Hudson County",34017036103,215
+"739","New York","Suffolk County","New Jersey","Union County",34039036103,38
+"740","New York","Suffolk County","New Jersey","Hunterdon County",34019036103,24
+"741","New York","Suffolk County","New Jersey","Ocean County",34029036103,26
+"742","New York","Suffolk County","New York","Nassau County",36059036103,4138
+"743","New York","Suffolk County","New York","Bronx County",36005036103,319
+"744","New York","Suffolk County","New Jersey","Warren County",34041036103,19
+"745","New York","Suffolk County","Connecticut","Litchfield County",9005036103,39
+"746","New York","Suffolk County","New York","Dutchess County",36027036103,513
+"747","New York","Suffolk County","Pennsylvania","Monroe County",42089036103,105
+"748","New York","Suffolk County","New Jersey","Mercer County",34021036103,44
+"749","New York","Suffolk County","Connecticut","New Haven County",9009036103,269
+"750","New York","Suffolk County","Pennsylvania","Pike County",42103036103,56
+"751","New York","Suffolk County","New York","New York County",36061036103,2095
+"752","New York","Suffolk County","New York","Orange County",36071036103,226
+"753","New York","Suffolk County","Pennsylvania","Lehigh County",42077036103,298
+"754","New York","Suffolk County","New York","Kings County",36047036103,794
+"755","New York","Suffolk County","Pennsylvania","Northampton County",42095036103,172
+"756","New York","Suffolk County","New York","Richmond County",36085036103,226
+"757","New York","Suffolk County","New York","Rockland County",36087036103,61
+"758","New York","Suffolk County","New Jersey","Passaic County",34031036103,25
+"759","New York","Suffolk County","New York","Westchester County",36119036103,429
+"760","New York","Suffolk County","New Jersey","Bergen County",34003036103,93
+"761","New York","Suffolk County","New Jersey","Morris County",34027036103,122
+"762","New York","Suffolk County","New York","Ulster County",36111036103,331
+"763","New York","Ulster County","New Jersey","Monmouth County",34025036111,20
+"764","New York","Ulster County","New York","New York County",36061036111,329
+"765","New York","Ulster County","New York","Dutchess County",36027036111,788
+"766","New York","Ulster County","New York","Queens County",36081036111,200
+"767","New York","Ulster County","New Jersey","Somerset County",34035036111,2
+"768","New York","Ulster County","Pennsylvania","Lehigh County",42077036111,17
+"769","New York","Ulster County","New York","Nassau County",36059036111,49
+"770","New York","Ulster County","New Jersey","Bergen County",34003036111,50
+"771","New York","Ulster County","New York","Kings County",36047036111,301
+"772","New York","Ulster County","New Jersey","Hudson County",34017036111,150
+"773","New York","Ulster County","New York","Putnam County",36079036111,62
+"774","New York","Ulster County","Connecticut","Fairfield County",9001036111,38
+"775","New York","Ulster County","Connecticut","New Haven County",9009036111,41
+"776","New York","Ulster County","New Jersey","Essex County",34013036111,68
+"777","New York","Ulster County","New York","Westchester County",36119036111,57
+"778","New York","Ulster County","New York","Bronx County",36005036111,128
+"779","New York","Ulster County","New York","Rockland County",36087036111,37
+"780","New York","Ulster County","New York","Orange County",36071036111,679
+"781","New York","Ulster County","New York","Suffolk County",36103036111,45
+"782","New York","Westchester County","New York","Suffolk County",36103036119,437
+"783","New York","Westchester County","New York","Dutchess County",36027036119,1528
+"784","New York","Westchester County","New York","Putnam County",36079036119,1286
+"785","New York","Westchester County","New York","Richmond County",36085036119,83
+"786","New York","Westchester County","Pennsylvania","Northampton County",42095036119,152
+"787","New York","Westchester County","New York","Orange County",36071036119,1199
+"788","New York","Westchester County","New Jersey","Middlesex County",34023036119,225
+"789","New York","Westchester County","New Jersey","Morris County",34027036119,251
+"790","New York","Westchester County","New Jersey","Hunterdon County",34019036119,13
+"791","New York","Westchester County","New Jersey","Bergen County",34003036119,198
+"792","New York","Westchester County","New York","Rockland County",36087036119,928
+"793","New York","Westchester County","New Jersey","Hudson County",34017036119,199
+"794","New York","Westchester County","New Jersey","Mercer County",34021036119,72
+"795","New York","Westchester County","New Jersey","Essex County",34013036119,215
+"796","New York","Westchester County","New York","Kings County",36047036119,893
+"797","New York","Westchester County","New York","Nassau County",36059036119,455
+"798","New York","Westchester County","New Jersey","Monmouth County",34025036119,100
+"799","New York","Westchester County","Pennsylvania","Pike County",42103036119,111
+"800","New York","Westchester County","Connecticut","New Haven County",9009036119,383
+"801","New York","Westchester County","Connecticut","Fairfield County",9001036119,3694
+"802","New York","Westchester County","New York","Ulster County",36111036119,540
+"803","New York","Westchester County","New York","New York County",36061036119,3070
+"804","New York","Westchester County","New Jersey","Somerset County",34035036119,29
+"805","New York","Westchester County","New Jersey","Passaic County",34031036119,116
+"806","New York","Westchester County","Connecticut","Litchfield County",9005036119,106
+"807","New York","Westchester County","New York","Bronx County",36005036119,2790
+"808","New York","Westchester County","New York","Queens County",36081036119,670
+"809","New York","Westchester County","New Jersey","Ocean County",34029036119,308
+"810","New York","Westchester County","Pennsylvania","Monroe County",42089036119,9
+"811","New York","Westchester County","Pennsylvania","Lehigh County",42077036119,31
+"812","Pennsylvania","Carbon County","New Jersey","Middlesex County",34023042025,29
+"813","Pennsylvania","Carbon County","New York","New York County",36061042025,67
+"814","Pennsylvania","Carbon County","Pennsylvania","Northampton County",42095042025,200
+"815","Pennsylvania","Carbon County","New Jersey","Warren County",34041042025,13
+"816","Pennsylvania","Carbon County","New Jersey","Monmouth County",34025042025,51
+"817","Pennsylvania","Carbon County","Pennsylvania","Monroe County",42089042025,96
+"818","Pennsylvania","Carbon County","Pennsylvania","Lehigh County",42077042025,670
+"819","Pennsylvania","Lehigh County","New Jersey","Hunterdon County",34019042077,17
+"820","Pennsylvania","Lehigh County","New Jersey","Somerset County",34035042077,12
+"821","Pennsylvania","Lehigh County","New York","Kings County",36047042077,124
+"822","Pennsylvania","Lehigh County","New York","Orange County",36071042077,15
+"823","Pennsylvania","Lehigh County","New Jersey","Essex County",34013042077,14
+"824","Pennsylvania","Lehigh County","New Jersey","Passaic County",34031042077,12
+"825","Pennsylvania","Lehigh County","New York","Suffolk County",36103042077,73
+"826","Pennsylvania","Lehigh County","New York","Richmond County",36085042077,17
+"827","Pennsylvania","Lehigh County","New Jersey","Mercer County",34021042077,39
+"828","Pennsylvania","Lehigh County","Connecticut","New Haven County",9009042077,17
+"829","Pennsylvania","Lehigh County","New York","Nassau County",36059042077,14
+"830","Pennsylvania","Lehigh County","Pennsylvania","Northampton County",42095042077,5282
+"831","Pennsylvania","Lehigh County","New Jersey","Ocean County",34029042077,30
+"832","Pennsylvania","Lehigh County","New York","Westchester County",36119042077,10
+"833","Pennsylvania","Lehigh County","New York","New York County",36061042077,164
+"834","Pennsylvania","Lehigh County","Pennsylvania","Carbon County",42025042077,267
+"835","Pennsylvania","Lehigh County","New Jersey","Bergen County",34003042077,9
+"836","Pennsylvania","Lehigh County","Pennsylvania","Pike County",42103042077,8
+"837","Pennsylvania","Lehigh County","New York","Queens County",36081042077,50
+"838","Pennsylvania","Lehigh County","Connecticut","Fairfield County",9001042077,28
+"839","Pennsylvania","Lehigh County","New Jersey","Warren County",34041042077,11
+"840","Pennsylvania","Lehigh County","New York","Dutchess County",36027042077,29
+"841","Pennsylvania","Lehigh County","Pennsylvania","Monroe County",42089042077,166
+"842","Pennsylvania","Lehigh County","New Jersey","Union County",34039042077,17
+"843","Pennsylvania","Lehigh County","New Jersey","Middlesex County",34023042077,279
+"844","Pennsylvania","Lehigh County","New York","Bronx County",36005042077,48
+"845","Pennsylvania","Lehigh County","New Jersey","Monmouth County",34025042077,34
+"846","Pennsylvania","Lehigh County","New Jersey","Morris County",34027042077,12
+"847","Pennsylvania","Monroe County","Pennsylvania","Pike County",42103042089,293
+"848","Pennsylvania","Monroe County","New York","Richmond County",36085042089,32
+"849","Pennsylvania","Monroe County","Pennsylvania","Carbon County",42025042089,248
+"850","Pennsylvania","Monroe County","New Jersey","Hudson County",34017042089,47
+"851","Pennsylvania","Monroe County","New York","Orange County",36071042089,11
+"852","Pennsylvania","Monroe County","New Jersey","Warren County",34041042089,7
+"853","Pennsylvania","Monroe County","New Jersey","Somerset County",34035042089,105
+"854","Pennsylvania","Monroe County","New York","Westchester County",36119042089,11
+"855","Pennsylvania","Monroe County","Pennsylvania","Northampton County",42095042089,1038
+"856","Pennsylvania","Monroe County","New Jersey","Morris County",34027042089,54
+"857","Pennsylvania","Monroe County","New York","New York County",36061042089,66
+"858","Pennsylvania","Monroe County","New Jersey","Ocean County",34029042089,162
+"859","Pennsylvania","Monroe County","New Jersey","Middlesex County",34023042089,99
+"860","Pennsylvania","Monroe County","New York","Kings County",36047042089,32
+"861","Pennsylvania","Monroe County","New Jersey","Mercer County",34021042089,74
+"862","Pennsylvania","Monroe County","Pennsylvania","Lehigh County",42077042089,316
+"863","Pennsylvania","Monroe County","New York","Suffolk County",36103042089,42
+"864","Pennsylvania","Monroe County","New York","Queens County",36081042089,47
+"865","Pennsylvania","Monroe County","New York","Ulster County",36111042089,15
+"866","Pennsylvania","Monroe County","New Jersey","Bergen County",34003042089,75
+"867","Pennsylvania","Monroe County","New Jersey","Monmouth County",34025042089,109
+"868","Pennsylvania","Monroe County","New Jersey","Union County",34039042089,6
+"869","Pennsylvania","Monroe County","New York","Bronx County",36005042089,50
+"870","Pennsylvania","Monroe County","New Jersey","Passaic County",34031042089,171
+"871","Pennsylvania","Northampton County","Pennsylvania","Carbon County",42025042095,373
+"872","Pennsylvania","Northampton County","New York","Bronx County",36005042095,88
+"873","Pennsylvania","Northampton County","New Jersey","Morris County",34027042095,31
+"874","Pennsylvania","Northampton County","Pennsylvania","Lehigh County",42077042095,4494
+"875","Pennsylvania","Northampton County","New Jersey","Union County",34039042095,6
+"876","Pennsylvania","Northampton County","New Jersey","Warren County",34041042095,539
+"877","Pennsylvania","Northampton County","Pennsylvania","Pike County",42103042095,76
+"878","Pennsylvania","Northampton County","Connecticut","New Haven County",9009042095,33
+"879","Pennsylvania","Northampton County","New Jersey","Passaic County",34031042095,9
+"880","Pennsylvania","Northampton County","New Jersey","Essex County",34013042095,27
+"881","Pennsylvania","Northampton County","New York","Orange County",36071042095,8
+"882","Pennsylvania","Northampton County","New Jersey","Hudson County",34017042095,16
+"883","Pennsylvania","Northampton County","New Jersey","Somerset County",34035042095,100
+"884","Pennsylvania","Northampton County","New York","Dutchess County",36027042095,42
+"885","Pennsylvania","Northampton County","New York","Westchester County",36119042095,12
+"886","Pennsylvania","Northampton County","Pennsylvania","Monroe County",42089042095,720
+"887","Pennsylvania","Northampton County","New York","New York County",36061042095,47
+"888","Pennsylvania","Northampton County","New York","Kings County",36047042095,99
+"889","Pennsylvania","Northampton County","New Jersey","Bergen County",34003042095,11
+"890","Pennsylvania","Northampton County","New Jersey","Monmouth County",34025042095,15
+"891","Pennsylvania","Northampton County","New Jersey","Mercer County",34021042095,15
+"892","Pennsylvania","Northampton County","New York","Suffolk County",36103042095,32
+"893","Pennsylvania","Northampton County","New Jersey","Hunterdon County",34019042095,109
+"894","Pennsylvania","Northampton County","New Jersey","Middlesex County",34023042095,153
+"895","Pennsylvania","Northampton County","Connecticut","Fairfield County",9001042095,37
+"896","Pennsylvania","Northampton County","New York","Rockland County",36087042095,111
+"897","Pennsylvania","Pike County","New York","Orange County",36071042103,220
+"898","Pennsylvania","Pike County","New Jersey","Monmouth County",34025042103,28
+"899","Pennsylvania","Pike County","Pennsylvania","Northampton County",42095042103,85
+"900","Pennsylvania","Pike County","New Jersey","Middlesex County",34023042103,18
+"901","Pennsylvania","Pike County","New Jersey","Hunterdon County",34019042103,10
+"902","Pennsylvania","Pike County","Connecticut","Litchfield County",9005042103,4
+"903","Pennsylvania","Pike County","New York","Dutchess County",36027042103,9
+"904","Pennsylvania","Pike County","New York","Kings County",36047042103,130
+"905","Pennsylvania","Pike County","New Jersey","Morris County",34027042103,44
+"906","Pennsylvania","Pike County","New Jersey","Warren County",34041042103,66
+"907","Pennsylvania","Pike County","Pennsylvania","Monroe County",42089042103,261
+"908","Pennsylvania","Pike County","New Jersey","Ocean County",34029042103,32

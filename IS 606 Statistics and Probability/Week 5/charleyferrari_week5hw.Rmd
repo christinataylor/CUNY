@@ -74,9 +74,6 @@ moe <- t*se
 
 moe
 
-qt(0.975,100)
-qnorm(0.975)
-
 ```
 
 
@@ -87,7 +84,7 @@ it probably wouldn't be safe to use this small a sample size.)
 
 The National Center of Education Statistics conducted a survey of high school 
 seniors, collecting test data on reading, writing, and several other subjects.
-Here we examine a simple random samplee of 200 students from this survey. Side-
+Here we examine a simple random sample of 200 students from this survey. Side-
 by-side box plots of reading and writing scores as well as a histogram of the 
 differences in scores are shown below.
 
@@ -104,14 +101,15 @@ c.  Create hypotheses appropriate for the following research question: Is there
 an evident difference in the average scores of students in the reading and 
 writing exam?
 
-$H_0$: $\mu_{reading} = \mu_{writing}$, or $\mu{reading} - \mu{writing} = 0$
-$H_a$: $\mu_{reading} \neq \mu_{writing}$ or $\mu{reading} - \mu{writing} \neq 0$
+$H_0$: $\mu_{reading} = \mu_{writing}$, or $\mu_{reading} - \mu_{writing} = 0$
+$H_a$: $\mu_{reading} \neq \mu_{writing}$ or $\mu_{reading} - \mu_{writing} \neq 0$
 
 d. Check the conditions required to complete this test.
 
 Our sample size is large enough at 200, and the differences appears to be 
 relatively normally distributed. We should be able to use z-scores and the 
-normal distribution to perform our inference.
+normal distribution to perform our inference, but we can use the t-distribution 
+just to be sure.
 
 e. The average observed difference in scores is $\bar{x}_{read-write} = -0.545$, 
 and the standard deviation of the differences is 8.887 points. Do these data 
@@ -120,16 +118,16 @@ two exams?
 
 We're using the second form of the hypotheses I stated in part c.
 
-$$ Z = \frac{\bar{x} - 0}{\sigma / \sqrt{n}} $$
+$$ T = \frac{\bar{x} - 0}{\sigma / \sqrt{n}} $$
 
 ```{r}
 
 xbar <- -0.545
 sd <- 8.887
 n <- 200
-z <- xbar/(sd/sqrt(n))
+t <- xbar/(sd/sqrt(n))
 
-pnorm(z)
+pt(t,n-1)
 
 ```
 
@@ -183,4 +181,94 @@ less than 0.05, so we can reject the null hypothesis. It would appear that the
 average fuel economy of automatic transmissions is significantly less than the 
 average fuel economy of manual transmissions.
 
+### 5.48: Work hours and education ###
 
+The General Social Survey collects data on demographics, education, and work, 
+among many other characteristics of US residents. Using ANOVA, we can consider 
+educational attainment levels for all 1,172 respondents at once. Below are the 
+distributions of hours worked by educational attainment and relevant summary 
+statistics that will be helpful in carrying out this analysis.
+
+a. Write hypotheses for evalulating whether the average number of hours worked 
+varies across the five groups.
+
+$H_0$: $\mu_{<hs} = \mu_{hs} = \mu_{jc} = \mu_{b} = \mu_{g}$
+$H_a$: at least one of these means are different.
+
+b. Check conditions and describe any assumptions you must make to proceed with 
+the test.
+
+
+The observations must be independent. This is a representative survey of US 
+residents that's below 10% of the population, so as long as this data is truly 
+a random sample this condition should hold.
+
+The data must also be approximately normal. The data appears normal enough from 
+the boxplots, and for a sample size of around 1000 this should be usable.
+
+The data must also have comparable standard deviations. This condition also 
+appears to be satisfied looking at the table, with the potential outlier of 
+junior college with a standard deviation of 18.1.
+
+c. Below is part of the output associated with this test. Fill in the empty 
+cells.
+
+Lets work our way backwards. First, lets calculate our two degrees of freedom:
+
+```{r}
+k <- 5
+n <- 1172
+df1 <- k-1
+df2 <- n-k
+df1
+df2
+
+```
+
+Now that we know the degrees of freedom, we can use the qf function on the 
+Pr(>F) to get the F-statistic:
+
+```{r}
+
+prf <- 0.0682
+fstat <- qf(1-prf,df1,df2)
+fstat
+
+```
+
+The f-stat is equal to MSG/MSE. We have MST, so we can use that to get MSE:
+
+```{r}
+
+MSG <- 501.54
+MSE <- MSG/fstat
+
+```
+
+$MSG = \frac{1}{df_g} SSG$, so we can just multiply MSG by $df_g$ to get SSG:
+
+```{r}
+
+SSG <- df1*MSG
+SSE <- df2*MSE
+SSG
+SSE
+
+```
+
+Just to test it out, I calculated SSE in this way as well. It seems to check out!
+
+SST = SSG + SSE, and $df_{total} = df_g + df_e$
+
+```{r}
+
+SST <- SSG + SSE
+dft <- df1 + df2
+SST
+dft
+```
+
+d. What is the conclusion of this test?
+
+the p-value is somewhat greater than 0.05, so we do not reject the null 
+hypothesis that the five means are equal to eachother.

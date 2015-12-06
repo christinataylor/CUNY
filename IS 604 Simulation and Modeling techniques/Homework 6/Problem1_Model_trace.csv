@@ -1,0 +1,4 @@
+Time(Hours),EntityID,ObjectName,ProcessID,StepName,Action
+0.333809722222222,DefaultEntity.34,BasicNode2,0.TransferFailureLogic,[Notify] DestroyingEntity,Entity 'DefaultEntity.34' failed to initiate transfer from node
+0.333809722222222,DefaultEntity.34,BasicNode2,0.TransferFailureLogic,[Notify] DestroyingEntity,"Entity 'DefaultEntity.34' failed to initiate transfer from node 'BasicNode2' onto an outbound link. The entity is being automatically destroyed. However, this warning may indicate a problem in the modeled logic. "
+

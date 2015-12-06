@@ -1,0 +1,7 @@
+name: Publish Document
+account: rpubs
+server: rpubs.com
+bundleId:
+        https://api.rpubs.com/api/v1/document/132780/db37670d02b34175b386102132d4a1a0
+url: http://rpubs.com/charleyferrari/132780
+when: 1449113896.52636
