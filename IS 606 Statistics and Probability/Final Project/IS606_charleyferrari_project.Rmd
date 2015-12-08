@@ -1,24 +1,12 @@
 ---
-output: html_document
+output: pdf_document
 ---
-```{r include=FALSE, cache=FALSE}
-# DO NOT REMOVE
-# THIS IS FOR SETTING SOME PLOTTING PARAMETERS SO THAT YOUR PLOTS DON'T TAKE UP TOO MUCH SPACE
-# IF YOU WOULD LIKE TO CHANGE THESE, SEE HELP FILES ON THE par() FUNCTION
-# OR ASK FOR HELP
-library(knitr)
-## set global chunk options
-opts_chunk$set(fig.path='figure/manual-', cache.path='cache/manual-', fig.align='center', fig.show='hold', par=TRUE)
-## tune details of base graphics (http://yihui.name/knitr/hooks)
-knit_hooks$set(par=function(before, options, envir){
-if (before && options$fig.show!='none') par(mar=c(4,4,.2,.1),cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)
-})
-```
+
 
 ```{r echo=FALSE, include=FALSE}
 # load data
 
-setwd("E:/Downloads/Courses/CUNY/SPS/Git/IS 606 Statistics and Probability/Final Project")
+setwd("/Users/Charley/Documents/cunygit/IS 606 Statistics and Probability/Final Project")
 
 load("quandldata.RData")
 
@@ -39,13 +27,13 @@ Since 1971, when the Bretton-Woods system fell apart, currencies have been free 
 
 Exchange rates determined on the open market react more to macroeconomic fundamentals. Within a country with fiat currency, the money supply is more flexible, and can react to macroeconomic needs. The money supply can be increased during times of recessions, or decreased when inflation is more of an issue. The interaction of this happening between countries, among other macroeconomic factors, are what cause exchange rate fluctuations.
 
-Gold, now that it is not the base of the world's monetary system, functions very similar to a commodity. Supply and demand play key roles in its price, increases in supply can be expected to decrease the price, while more demand for gold can be expected to increase it. It is also subject to more irrational market forces: bubbles and crashes.
+Gold, now that it is not the base of the world's monetary system, functions very similar to a commodity. Supply and demand play key roles in its price. Increases in supply can be expected to decrease the price, while more demand for gold can be expected to increase it. It is also subject to more irrational market forces: bubbles and crashes.
 
 While most currencies are fiat today, there is still a debate on the wisdom of a gold standard. Proponents point to the acceptance of inflation as a fact of life, and fears of hyperinflationary episodes completely destroying the value of currencies. Fiat currencies are subject to political whims, while a gold standard imposes a strict discipline on the money supply. Proponents of fiat currency and the role of central banks in the monetary supply will point to past deflationary episodes such as the Great Depression, and comment on how much worse the financial crisis of 2008 could have been if the Federal Reserve hadn't reacted in the way it had.
 
 Bitcoin is being portrayed as both a competitor for national currencies, and as a replacement for an investment grade commodity such as gold. Like a currency, it is designed to be a medium of exchange.
 
-However, the designer of bitcoin built supply constraints into its algorithm. Bitcoins are "mined" by computers solving math problems of ever increasing complexity. The rate at which these can be solved is designed to assymptotically approach 0. In this way, Bitcoin is meant to mirror the supply of gold. There is a fixed supply of gold on earth, the easiest to reach caches of gold are mined first, and gold becomes harder and harder to mine as time goes on. Innovations in gold mining can lead to short term spikes in supply, just as one can imagine a new computing technology being able to more quickly solve these problems for bitcoin. However, there is still a fundamental restriction on the supply of gold and bitcoin. Bitcoin, if it becomes a major unit of currency, will be subject to the same deflationary problems that faced currencies on the gold standard.
+However, the designer of bitcoin built supply constraints into its algorithm. Bitcoins are "mined" by computers solving math problems of ever increasing complexity. The rate at which these can be solved is designed to assymptotically approach 0. In this way, Bitcoin is meant to mirror the supply of gold. There is a fixed supply of gold on earth. The easiest to reach caches of gold are mined first, and gold becomes harder and harder to mine as time goes on. Innovations in gold mining can lead to short term spikes in supply, just as one can imagine a new computing technology being able to more quickly solve these problems for bitcoin. However, there is still a fundamental restriction on the supply of gold and bitcoin. Bitcoin, if it becomes a major unit of currency, will be subject to the same deflationary problems that faced currencies on the gold standard.
 
 Dogecoin is a rivil cryptocurrency that takes an alternative approach. Recognizing the problems with a fixed supply, Dogecoin is adopting a fixed rate of inflation, targeting the number of coins in circulation. [This](http://arstechnica.com/business/2014/02/dogecoin-to-allow-annual-inflation-of-5-billion-coins-each-year-forever/) article on Ars Technica explains a few of the basics on the discussions that led to this, as well as some statistics on hoarding behavior observed with bitcoin that is attributed to its deflationary nature.
 
@@ -252,7 +240,7 @@ ggplot(filter(pcdata, type %in% c("Bitcoin", "Dogecoin")),
 
 ```
 
-It would be worth it to perform more research on these currencies. Perhaps comparing Dogecoin and Bitcoin to different time periods to see if they match the behavior of currencies or commodities at certain times, and to compare booms or busts of these currencies. Perhaps they can be compared to other currencies (silver is more volatile than gold, for example.)
+It would be worth it to perform more research on these currencies. Perhaps comparing Dogecoin and Bitcoin to currencies in different time periods to see if they match their behavior at certain times, and to compare booms or busts of these currencies. Perhaps they can be compared to other commodities as well (silver is more volatile than gold, for example.)
 
 Despite the acceptance of the null hypothesis that Dogecoin is similar to all currencies it was compared to, this high variance leads me to say that Bitcoin and Dogecoin are both different from existing currencies or commodities. Their wide variability sets them apart from existing financial innovations.
 
