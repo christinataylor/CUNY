@@ -1,0 +1,46 @@
+---
+title: "Untitled"
+author: "Charley Ferrari"
+date: "December 9, 2015"
+output: ioslides_presentation
+---
+
+## R Markdown
+
+This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+## Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+## Slide with R Code and Output
+
+```{r}
+summary(cars)
+```
+
+## Slide with Plot
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+## Social Utility
+
+- Graph of total utility
+
+## Social Utility
+
+- In the last slide, you can see an extra column added: total utility.
+- This is equal to the individual utility at each location times the population of each location
+- or, $p \times u^T$, with p as the population vector and u as the utility vector, whose lengths are the number of locations.
+- In this model, it is not guarenteed that people acting in their own self interest will lead to a socially optimal distribution.
+
+
+## Social Utility
+
+![gametheory](gametheory.jpg)
