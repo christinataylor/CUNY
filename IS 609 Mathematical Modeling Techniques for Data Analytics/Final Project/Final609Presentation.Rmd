@@ -150,3 +150,27 @@ kable(pdatapan, format = "markdown")
 ## Achieving Maximum Social Utility
 
 ![gametheory](gametheory.jpg)
+
+## Achieving Maximum Social Utility
+
+- This is somewhat like the prisoner's dilemma. 
+
+- If 5t < 2, moving is a strictly dominant strategy for player 1, so they will definitely do that. Given this, player 2 gets the same payoff whether or not they tax, so we'll assume they have a 50% chance of taxing.
+
+- If 5t > 2, we still end up in the same place! Consider the situation where player 1 moves and player 2 taxes. Player 1 would be better off if they decided to stay.
+
+- However, if player 1 decided to stay, player 2 would vote to not tax. Given that, it would make sense for player 1 to move. This suggests there might be a mixed strategy equilibrium.
+
+## Achieving Maximum Social Utility
+
+- Lets assume Player 1 will move with probability $p_m$, and Player 2 will tax with probability $p_t$, and look at the decision facing player 2:
+
+- Tax: $8p_m + (1-p_m)(10-t) = 10 - 2p_m - t + p_m t$
+
+- No Tax: $8p_m + 10(1-p_m) = 10 - 2p_m$
+
+- The p_m that would induce player 2 to mix between these two strategies would occur when these two payoffs are equal. So:
+
+- $10 - 2p_m - t + p_m t = 10 - 2p_m$
+
+- $p_m = 1$. In a mixed strategy equilibrium, player 1 will move no matter what the tax is.
