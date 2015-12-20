@@ -1,0 +1,198 @@
+---
+title: "Untitled"
+author: "Charley Ferrari, Paul Garaud"
+date: "December 20, 2015"
+output: html_document
+---
+
+## Markov Chains
+
+Our paper models the markov chain population model suggested by Pan and Nagurney in their paper *Using Markov Chains to Model Human Migration in a Network Equilibrium Framework*, available for download [here](http://www.sciencedirect.com/science/article/pii/0895717794900140). 
+
+Pan and Nagurney model the question of optimal migration patterns using a markov chain. Each location represents a "state" that the markov chain can take, and transition matrices can be calculated to calculate the behavior of the chain. Below is an example of what the model would look like with three locations.
+
+
+![MCMap](markovchain.jpeg)
+
+
+
+Transition matrices are calculated by looking at the utility of different locations as functions of population, and the cost of moving, provided as a function of flow. The cost being represented as a function of flow is what allows the markov chain to operate in stages, and not just immediately reach an equilibrium.
+
+Pan and Nagurney introduce a two region example of the model. In their example, the utility functions are defined below:
+
+$$ u_1 (p) = -p_1 + 8 $$
+
+$$ u_2 (p) = -p_2 + 14 $$
+
+And cost is defined by flow:
+
+$$ c_{ij} = 2f_{ij} $$
+
+Given an initial population distribution, at each step we can solve for the flow matrix, $F = \left[ \begin{array}{cc} f_{11} & f_{12} \\ f_{21} & f_{22} \end{array} \right]$.
+
+People will move from locations of lower utility to locations of higher utility. The flow at each step in the markov chain will be determined by solving the below equation:
+
+$$ u_i (p) + c_{ij} (f) = u_j (p) $$
+
+The algebraic solution for the first few steps can be seen in the paper:
+
+![equation](costandutility.JPG)
+![panmap](panmap.JPG)
+
+```{r include=FALSE}
+
+library(ggplot2)
+
+library(reshape2)
+
+library(knitr)
+
+library(ggthemes)
+
+u1pan <- function(p){
+  return(-p[1]+8)
+}
+
+u2pan <- function(p){
+  return(-p[2]+14)
+}
+
+c12pan <- function(f){
+  return(2*f[1])
+}
+
+c21pan <- function(f){
+  return(2*f[2])
+}
+
+```
+
+We created the below function to calculate the flow at each step:
+
+```{r}
+
+flowcalcpan <- function(p){
+  if(u2pan(p) > u1pan(p)){
+    f1 <- (p[1] - p[2] + 6)/4
+    f <- c(f1,0)
+  }else if(u1pan(p) > u2pan(p)){
+    f2 <- (p[2] - p[1] - 6)/4
+    f <- c(0,f2)
+  }else{f <- c(0,0)}
+  
+  return(f)
+}
+
+```
+
+This function uses the predefined functions u1pan and u2pan for solving at each step, but also includes the algebraic solution:
+
+$$ f_{12} = \frac{p_1 - p_2 + 6}{4} $$
+
+or 
+
+$$ f_{21} = \frac{p_2 - p_1 - 6}{4} $$
+
+This is arrived at by solving directly for $u_i (p) + c_{ij} (f) = u_j (p)$. Considering a step towards a population distribution $p_n$ from an initial population distribution $p_{n-1}$, and assuming our lower utility region is region 1 (so we have a flow from region 1 to region 2), we have:
+
+$$ p_{1,n} = p_{1,(n-1)} - f{12} $$
+
+And similar solutions, depending on the direction of our flow and which location we're looking at. $p_n$ is a function of $p_{n-1}$ and flow.
+
+Starting at an initial population, here is an example of a table stepping through this chain:
+
+```{r}
+
+p0 <- c(4,2)
+
+u0 <- c(u1pan(p0), u2pan(p0))
+
+pdatapan <- data.frame(p1 = 4, p2 = 2, u1 = u0[1], u2 = u0[2], 
+                       totu = p0 %*% u0 )
+
+iter <- 1:5
+
+for(i in iter){
+  p <- c(tail(pdatapan$p1,1),tail(pdatapan$p2,1))
+  f <- flowcalcpan(p)
+  p[1] <- p[1]-f[1]+f[2]
+  p[2] <- p[2]+f[1]-f[2]
+  u <- c(u1pan(p),u2pan(p))
+  totu <- p %*% u
+
+  pdatapan <- rbind(pdatapan, c(p[1], p[2], u, totu))
+}
+
+kable(pdatapan, format = "markdown")
+
+
+```
+
+## Social Utility
+
+We added a last column to the table above: totu. This is meant to be the total utility of the society. This is simply the sum of the utilities of each individual, or, given utility and population vectors, $p \times u^T$. Looking at this column, we can see that people acting in their own self interest do not guarentee a socially optimal distribution.
+
+Solving for optimal social utility is a linear programming problem. We are trying to maximize $u_tot$:
+
+$$ u_{tot} = p \times u $$
+
+Subject to the restrictions given by our total population across n regions:
+
+$$ \sum_{i=1}^n p_i = p_{tot} $$
+
+For the two-population example given above, we have:
+
+$$ u_{tot} = p_1 (8-p_1) + p_2 (14-p_2) $$
+
+And
+
+$$ p_{tot} = p_1 + p_2 = 6 $$
+
+We can analyze this problem graphically. Below are a few graphs of different values of $u_{tot}$. As we have them defined, these are circular functions, and the total population restraint is a straight line in the $p_1$ $p_2$ plane.
+
+![lp](lp.png)
+
+Algebraically, you can simply solve for p_2, and end up with $u_{tot}$ as a function of $p_1$: 
+
+$$ u_{tot} = p_1 (8-p_1) + (6-p_1)(8+p_1) $$
+
+Which leads to the quadratic equation:
+
+$$ u_{tot} = -2p_1^2 + 6p + 48 $$
+
+This can pretty simply be solved with a maximum of $u_{tot} = 52.5$ at $p_1 = 1.5$ and $p_2 = 4.5$.
+
+We can expand this over multiple locations, and end up with multidimensional problems. If we add a third location, set $p_{tot} = p_1 + p_2 + p_3 = 40$, and set $u_3 = 18 - p_3$, we end up solving the below problem:
+
+$$ u_{tot} = p_1 (8-p_1) + p_2 (14-p_2) + p_3 (18-p_3) $$
+
+Subject to:
+
+$$ p_1 + p_2 + p_3 = 40$$
+
+This is a more advanced problem, our population limit is defined as a plane rather than a line. Algebraically solving for $p_3$ can at least simplify this problem into maximizing a three-dimensional function:
+
+$$ p_3 = 40 - p_1 - p_2 $$
+
+$$ u_{tot} = -2p_1^2 - 2p_2^2 - 2p_1 p_2 + 70p_1 + 76p_2 - 880 $$
+
+A function like this would require more advanced methods to solve, like Gradient descent.
+
+## Achieving Maximum Social Utility
+
+Now, lets look at the question of how we can acheive maximum social utility. As we've shown above, maximum social utility isn't guarenteed with each individual acting in their own self interest. One way a more socially optimal outcome could be incentivized is through taxation.
+
+One difference to note is at the moment we're talking about socially optimal outcomes, not equitable outcomes. Consider a situation where one individual can make a decision that increases their utility by n, but decreases another individual's (or multiple individual's) utility equally by n. Measuring the relative utilities of everyone would allow us to find out which outcome is more equitable, but regardless of equitability both of these outcomes are equally optimal socially.
+
+Now, consider a situation where one individual can make a decision that increases their utility by n, but decreases another individual's utility by some value greater than n. In this case, we're moving from a socially optimal point to a less socially optimal point. The gain in this individuals utility is less than the loss in utility felt by other people. It's in this individual's self interest to move to a less socially optimal outcome.
+
+Taxation can be used to keep this person from making this decision. Because this individual's decision may decrease social utility by a value greater than n, a tax of n given to this individual could incentivize them to not make a socially un-optimal decision.
+
+Lets look at our migration problem through this lens:
+
+```{r echo=FALSE}
+kable(pdatapan, format = "markdown")
+
+```
+
+Using our two region example
