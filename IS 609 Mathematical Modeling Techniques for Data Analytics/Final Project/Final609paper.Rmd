@@ -1,8 +1,8 @@
 ---
-title: "Untitled"
+title: "Exploring Equilibrium of A Markov Chain Model of Migration and Social Utility"
 author: "Charley Ferrari, Paul Garaud"
 date: "December 20, 2015"
-output: html_document
+output: pdf_document
 ---
 
 ## Markov Chains
@@ -95,7 +95,7 @@ $$ f_{21} = \frac{p_2 - p_1 - 6}{4} $$
 
 This is arrived at by solving directly for $u_i (p) + c_{ij} (f) = u_j (p)$. Considering a step towards a population distribution $p_n$ from an initial population distribution $p_{n-1}$, and assuming our lower utility region is region 1 (so we have a flow from region 1 to region 2), we have:
 
-$$ p_{1,n} = p_{1,(n-1)} - f{12} $$
+$$ p_{1,n} = p_{1,(n-1)} - f_{12} $$
 
 And similar solutions, depending on the direction of our flow and which location we're looking at. $p_n$ is a function of $p_{n-1}$ and flow.
 
@@ -132,7 +132,7 @@ kable(pdatapan, format = "markdown")
 
 We added a last column to the table above: totu. This is meant to be the total utility of the society. This is simply the sum of the utilities of each individual, or, given utility and population vectors, $p \times u^T$. Looking at this column, we can see that people acting in their own self interest do not guarentee a socially optimal distribution.
 
-Solving for optimal social utility is a linear programming problem. We are trying to maximize $u_tot$:
+Solving for optimal social utility is a linear programming problem. We are trying to maximize $u_{tot}$:
 
 $$ u_{tot} = p \times u $$
 
@@ -170,13 +170,69 @@ Subject to:
 
 $$ p_1 + p_2 + p_3 = 40$$
 
-This is a more advanced problem, our population limit is defined as a plane rather than a line. Algebraically solving for $p_3$ can at least simplify this problem into maximizing a three-dimensional function:
+This is a more advanced problem, our population limit is defined as a plane rather than a line. Algebraically solving for $p_3$ we can at least simplify this problem into maximizing a three-dimensional function:
 
 $$ p_3 = 40 - p_1 - p_2 $$
 
 $$ u_{tot} = -2p_1^2 - 2p_2^2 - 2p_1 p_2 + 70p_1 + 76p_2 - 880 $$
 
-A function like this would require more advanced methods to solve, like Gradient descent.
+A function like this would require more advanced methods to maximize, like Gradient ascent. Lets build a function to do this. First, lets build a function to compute the total utility given $p_1$ and $p_2$
+
+```{r}
+
+computeFunc <- function(p1,p2){
+  return(-2*p1^2 - 2*p2^2 - 2*p1*p2 + 70*p1 + 76*p2 - 880)
+}
+
+```
+
+To run gradient ascent, we'll need to calculate the gradient of this function of $p_1$ and $p_2$. This is simply the two partial derivatives: $\frac{du_{tot}}{dp_1}$ and $\frac{du_{tot}}{dp_2}$. Computing these, we have:
+
+$\frac{du_{tot}}{dp_1} = -4p_1 - 2p_2 + 70$
+
+and 
+
+$\frac{du_{tot}}{dp_2} = -4p_2 - 2p_1 + 76$
+
+To complete the gradient ascent, lets create a function that records a number of iterations into a data frame. Starting at a $p_{1,0}$ and $p_{2,0}$, collectively $p_0$, we'll calculate our steps as:
+
+$$ p_1 = p_0 + \alpha \cdot \triangledown u_{tot} (p_0) $$
+
+```{r}
+
+gradientAscent <- function(p1,p2,alpha,numiters){
+  
+  grad <- data.frame(p1 = p1, p2 = p2, utot = computeFunc(p1,p2))
+  
+  for(i in 1:(numiters-1)){
+    newp1 <- p1 + alpha*(-4*p1 - 2*p2 + 70)
+    newp2 <- p2 + alpha*(-4*p2 - 2*p1 + 76)
+    p1 <- newp1
+    p2 <- newp2
+    grad <- rbind(grad,c(p1,p2,computeFunc(p1,p2)))
+  }
+  
+  return(grad)
+}
+
+```
+
+Doing 50 iterations, starting with initial guesses $p_1 = 2$ and $p_2 = 2$, and using $\alpha = 0.2$, this leaves us with the results:
+
+```{r echo=FALSE}
+kable(head(gradientAscent(2,2,0.2,50)))
+
+```
+
+...
+
+```{r echo=FALSE}
+
+kable(tail(gradientAscent(2,2,0.2,50)))
+
+```
+
+We successfully converge to the correct maximum. $p_1 = 10.67$, $p_2 = 13.67$, and the maximized social utility is $u_{tot} = 12.67$
 
 ## Achieving Maximum Social Utility
 
@@ -186,7 +242,7 @@ One difference to note is at the moment we're talking about socially optimal out
 
 Now, consider a situation where one individual can make a decision that increases their utility by n, but decreases another individual's utility by some value greater than n. In this case, we're moving from a socially optimal point to a less socially optimal point. The gain in this individuals utility is less than the loss in utility felt by other people. It's in this individual's self interest to move to a less socially optimal outcome.
 
-Taxation can be used to keep this person from making this decision. Because this individual's decision may decrease social utility by a value greater than n, a tax of n given to this individual could incentivize them to not make a socially un-optimal decision.
+Incentives can be used to keep this person from making this decision. Because this individual's decision may decrease social utility by a value greater than n, a tax of n given to this individual could incentivize them to not make a socially un-optimal decision.
 
 Lets look at our migration problem through this lens:
 
@@ -195,4 +251,28 @@ kable(pdatapan, format = "markdown")
 
 ```
 
-Using our two region example
+Using our two region example, lets assume we're using a tax of t. Looking at the situation where $p_1 = 1$ and $p_2 = 2$, the game can be modeled using the payoff matrix below:
+
+![gametheory](gametheory.jpg)
+
+This is somewhat like the prisoner's dilemma. If 5t < 2, moving is a strictly dominant strategy for player 1, so they will definitely move. Given this, player 2 gets the same payoff whether or not they tax, so we'll assume they have a 50% chance of taxing. If 5t > 2, we will eventually end up in the same place. 
+
+Consider the situation where player 1 moves and player 2 taxes. Player 1 would be better off if they decided to stay. However, if player 1 decided to stay, player 2 would vote to not tax. Given that, it would make sense for player 1 to move. This behavior suggests there might be a mixed strategy equilibrium.
+
+Lets assume Player 1 will move with probability $p_m$, Player 2 will tax with probability $p_t$, and look at the decision facing player 2:
+
+Tax: 
+
+$$ 8p_m + (1-p_m)(10-t) = 10 - 2p_m - t + p_m t $$
+
+No Tax: 
+
+$$ 8p_m + 10(1-p_m) = 10 - 2p_m $$
+
+The $p_m$ that would induce player 2 to mix between these two strategies would occur when these two payoffs are equal. So:
+
+$$ 10 - 2p_m - t + p_m t = 10 - 2p_m $$
+
+Solving for the above equation, we get $p_m = 1$. In a mixed strategy equilibrium, player 1 will move no matter what the tax is.
+
+Looking at this sort of population model can give us a lot of different views of this problem. The model as presented by Pan and Nagurney shows the network equilibrium of the problem faced by individuals faced with these utilities. Taking social utility into consideration allows different views of the problem, which lent themselves to be modeled using a wide variety of techniques.
