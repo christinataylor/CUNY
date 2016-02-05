@@ -11,7 +11,7 @@ library(ggplot2)
 
 library(dplyr)
 
-setwd("C:/Users/xec33059/Downloads/IS 621 To Merge")
+setwd("/Users/Charley/Downloads/cuny/IS 621 Business Analytics and Data Mining/Homework 1")
 
 cigarettes <- read.csv("cigarette-training-data.csv")
 
@@ -26,7 +26,7 @@ summary(lm(Sales ~ Price + Income, data = cigarettes))
 
 test <- cigarettes
 
-test <- filter(cigarettes, Sales < 150 & Sales > 85)
+test <- filter(cigarettes, Sales < 135 & Sales > 82)
 
 ggplot(test, aes(x=log(Sales), y=log(Income))) + geom_point()
 ggplot(test, aes(x=log(Sales), y=log(Age))) + geom_point()
@@ -63,3 +63,95 @@ summary(lm(log(Sales) ~ Income + Age, data = cigarettes))
 
 ```
 
+## Data Exploration
+
+Lookin
+
+```{r echo=False}
+
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+d1 <- ggplot(cigarettes, aes(x=1, y=Sales)) + geom_boxplot()
+d2 <- ggplot(cigarettes, aes(x=1, y=Age)) + geom_boxplot()
+d3 <- ggplot(cigarettes, aes(x=1, y=Income)) + geom_boxplot()
+d4 <- ggplot(cigarettes, aes(x=1, y=Price)) + geom_boxplot()
+
+multiplot(d1, d2, d3, d4, cols=2)
+
+qplot(y=cigarettes$Sales, x= 1, geom = "boxplot")
+
+g1 <- ggplot(cigarettes, aes(y = Sales, x = Age)) + geom_point() + 
+  geom_smooth(method = "lm")
+g2 <- ggplot(cigarettes, aes(y = Sales, x = Income)) + geom_point() + 
+  geom_smooth(method = "lm")
+g3 <- ggplot(cigarettes, aes(y = Sales, x = Price)) + geom_point() + 
+  geom_smooth(method = "lm")
+
+g <- multiplot(g1, g2, g3, cols=2)
+
+test <- filter(cigarettes, Sales < 135 & Sales > 82)
+
+g1 <- ggplot(test, aes(y = Sales, x = Age)) + geom_point() + 
+  geom_smooth(method = "lm")
+g2 <- ggplot(test, aes(y = Sales, x = Income)) + geom_point() + 
+  geom_smooth(method = "lm")
+g3 <- ggplot(test, aes(y = Sales, x = Price)) + geom_point() + 
+  geom_smooth(method = "lm")
+
+g <- multiplot(g1, g2, g3, cols=2)
+
+library(plotly)
+py <- plot_ly(username='charleyferrari', key='oksysax3g0')
+
+ggplotly(g1)
+
+ggplot(cigarettes, aes(y = Sales)) + geom_boxplot()
+
+
+
+
+```
