@@ -1,0 +1,512 @@
+probmove <- (u2(p) - 200) / u1(p)
+if (runif (1) < probmove) {
+p[1] <- p[1]-10
+p[2] <- p[2]+10
+pdata <- rbind(pdata, c(p, u1(p), u2(p)))
+} else {
+pdata <- rbind(pdata, c(p, u1(p), u2(p)))
+}
+}
+} else {
+pdata <- rbind(pdata, c(p, u1(p), u2(p)))
+}
+}
+if (location == 2) {
+if (p[2] >= 10 && p[1] <= 5990) {
+if (u2(p) < u1(p) - 200) {
+p[2] <- p[2]-10
+p[1] <- p[1]+10
+pdata <- rbind(pdata, c(p, u1(p), u2(p)))
+} else {
+probmove <- (u1(p) - 200) / u2(p)
+if (runif (1) < probmove) {
+p[2] <- p[2]-10
+p[1] <- p[1]+10
+pdata <- rbind(pdata, c(p, u1(p), u2(p)))
+} else {
+pdata <- rbind(pdata, c(p, u1(p), u2(p)))
+}
+}
+} else {
+pdata <- rbind(pdata, c(p, u1(p), u2(p)))
+}
+}
+return(pdata)
+}
+iter <- 1:10000
+for(i in iter) {
+pdata <- pdatastep(pdata)
+}
+plot(iter, pdata$p1[-1], type = 'l')
+plot(iter, pdata$p2[-1], type = 'l')
+u1 <- function(p){
+return(-p[1]+8000)
+}
+u2 <- function(p){
+return(-p[2]+14000)
+}
+c12 <- function(f){
+return(2*f[1])
+}
+c21 <- function(f){
+return(2*f[2])
+}
+p0 <- c(4000,2000)
+flowcalc <- function(p){
+if(u2(p) > u1(p)){
+f1 <- (p[1] - p[2] + 6000)/4
+f <- c(f1,0)
+}else if(u1(p) > u2(p)){
+f2 <- (p[2] - p[1] - 6000)/4
+f <- c(0,f2)
+}else{f <- c(0,0)}
+return(f)
+}
+pdata <- data.frame(p1 = 4000, p2 = 2000, u1 = u1(p0), u2 = u2(p0))
+for(i in 1:10){
+p <- c(tail(pdata$p1,1),tail(pdata$p2,1))
+f <- flowcalc(p)
+u <- c(u1(p),u2(p))
+totu <- sum(p*u)
+pdata <- rbind(pdata, c(p[1]-f[1]+f[2], p[2]+f[1]-f[2], u))
+}
+p0 <- c(4000,2000)
+pdata <- data.frame(p1 = 4000, p2 = 2000, u1 = u1(p0), u2 = u2(p0))
+pdatastep <- function(pdata){
+location <- sample(c(1,2),1)
+p <- c(tail(pdata$p1,1),tail(pdata$p2,1))
+if(location == 1){
+if(p[1] >= 10 && p[2] <= 5990){
+if(u1(p) < u2(p) - 200){
+p[1] <- p[1]-10
+p[2] <- p[2]+10
+pdata <- rbind(pdata,c(p,u1(p),u2(p)))
+}else{
+probmove <- (u2(p) - 200)/u1(p)
+if(runif(1) < probmove){
+p[1] <- p[1]-10
+p[2] <- p[2]+10
+pdata <- rbind(pdata,c(p,u1(p),u2(p)))
+}else{
+pdata <- rbind(pdata,c(p,u1(p),u2(p)))
+}
+}
+}else{
+pdata <- rbind(pdata,c(p,u1(p),u2(p)))
+}
+#print("location1")
+}
+if(location == 2){
+if(p[2] >= 10 && p[1] <= 5990){
+if(u2(p) < u1(p) - 200){
+p[2] <- p[2]-10
+p[1] <- p[1]+10
+pdata <- rbind(pdata,c(p,u1(p),u2(p)))
+}else{
+probmove <- (u1(p) - 200)/u2(p)
+if(runif(1) < probmove){
+p[2] <- p[2]-10
+p[1] <- p[1]+10
+pdata <- rbind(pdata,c(p,u1(p),u2(p)))
+}else{
+pdata <- rbind(pdata,c(p,u1(p),u2(p)))
+}
+}
+}else{
+pdata <- rbind(pdata,c(p,u1(p),u2(p)))
+}
+#print("location2")
+}
+#print("moo")
+return(pdata)
+}
+for(i in 1:9999){
+pdata <- pdatastep(pdata)
+}
+pdata$iter <- 1:length(pdata$p1)
+pdatamelt <- melt(pdata, id.vars=c("u1","u2","iter"), measure.vars=c("p1","p2"),
+variable.name="region", value.name="population")
+ggplot(pdatamelt, aes(x=iter, y=population,color=region)) + geom_line()
+install.packages("ggthemes")
+library(ggthemes)
+ggplot(pdatamelt, aes(x=iter, y=population,color=region)) + geom_line() +
+theme_tufte()
+ggplot(pdatamelt, aes(x=population, color=region)) + geom_histogram()
+ggplot(pdatamelt, aes(x=population, fill=region)) + geom_histogram()
+hist(pdata$p1,breaks=100)
+hist(pdata$p2,breaks=100)
+ggplot(pdatamelt, aes(x=population, fill=region)) + geom_histogram(binwidth = 10)
+ggplot(pdatamelt, aes(x=population, fill=region)) +
+geom_histogram(binwidth = 10) + theme_tufte()
+ggplot(pdatamelt, aes(x=iter, y=population,color=region)) + geom_line() +
+theme_tufte()
+ggplot(pdatamelt, aes(x=population, fill=region)) +
+geom_histogram(binwidth = 10) + theme_tufte()
+u1 <- function(p){
+return(-p[1]+8)
+}
+u2 <- function(p){
+return(-p[2]+14)
+}
+c12 <- function(f){
+return(2*f[1])
+}
+c21 <- function(f){
+return(2*f[2])
+}
+p0 <- c(4,2)
+flowcalc <- function(p){
+if(u2(p) > u1(p)){
+f1 <- (p[1] - p[2] + 6000)/4
+f <- c(f1,0)
+}else if(u1(p) > u2(p)){
+f2 <- (p[2] - p[1] - 6000)/4
+f <- c(0,f2)
+}else{f <- c(0,0)}
+return(f)
+}
+flowcalc <- function(p){
+if(u2(p) > u1(p)){
+f1 <- (p[1] - p[2] + 6)/4
+f <- c(f1,0)
+}else if(u1(p) > u2(p)){
+f2 <- (p[2] - p[1] - 6)/4
+f <- c(0,f2)
+}else{f <- c(0,0)}
+return(f)
+}
+library(knitr)
+library(ggplot2)
+library(reshape2)
+library(knitr)
+u1 <- function(p){
+return(-p[1]+8)
+}
+u2 <- function(p){
+return(-p[2]+14)
+}
+c12 <- function(f){
+return(2*f[1])
+}
+c21 <- function(f){
+return(2*f[2])
+}
+p0 <- c(4,2)
+flowcalc <- function(p){
+if(u2(p) > u1(p)){
+f1 <- (p[1] - p[2] + 6)/4
+f <- c(f1,0)
+}else if(u1(p) > u2(p)){
+f2 <- (p[2] - p[1] - 6)/4
+f <- c(0,f2)
+}else{f <- c(0,0)}
+return(f)
+}
+p0 <- c(4,2)
+pdata <- data.frame(p1 = 4, p2 = 2, u1 = u1(p0), u2 = u2(p0))
+iter <- 1:5
+for(i in iter){
+p <- c(tail(pdata$p1,1),tail(pdata$p2,1))
+f <- flowcalc(p)
+u <- c(u1(p),u2(p))
+totu <- sum(p*u)
+pdata <- rbind(pdata, c(p[1]-f[1]+f[2], p[2]+f[1]-f[2], u))
+}
+kable(pdata, format = "markdown")
+rownames(pdata) <- 1:length(pdata$p1)
+pdata$iter <- 1:length(pdata$p1)
+pdata <- pdata[,c(2,3,4,5,1)]
+p0 <- c(4,2)
+u1 <- function(p){
+return(-p[1]+8)
+}
+u2 <- function(p){
+return(-p[2]+14)
+}
+c12 <- function(f){
+return(2*f[1])
+}
+c21 <- function(f){
+return(2*f[2])
+}
+flowcalc <- function(p){
+if(u2(p) > u1(p)){
+f1 <- (p[1] - p[2] + 6)/4
+f <- c(f1,0)
+}else if(u1(p) > u2(p)){
+f2 <- (p[2] - p[1] - 6)/4
+f <- c(0,f2)
+}else{f <- c(0,0)}
+return(f)
+}
+pdata <- data.frame(p1 = 4, p2 = 2, u1 = u1(p0), u2 = u2(p0),
+totu = sum(p0*c(u1(p0),u2(p0))))
+for(i in 1:10){
+p <- c(tail(pdata$p1,1),tail(pdata$p2,1))
+f <- flowcalc(p)
+u <- c(u1(p),u2(p))
+totu <- sum(p*u)
+pdata <- rbind(pdata, c(p[1]-f[1]+f[2], p[2]+f[1]-f[2], u, totu))
+}
+View(pdata)
+psadplus <- (pplussad*psad)/(pplussad*psad + pplushappy*(1-psad))
+psad <- 0.001
+pplussad <- 0.99
+pplushappy <- 0.05
+psadplus <- (pplussad*psad)/(pplussad*psad + pplushappy*(1-psad))
+psadplus
+psad <- psadplus
+psadplusminus <- (pplussad*psad)/(pplussad*psad + pplushappy*(1-psad))
+psad <- 0.001
+pplussad <- 0.99
+pplushappy <- 0.05
+psadplus <- (pplussad*psad)/(pplussad*psad + pplushappy*(1-psad))
+psadplus
+psad <- psadplus
+psadplusminus <- ((1-pplussad)*psad)/((1-pplussad)*psad + (1-pplushappy)*(1-psad))
+psadplusminus
+psadplusminus
+psad <- 0.001
+psadminus <- ((1-pplussad)*psad)/((1-pplussad)*psad + (1-pplushappy)*(1-psad))
+psadminus
+psadminus
+n <- 100000
+n <- 100000
+freqplussad <- pplussad*psad*n
+freqplussad
+n <- 100000
+freqplussad <- pplussad*psad*n
+freqminussad <- (1-pplussad)*psad*n
+freqminussad
+freqplushappy <- pplushappy*(1-psad)*n
+freqplushappy
+freqplushappy <- (1-pplushappy)*(1-psad)*n
+freqplushappy
+n <- 100000
+freqplussad <- pplussad*psad*n
+freqminussad <- (1-pplussad)*psad*n
+freqplushappy <- pplushappy*(1-psad)*n
+freqminushappy <- (1-pplushappy)*(1-psad)*n
+freqplussad+freqminussad+freqplushappy+freqminushappy
+freqsad <- psad*n
+freqsad
+freqhappy <- (1-psad)*n
+freqplus <- (pplussad*psad+pplushappy*(1-psad))*n
+freqplus <- (pplussad*psad+pplushappy*(1-psad))*n
+freqminus <- ((1-pplussad)*psad+(1-pplushappy)*(1-psad))*n
+freqplus+freqminus
+solutionmatrix <- matrix(c(freqplussad,freqminussad,freqsad,
+freqplushappy, freqminushappy, freqhappy,
+freqplus, freqminus, 100000),nrow=3)
+solutionmatrix
+rownames(solutionmatrix) <- c("Positive", "Negative", "Total")
+colnames(solutionmatrix) <- c("Sad", "Happy", "Total")
+solutionmatrix
+solutionmatrix["Positive","Sad"]
+pdiseasepositive <-
+solutionmatrix["Positive","Sad"]/solutionmatrix["Positive","Total"]
+pdiseasepositive
+psad
+freqsad <- psad*n
+n <- 10000000
+freqsad <- psad*n
+psad <- 0.001
+pplussad <- 0.99
+pplushappy <- 0.05
+psadplus <- (pplussad*psad)/(pplussad*psad + pplushappy*(1-psad))
+psadplus
+psad <- psadplus
+psadplusminus <- ((1-pplussad)*psad)/((1-pplussad)*psad + (1-pplushappy)*(1-psad))
+psadplusminus
+psad <- 0.001
+psadminus <- ((1-pplussad)*psad)/((1-pplussad)*psad + (1-pplushappy)*(1-psad))
+psadminus
+n <- 10000000
+freqsad <- psad*n
+freqsad
+freqplussad <- pplussad*freqsad
+freqplussad
+freqplushappy <- pplushappy*freqhappy
+n <- 10000000
+freqsad <- psad*n
+freqhappy <- (1-psad)*n
+freqplussad <- pplussad*freqsad
+freqplushappy <- pplushappy*freqhappy
+freqplushappy
+freqplussad
+n <- 10000000
+freqsad <- psad*n
+freqhappy <- (1-psad)*n
+freqplussad <- pplussad*freqsad
+freqplushappy <- pplushappy*freqhappy
+freqplusminussad <- (1-pplussad)*freqplussad
+freqplusminussad
+pplushappy
+n <- 10000000
+freqsad <- psad*n
+freqhappy <- (1-psad)*n
+freqplussad <- pplussad*freqsad
+freqplushappy <- pplushappy*freqhappy
+freqplusminussad <- (1-pplussad)*freqplussad
+freqplusminushappy <- (1-pplushappy)*freqplushappy
+freqplusminussad
+freqplusminushappy
+freqplushappy
+pplusminussad <- freqplusminussad/(freqplusminussad+freqplusminushappy)
+pplusminussad
+psad <- 0.001
+pplussad <- 0.99
+pplushappy <- 0.05
+psadplus <- (pplussad*psad)/(pplussad*psad + pplushappy*(1-psad))
+psadplus
+psad <- psadplus
+psadplusminus <- ((1-pplussad)*psad)/((1-pplussad)*psad + (1-pplushappy)*(1-psad))
+psadplusminus
+psadplusminus
+psad <- 0.001
+psadminus <- ((1-pplussad)*psad)/((1-pplussad)*psad + (1-pplushappy)*(1-psad))
+psadminus
+n <- 100000
+freqplussad <- pplussad*psad*n
+freqminussad <- (1-pplussad)*psad*n
+freqplushappy <- pplushappy*(1-psad)*n
+freqminushappy <- (1-pplushappy)*(1-psad)*n
+freqsad <- psad*n
+freqhappy <- (1-psad)*n
+freqplus <- (pplussad*psad+pplushappy*(1-psad))*n
+freqminus <- ((1-pplussad)*psad+(1-pplushappy)*(1-psad))*n
+solutionmatrix <- matrix(c(freqplussad,freqminussad,freqsad,
+freqplushappy, freqminushappy, freqhappy,
+freqplus, freqminus, 100000),nrow=3)
+rownames(solutionmatrix) <- c("Positive", "Negative", "Total")
+colnames(solutionmatrix) <- c("Sad", "Happy", "Total")
+solutionmatrix
+pdiseasepositive <-
+solutionmatrix["Positive","Sad"]/solutionmatrix["Positive","Total"]
+pdiseasepositive
+n <- 10000000
+freqsad <- psad*n
+freqhappy <- (1-psad)*n
+freqplussad <- pplussad*freqsad
+freqplushappy <- pplushappy*freqhappy
+freqplusminussad <- (1-pplussad)*freqplussad
+freqplusminushappy <- (1-pplushappy)*freqplushappy
+freqplusminussad
+freqplusminushappy
+pplusminussad <- freqplusminussad/(freqplusminussad+freqplusminushappy)
+pplusminussad
+psadplusminus
+setwd("C:/Users/xec33059/Downloads/IS 621 To Merge")
+cigarettes <- read.csv("cigarette-training-data.csv")
+View(cigarettes)
+library(ggplot2)
+?ggpairs
+pairs(cigarettes)
+ggplot(cigarettes, aes(x=Sales, y=Age)) + geom_point()
+ggplot(cigarettes, aes(x=Sales, y=Income)) + geom_point()
+ggplot(cigarettes, aes(x=Sales, y=Price)) + geom_point()
+library(dplyr)
+test <- filter(cigarettes, Sales < 150)
+ggplot(test, aes(x=Sales, y=Price)) + geom_point()
+ggplot(test, aes(x=Sales, y=Age)) + geom_point()
+ggplot(test, aes(x=Sales, y=Income)) + geom_point()
+test <- filter(cigarettes, Sales < 150 & Sales > 85)
+ggplot(test, aes(x=Sales, y=Income)) + geom_point()
+ggplot(test, aes(x=Sales, y=Age)) + geom_point()
+ggplot(test, aes(x=Sales, y=Price)) + geom_point()
+View(cigarettes)
+test <- cigarettes
+ggplot(test, aes(x=Sales, y=Income)) + geom_point()
+ggplot(test, aes(x=Sales, y=Age)) + geom_point()
+ggplot(test, aes(x=Sales, y=Price)) + geom_point()
+exp(1)
+log(exp(1))
+ggplot(test, aes(x=log(Sales), y=log(Income))) + geom_point()
+ggplot(test, aes(x=log(Sales), y=log(Age))) + geom_point()
+ggplot(test, aes(x=log(Sales), y=log(Price))) + geom_point()
+test <- log(cigarettes)
+select(cigarettes, -c(State, Sales))
+pairs(select(cigarettes, -c(State, Sales)))
+cigarettes <- read.csv("cigarette-training-data.csv")
+pairs(select(cigarettes, -c(State, Sales)))
+View(cigarettes)
+summary(lm(Sales ~ Price + Income + Age))
+summary(lm(Sales ~ Price + Income + Age, data = cigarettes))
+test <- cigarettes
+ggplot(test, aes(x=log(Sales), y=log(Income))) + geom_point()
+ggplot(test, aes(x=log(Sales), y=log(Age))) + geom_point()
+ggplot(test, aes(x=log(Sales), y=log(Price))) + geom_point()
+ggplot(test, aes(x=Sales, y=Income)) + geom_point()
+ggplot(test, aes(x=Sales, y=Age)) + geom_point()
+ggplot(test, aes(x=Sales, y=Price)) + geom_point()
+ggplot(test, aes(x=log(Sales), y=log(Income))) + geom_point()
+ggplot(test, aes(x=log(Sales), y=log(Age))) + geom_point()
+ggplot(test, aes(x=log(Sales), y=log(Price))) + geom_point()
+pairs(select(cigarettes, -c(State, Sales)))
+cor(select(cigarettes, -c(State, Sales)))
+?cor
+summary(lm(Sales ~ Price + Income + Age, data = cigarettes))
+summary(lm(Sales ~ Price + Income, data = cigarettes))
+summary(lm(Sales ~ Price + Income + Age, data = cigarettes))
+summary(lm(Sales ~ Price + Income, data = cigarettes))
+summary(lm(Sales ~ Price + Income + Age, data = cigarettes))
+summary(lm(log(Sales) ~ log(Price) + log(Income), data = cigarettes))
+is.na(cigarettes)
+View(cigarettes)
+northeast <- c("ME", "NH", "VT", "MA", "RI", "CT", "NY", "PA", "NJ")
+midwest <- c("ND", "SD", "NE", "KS", "MN", "IA", "MO", "IL", "WI", "MI",
+"IN", "OH")
+south <- c("DE", "MD", "DC", "WV", "VA", "KY", "NC", "TN", "SC", "GA",
+"AL","MS","AR","LA","OK","TX")
+west <- c("WA", "OR", "ID", "MT", "WY", "CA", "NV", "UT", "CO", "AZ", "NM")
+data.frame(region = "northeast", state = northeast)
+regionlookup <- rbind(data.frame(region = "northeast", state = northeast),
+data.frame(region = "midwest", state = midwest),
+data.frame(region = "south", state = south),
+data.frame(region = "west", state = west))
+?merge
+merge(cigarettes,regionlookup, by="State")
+regionlookup <- rbind(data.frame(Region = "northeast", State = northeast),
+data.frame(Region = "midwest", State = midwest),
+data.frame(Region = "south", State = south),
+data.frame(Region = "west", State = west))
+merge(cigarettes,regionlookup, by="State")
+regionlookup <- rbind(data.frame(Region = "Northeast", State = northeast),
+data.frame(Region = "Midwest", State = midwest),
+data.frame(Region = "South", State = south),
+data.frame(Region = "West", State = west))
+cigarettesregion <- merge(cigarettes,regionlookup, by="State")
+View(cigarettesregion)
+summary(lm(Sales ~ Price + Income + Age, data = cigarettesregion))
+summary(lm(Sales ~ Price + Income + Age + Region, data = cigarettesregion))
+summary(lm(Sales ~ log(Price) + Income + Age, data = cigarettes))
+summary(lm(log(Sales) ~ log(Price) + Income + Age, data = cigarettes))
+ggplot(test, aes(x=log(Sales), y=Income)) + geom_point()
+ggplot(test, aes(x=log(Sales), y=Age)) + geom_point()
+ggplot(test, aes(x=log(Sales), y=log(Price))) + geom_point()
+ggplot(test, aes(x=log(Sales), y=Income)) + geom_point() + geom_mooth()
+ggplot(test, aes(x=log(Sales), y=Income)) + geom_point() + geom_smooth()
+ggplot(test, aes(x=log(Sales), y=Income)) + geom_point() + geom_smooth(method = "lm")
+ggplot(test, aes(x=log(Sales), y=Income)) + geom_point() +
+geom_smooth(method = "lm")
+ggplot(test, aes(x=log(Sales), y=Age)) + geom_point() +
+geom_smooth(method = "lm")
+ggplot(test, aes(x=log(Sales), y=log(Price))) + geom_point() +
+geom_smooth(method = "lm")
+test <- filter(cigarettes, Sales < 150)
+ggplot(test, aes(x=log(Sales), y=log(Income))) + geom_point()
+ggplot(test, aes(x=log(Sales), y=Income)) + geom_point() +
+geom_smooth(method = "lm")
+test <- filter(cigarettes, Sales < 150 & Sales > 85)
+ggplot(test, aes(x=log(Sales), y=Income)) + geom_point() +
+geom_smooth(method = "lm")
+ggplot(test, aes(x=log(Sales), y=Age)) + geom_point() +
+geom_smooth(method = "lm")
+ggplot(test, aes(x=log(Sales), y=log(Price))) + geom_point() +
+geom_smooth(method = "lm")
+summary(lm(log(Sales) ~ log(Price) + Income + Age, data = cigarettes))
+summary(lm(log(sales) ~ log(Price) + Income, data = cigarettes))
+summary(lm(log(Sales) ~ log(Price) + Income, data = cigarettes))
+summary(lm(log(Sales) ~ log(Price) + Age, data = cigarettes))
+summary(lm(log(Sales) ~ Income + Age, data = cigarettes))
+summary(lm(log(Sales) ~ log(Price) + Income + Age, data = cigarettes))

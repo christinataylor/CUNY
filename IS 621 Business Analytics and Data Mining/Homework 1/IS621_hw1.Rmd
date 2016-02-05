@@ -1,0 +1,65 @@
+---
+title: "IS621_hw1"
+author: "Charley Ferrari"
+date: "February 3, 2016"
+output: pdf_document
+---
+
+```{r}
+
+library(ggplot2)
+
+library(dplyr)
+
+setwd("C:/Users/xec33059/Downloads/IS 621 To Merge")
+
+cigarettes <- read.csv("cigarette-training-data.csv")
+
+pairs(select(cigarettes, -c(State, Sales)))
+
+cor(select(cigarettes, -c(State, Sales)))
+
+
+summary(lm(Sales ~ Price + Income + Age, data = cigarettes))
+
+summary(lm(Sales ~ Price + Income, data = cigarettes))
+
+test <- cigarettes
+
+test <- filter(cigarettes, Sales < 150 & Sales > 85)
+
+ggplot(test, aes(x=log(Sales), y=log(Income))) + geom_point()
+ggplot(test, aes(x=log(Sales), y=log(Age))) + geom_point()
+ggplot(test, aes(x=log(Sales), y=log(Price))) + geom_point()
+
+ggplot(test, aes(x=log(Sales), y=Income)) + geom_point() + 
+  geom_smooth(method = "lm")
+ggplot(test, aes(x=log(Sales), y=Age)) + geom_point() + 
+  geom_smooth(method = "lm")
+ggplot(test, aes(x=log(Sales), y=log(Price))) + geom_point() + 
+  geom_smooth(method = "lm")
+
+northeast <- c("ME", "NH", "VT", "MA", "RI", "CT", "NY", "PA", "NJ")
+midwest <- c("ND", "SD", "NE", "KS", "MN", "IA", "MO", "IL", "WI", "MI", 
+             "IN", "OH")
+south <- c("DE", "MD", "DC", "WV", "VA", "KY", "NC", "TN", "SC", "GA",
+           "AL","MS","AR","LA","OK","TX")
+west <- c("WA", "OR", "ID", "MT", "WY", "CA", "NV", "UT", "CO", "AZ", "NM")
+
+regionlookup <- rbind(data.frame(Region = "Northeast", State = northeast),
+                      data.frame(Region = "Midwest", State = midwest),
+                      data.frame(Region = "South", State = south),
+                      data.frame(Region = "West", State = west))
+
+cigarettesregion <- merge(cigarettes,regionlookup, by="State")
+
+summary(lm(Sales ~ Price + Income + Age + Region, data = cigarettesregion))
+
+summary(lm(log(Sales) ~ log(Price) + Income + Age, data = cigarettes))
+summary(lm(log(Sales) ~ log(Price) + Income, data = cigarettes))
+summary(lm(log(Sales) ~ log(Price) + Age, data = cigarettes))
+summary(lm(log(Sales) ~ Income + Age, data = cigarettes))
+
+
+```
+
