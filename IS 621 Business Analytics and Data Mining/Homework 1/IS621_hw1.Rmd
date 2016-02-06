@@ -65,7 +65,13 @@ summary(lm(log(Sales) ~ Income + Age, data = cigarettes))
 
 ## Data Exploration
 
-Lookin
+The cigarettes data set consists of five variables: State, Age, Income, Price, and Sales. ALl of these variables are continuous except for State which is categorical. Since there is one observation per state however, this is not useful for analysis. In order to test if there are any geographical effects in this data, I divided the states into the four major census regions: Northeast, Midwest, South, and West. With multiple observations of each factor, I can generate three dummy variables to see if region has any effect.
+
+First, I will look at a few boxplots to get a handle on the numerical variables:
+
+```{r echo=False}
+
+```
 
 ```{r echo=False}
 
@@ -131,7 +137,7 @@ g2 <- ggplot(cigarettes, aes(y = Sales, x = Income)) + geom_point() +
 g3 <- ggplot(cigarettes, aes(y = Sales, x = Price)) + geom_point() + 
   geom_smooth(method = "lm")
 
-g <- multiplot(g1, g2, g3, cols=2)
+multiplot(g1, g2, g3, cols=2)
 
 test <- filter(cigarettes, Sales < 135 & Sales > 82)
 
@@ -152,6 +158,13 @@ ggplotly(g1)
 ggplot(cigarettes, aes(y = Sales)) + geom_boxplot()
 
 
+install.packages("MASS")
+install.packages("ISLR")
+library(MASS)
+library(ISLR)
 
+Carseatdata <- Carseats[,!(names(Carseats) %in% c("Urban", "US", "ShelveLoc"))]
+
+cormat <- cor(Carseatdata)
 
 ```

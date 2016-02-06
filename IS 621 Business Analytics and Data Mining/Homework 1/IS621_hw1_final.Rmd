@@ -1,0 +1,289 @@
+---
+title: "IS621_hw1_final"
+author: "Charley Ferrari"
+date: "February 5, 2016"
+output: pdf_document
+---
+
+```{r, echo=FALSE, include=FALSE}
+
+# Bringing in the data
+
+library(ggplot2)
+
+library(MASS)
+
+library(knitr)
+
+library(dplyr)
+
+setwd("/Users/Charley/Downloads/cuny/IS 621 Business Analytics and Data Mining/Homework 1")
+
+cigarettes <- read.csv("cigarette-training-data.csv")
+
+northeast <- c("ME", "NH", "VT", "MA", "RI", "CT", "NY", "PA", "NJ")
+midwest <- c("ND", "SD", "NE", "KS", "MN", "IA", "MO", "IL", "WI", "MI", 
+             "IN", "OH", "IO", "KA", "NB")
+south <- c("DE", "MD", "DC", "WV", "VA", "KY", "NC", "TN", "SC", "GA",
+           "AL","MS","AR","LA","OK","TX", "FL")
+west <- c("WA", "OR", "ID", "MT", "WY", "CA", "NV", "UT", "CO", "AZ", "NM", "AK", "HI")
+
+regionlookup <- rbind(data.frame(Region = "Northeast", State = northeast),
+                      data.frame(Region = "Midwest", State = midwest),
+                      data.frame(Region = "South", State = south),
+                      data.frame(Region = "West", State = west))
+
+cigarettesregion <- merge(cigarettes,regionlookup, by="State")
+
+filteredcigarettes <- filter(cigarettes, Sales < 135 & Sales > 83)
+
+filteredcigarettesregion <- merge(filteredcigarettes,regionlookup, by="State")
+
+rm(midwest, northeast, south, west, regionlookup)
+
+```
+
+## Data Exploration
+
+The cigarettes data set consists of five variables: State, Age, Income, Price, and Sales. ALl of these variables are continuous except for State which is categorical. Since there is one observation per state however, this is not useful for analysis. In order to test if there are any geographical effects in this data, I divided the states into the four major census regions: Northeast, Midwest, South, and West. With multiple observations of each factor, I can generate three dummy variables to see if region has any effect.
+
+First, I will look at a few boxplots to get a handle on the numerical variables:
+
+```{r, echo=FALSE}
+
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+d1 <- ggplot(cigarettes, aes(x=1, y=Sales)) + geom_boxplot()
+d2 <- ggplot(cigarettes, aes(x=1, y=Age)) + geom_boxplot()
+d3 <- ggplot(cigarettes, aes(x=1, y=Income)) + geom_boxplot()
+d4 <- ggplot(cigarettes, aes(x=1, y=Price)) + geom_boxplot()
+
+multiplot(d1, d2, d3, d4, cols=2)
+
+rm(d1, d2, d3, d4)
+
+d1 <- ggplot(cigarettesregion, aes(x=1, y=Sales, color=Region)) + geom_boxplot()
+d2 <- ggplot(cigarettesregion, aes(x=1, y=Age, color=Region)) + geom_boxplot()
+d3 <- ggplot(cigarettesregion, aes(x=1, y=Income, color=Region)) + geom_boxplot()
+d4 <- ggplot(cigarettesregion, aes(x=1, y=Price, color=Region)) + geom_boxplot()
+
+multiplot(d1, d2, d3, d4, cols=2)
+
+rm(d1, d2, d3, d4)
+
+```
+
+Sales looks to have the most outliers, and they appear to be spread out across multiple regions (suggesting these outliers aren't a regional effect.) Since this is the variable we're predicting, I'll analyze a few scatter plots of our predictor variables versus sales.
+
+```{r, echo=FALSE}
+g1 <- ggplot(cigarettes, aes(y = Sales, x = Age)) + geom_point() + 
+  geom_smooth(method = "lm")
+g2 <- ggplot(cigarettes, aes(y = Sales, x = Income)) + geom_point() + 
+  geom_smooth(method = "lm")
+g3 <- ggplot(cigarettes, aes(y = Sales, x = Price)) + geom_point() + 
+  geom_smooth(method = "lm")
+
+multiplot(g1, g2, g3, cols=2)
+
+rm(g1, g2, g3)
+
+```
+
+Lets try to make some histograms?
+
+```{r, echo=FALSE}
+
+g1 <- ggplot(filteredcigarettes, aes(x = Age)) + geom_histogram()
+g2 <- ggplot(filteredcigarettes, aes(x = Income)) + geom_histogram()
+g3 <- ggplot(filteredcigarettes, aes(x = Price)) + geom_histogram()
+g4 <- ggplot(filteredcigarettes, aes(x = Sales^4)) + geom_histogram()
+
+multiplot(g1, g2, g3, g4, cols=2)
+
+rm(g1, g2, g3, g4)
+
+```
+
+There seems to be no pattern in the outliers indicating non-linearity, so it might make sense to remove these outliers. Below is a table of the outliers:
+
+```{r, echo=FALSE}
+
+kable(filter(cigarettes,Sales > 135 | Sales < 82))
+
+```
+
+A few of the outliers could be explained as quirky examples. DC is a city, and is perhaps not comparable to other states. Utah has a strong Mormon influence which could explain their low Sales, and Nevada could be influenced by Las Vegas' 'Sin City' status. New Hampshire was the most perplexing, but looking at a table of the Northeast gives a potential solution:
+
+
+```{r, echo=FALSE}
+
+kable(filter(cigarettesregion, Region == "Northeast") %>% dplyr::select(-Region))
+
+```
+
+The Northeastern states are smaller, which mean more people can cross state borders to get goods for a lower price. New Hampshire cigarettes are substantially cheaper than those in Massachusetts, which has a comparatively higher population. Similar border effects could be occurring in Oregon and Kentucky (which also have comparatively lower prices.)
+
+As one further test for these outliers, lets look at the Cook's distance in a straight linear model fit for Income, Price, and Age prediciting Sales:
+
+```{r echo=FALSE}
+
+model <- lm(Sales ~ Age + Income + Price, data = cigarettes)
+
+plot(model,which=4)
+
+rm(model)
+
+```
+
+Using the rule of thumb of $\frac{4}{n-2}$ suggests we could keep a few of the outliers, but given how much they differ from the Cook distance of the rest of the datapoints, I believe removing all outliers is the safest decision.
+
+Looking at the scatter plots once we do so shows clearer relationships:
+
+```{r, echo=FALSE}
+
+g1 <- ggplot(filteredcigarettes, aes(y = Sales, x = Age)) + geom_point() + 
+  geom_smooth(method = "lm")
+g2 <- ggplot(filteredcigarettes, aes(y = Sales, x = Income)) + geom_point() + 
+  geom_smooth(method = "lm")
+g3 <- ggplot(filteredcigarettes, aes(y = Sales, x = Price)) + geom_point() + 
+  geom_smooth(method = "lm")
+
+multiplot(g1, g2, g3, cols=2)
+
+rm(g1, g2, g3)
+
+# points(lstat, fitted(fit6), col="red", ch=20)
+
+# p + stat_smooth(method = "lm", formula = y ~ poly(x, 2), size = 1)
+
+
+```
+
+With these outliers removed, we can see some possible non-linearity in the Sales vs Income scatter plot.
+
+This makes intuitive sense. In a lower income range, higher incomes may lead to more cigarette sales simply because more people have disposable income to spend on cigarettes. As income increases past this threshold, the relationship may not be as strong (even if one is a heavy smoker, there is an upper limit to cigarette consumption.)
+
+To capture some of this, lets plot a best fit line for a model including Income and $Income^2$:
+
+```{r, echo=FALSE}
+
+ggplot(filteredcigarettes, aes(y = Sales, x = Income)) + geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ poly(x,2))
+
+```
+
+This also gives us a better adjusted R-squared: 0.2488 vs 0.1678 when just looking at income.
+
+Lastly, I'll look at the correlation between my predictor variables.
+
+```{r, echo=FALSE}
+
+kable(cor(dplyr::select(filteredcigarettes, -State)))
+
+```
+
+Nothing seems abnormally correlated, but it might be worth it to keep an eye on Price and Age.
+
+```{r, echo=FALSE}
+
+residtest <- data.frame(Sales = filteredcigarettes$Sales, 
+                        IncomeResid = 
+                          lm(Sales ~ Income, data=filteredcigarettes)$residuals,
+                        PriceResid = 
+                          lm(Sales ~ Price, data=filteredcigarettes)$residuals,
+                        AgeResid = 
+                          lm(Sales ~ Age, data=filteredcigarettes)$residuals)
+
+g1 <- ggplot(residtest, aes(x=Sales, y=IncomeResid)) + geom_point() + 
+  stat_smooth(method="lm")
+g2 <- ggplot(residtest, aes(x=Sales, y=PriceResid)) + geom_point() + 
+  stat_smooth(method="lm")
+g3 <- ggplot(residtest, aes(x=Sales, y=AgeResid)) + geom_point() + 
+  stat_smooth(method="lm")
+
+multiplot(g1, g2, g3, cols=2)
+
+rm(g1, g2, g3)
+
+
+```
+
+```{r, echo=FALSE}
+
+model <- lm(Sales ~ Age + poly(Income,2) + Price + Region, 
+            data = filteredcigarettesregion)
+
+summary(model)
+
+plot(model)
+
+
+```
+
+```{r, echo=FALSE}
+
+gala <- gala
+
+model <- lm(Species ~ Area + Elevation + Nearest + Scruz + Adjacent, data=gala)
+
+summary(model)
+
+library(MASS)
+
+boxcox(model, plotit=T)
+
+model2 <- lm(I(Species^(1/3)) ~ Area + Elevation + Nearest + Scruz + Adjacent, data=gala)
+
+summary(model2)
+
+gala$Species13 <- gala$Species^(1/3)
+
+model3 <- lm(Species13 ~ Area + Elevation + Nearest + Scruz + Adjacent, data=gala)
+
+summary(model3)
+
+```
