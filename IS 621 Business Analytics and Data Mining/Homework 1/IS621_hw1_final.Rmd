@@ -17,6 +17,8 @@ library(knitr)
 
 library(dplyr)
 
+library(faraway)
+
 setwd("/Users/Charley/Downloads/cuny/IS 621 Business Analytics and Data Mining/Homework 1")
 
 cigarettes <- read.csv("cigarette-training-data.csv")
@@ -232,11 +234,11 @@ Nothing seems abnormally correlated, but it might be worth it to keep an eye on 
 
 residtest <- data.frame(Sales = filteredcigarettes$Sales, 
                         IncomeResid = 
-                          lm(Sales ~ Income, data=filteredcigarettes)$residuals,
+                          lm(Sales ~ poly(Income,2), data=filteredcigarettes)$residuals,
                         PriceResid = 
-                          lm(Sales ~ Price, data=filteredcigarettes)$residuals,
+                          lm(log(Sales) ~ Price, data=filteredcigarettes)$residuals,
                         AgeResid = 
-                          lm(Sales ~ Age, data=filteredcigarettes)$residuals)
+                          lm(Sales ~ poly(Age,2), data=filteredcigarettes)$residuals)
 
 g1 <- ggplot(residtest, aes(x=Sales, y=IncomeResid)) + geom_point() + 
   stat_smooth(method="lm")
@@ -249,6 +251,9 @@ multiplot(g1, g2, g3, cols=2)
 
 rm(g1, g2, g3)
 
+m <- lm(mpg~hp, data=mtcars)
+plot(m$fitted.values + m$residuals ~ mtcars$mpg) 
+
 
 ```
 
@@ -259,7 +264,16 @@ model <- lm(Sales ~ Age + poly(Income,2) + Price + Region,
 
 summary(model)
 
-plot(model)
+plot(model,which=1)
+
+data <- data.frame(fitted = as.numeric(model$fitted.values), 
+                   resid = as.numeric(model$residuals), 
+                   actual = filteredcigarettesregion$Sales,
+                   actualtest = model$fitted.values + model$residuals)
+
+ggplot(data, aes(x=actual, y=resid)) + geom_point() + stat_smooth(method="lm")
+
+ggplot(data, aes(x=fitted, y=resid)) + geom_point() + stat_smooth(method="lm")
 
 
 ```
