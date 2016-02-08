@@ -43,6 +43,15 @@ filteredcigarettesregion <- merge(filteredcigarettes,regionlookup, by="State")
 
 rm(midwest, northeast, south, west, regionlookup)
 
+cigarettesregion$Mormon <- ifelse(cigarettesregion$State == "UT", 1,0)
+
+cigarettesregion$SinState <- ifelse(cigarettesregion$State == "NV", 1,0)
+
+cigarettesregion$CrossBorder <- ifelse(cigarettesregion$State %in% c("KY","NH", "OR"),
+                                       1,0)
+
+cigarettesregion$LowPrice <- ifelse(cigarettesregion$Price < 35,1,0)
+
 ```
 
 ## Data Exploration
@@ -132,21 +141,6 @@ g3 <- ggplot(cigarettes, aes(y = Sales, x = Price)) + geom_point() +
 multiplot(g1, g2, g3, cols=2)
 
 rm(g1, g2, g3)
-
-```
-
-Lets try to make some histograms?
-
-```{r, echo=FALSE}
-
-g1 <- ggplot(filteredcigarettes, aes(x = Age)) + geom_histogram()
-g2 <- ggplot(filteredcigarettes, aes(x = Income)) + geom_histogram()
-g3 <- ggplot(filteredcigarettes, aes(x = Price)) + geom_histogram()
-g4 <- ggplot(filteredcigarettes, aes(x = Sales^4)) + geom_histogram()
-
-multiplot(g1, g2, g3, g4, cols=2)
-
-rm(g1, g2, g3, g4)
 
 ```
 
@@ -259,8 +253,8 @@ plot(m$fitted.values + m$residuals ~ mtcars$mpg)
 
 ```{r, echo=FALSE}
 
-model <- lm(Sales ~ Age + poly(Income,2) + Price + Region, 
-            data = filteredcigarettesregion)
+model <- lm(Sales ~ poly(Income,2) + Price + Region + SinState, 
+            data = cigarettesregion)
 
 summary(model)
 
