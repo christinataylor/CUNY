@@ -1,0 +1,20 @@
+---
+title: "IS621_hw1_scrap"
+author: "Charley Ferrari"
+date: "February 8, 2016"
+output: pdf_document
+---
+
+As one further test for these outliers, lets look at the Cook's distance in a straight linear model fit for Income, Price, and Age prediciting Sales:
+
+```{r echo=FALSE}
+
+model <- lm(Sales ~ Age + Income + Price, data = cigarettes)
+
+plot(model,which=4)
+
+rm(model)
+
+```
+
+Using the rule of thumb of $\frac{4}{n-2}$ suggests we could keep a few of the outliers, but given how much they differ from the Cook distance of the rest of the datapoints, I believe removing all outliers is the safest decision.

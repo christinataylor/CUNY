@@ -43,14 +43,14 @@ filteredcigarettesregion <- merge(filteredcigarettes,regionlookup, by="State")
 
 rm(midwest, northeast, south, west, regionlookup)
 
-cigarettesregion$Mormon <- ifelse(cigarettesregion$State == "UT", 1,0)
+#cigarettesregion$Mormon <- ifelse(cigarettesregion$State == "UT", 1,0)
 
-cigarettesregion$SinState <- ifelse(cigarettesregion$State == "NV", 1,0)
+#cigarettesregion$SinState <- ifelse(cigarettesregion$State == "NV", 1,0)
 
-cigarettesregion$CrossBorder <- ifelse(cigarettesregion$State %in% c("KY","NH", "OR"),
+#cigarettesregion$CrossBorder <- ifelse(cigarettesregion$State %in% c("KY","NH", "OR"),
                                        1,0)
 
-cigarettesregion$LowPrice <- ifelse(cigarettesregion$Price < 35,1,0)
+#cigarettesregion$LowPrice <- ifelse(cigarettesregion$Price < 35,1,0)
 
 ```
 
@@ -144,7 +144,7 @@ rm(g1, g2, g3)
 
 ```
 
-There seems to be no pattern in the outliers indicating non-linearity, so it might make sense to remove these outliers. Below is a table of the outliers:
+There seems to be no pattern in the outliers indicating non-linearity, so it might make sense to remove them. Below is a table of the outliers:
 
 ```{r, echo=FALSE}
 
@@ -152,7 +152,7 @@ kable(filter(cigarettes,Sales > 135 | Sales < 82))
 
 ```
 
-A few of the outliers could be explained as quirky examples. DC is a city, and is perhaps not comparable to other states. Utah has a strong Mormon influence which could explain their low Sales, and Nevada could be influenced by Las Vegas' 'Sin City' status. New Hampshire was the most perplexing, but looking at a table of the Northeast gives a potential solution:
+A few of these can be explained as quirky examples. DC is a city, and is perhaps not comparable to other states. Utah has a strong Mormon influence which could explain their low Sales, and Nevada could be influenced by Las Vegas' 'Sin City' status. New Hampshire was the most perplexing, but looking at a table of the Northeast gives a potential solution:
 
 
 ```{r, echo=FALSE}
@@ -163,21 +163,7 @@ kable(filter(cigarettesregion, Region == "Northeast") %>% dplyr::select(-Region)
 
 The Northeastern states are smaller, which mean more people can cross state borders to get goods for a lower price. New Hampshire cigarettes are substantially cheaper than those in Massachusetts, which has a comparatively higher population. Similar border effects could be occurring in Oregon and Kentucky (which also have comparatively lower prices.)
 
-As one further test for these outliers, lets look at the Cook's distance in a straight linear model fit for Income, Price, and Age prediciting Sales:
-
-```{r echo=FALSE}
-
-model <- lm(Sales ~ Age + Income + Price, data = cigarettes)
-
-plot(model,which=4)
-
-rm(model)
-
-```
-
-Using the rule of thumb of $\frac{4}{n-2}$ suggests we could keep a few of the outliers, but given how much they differ from the Cook distance of the rest of the datapoints, I believe removing all outliers is the safest decision.
-
-Looking at the scatter plots once we do so shows clearer relationships:
+I will revisit these outliers, but for now after removing them the scatter plots show clearer relationships:
 
 ```{r, echo=FALSE}
 
@@ -214,6 +200,8 @@ ggplot(filteredcigarettes, aes(y = Sales, x = Income)) + geom_point() +
 
 This also gives us a better adjusted R-squared: 0.2488 vs 0.1678 when just looking at income.
 
+I'm making the choice to include both Income and $Income^2$. When I run a model with just poly(Income,2) and Sales, I get the following equation: $Sales = 119.95 + 73.551 \times Income - 8.964 \times Income^2$. In several test models, $Income^2$ shows low significance, but both terms need
+
 Lastly, I'll look at the correlation between my predictor variables.
 
 ```{r, echo=FALSE}
@@ -224,9 +212,23 @@ kable(cor(dplyr::select(filteredcigarettes, -State)))
 
 Nothing seems abnormally correlated, but it might be worth it to keep an eye on Price and Age.
 
-```{r, echo=FALSE}
+Now that we have a base model, we can test the cook's distance of our outliers. Using poly(Income,2) to include both Income and $Income^2$, I'll create a model to try to predict sales.
 
-residtest <- data.frame(Sales = filteredcigarettes$Sales, 
+```{r echo=FALSE}
+
+model <- lm(Sales ~ Age + poly(Income,2) + Price + Region, data = cigarettesregion)
+
+plot(model,which=4)
+
+rm(model)
+
+cigarettesregion$cooks <- cooks.distance(model)
+
+```
+
+```{r, echo=FALSE, eval=FALSE}
+
+residtest <- data.frame(Sales = cigarettes$Sales, 
                         IncomeResid = 
                           lm(Sales ~ poly(Income,2), data=filteredcigarettes)$residuals,
                         PriceResid = 
@@ -251,10 +253,12 @@ plot(m$fitted.values + m$residuals ~ mtcars$mpg)
 
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 
 model <- lm(Sales ~ poly(Income,2) + Price + Region + SinState, 
             data = cigarettesregion)
+
+model <- lm(Sales ~ poly(Income,2), data=cigarettes)
 
 summary(model)
 
@@ -272,7 +276,7 @@ ggplot(data, aes(x=fitted, y=resid)) + geom_point() + stat_smooth(method="lm")
 
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 
 gala <- gala
 
