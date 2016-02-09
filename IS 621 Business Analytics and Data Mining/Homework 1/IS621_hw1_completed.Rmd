@@ -1,0 +1,375 @@
+---
+title: "IS621_hw1_completed"
+author: "Charley Ferrari"
+date: "February 9, 2016"
+output: pdf_document
+---
+
+```{r, echo=FALSE, include=FALSE}
+
+# Bringing in the data
+
+library(ggplot2)
+
+library(MASS)
+
+library(knitr)
+
+library(dplyr)
+
+library(faraway)
+
+library(ggthemes)
+
+setwd("/Users/Charley/Downloads/cuny/IS 621 Business Analytics and Data Mining/Homework 1")
+
+# setwd("C:/Users/xec33059/Downloads/cuny/IS 621 Business Analytics and Data Mining/Homework 1")
+
+cigarettes <- read.csv("cigarette-training-data.csv")
+
+northeast <- c("ME", "NH", "VT", "MA", "RI", "CT", "NY", "PA", "NJ")
+midwest <- c("ND", "SD", "NE", "KS", "MN", "IA", "MO", "IL", "WI", "MI", 
+             "IN", "OH", "IO", "KA", "NB")
+south <- c("DE", "MD", "DC", "WV", "VA", "KY", "NC", "TN", "SC", "GA",
+           "AL","MS","AR","LA","OK","TX", "FL")
+west <- c("WA", "OR", "ID", "MT", "WY", "CA", "NV", "UT", "CO", "AZ", "NM", "AK", "HI")
+
+regionlookup <- rbind(data.frame(Region = "Northeast", State = northeast),
+                      data.frame(Region = "Midwest", State = midwest),
+                      data.frame(Region = "South", State = south),
+                      data.frame(Region = "West", State = west))
+
+cigarettesregion <- merge(cigarettes,regionlookup, by="State")
+
+filteredcigarettes <- filter(cigarettes, Sales < 135 & Sales > 83)
+
+filteredcigarettesregion <- merge(filteredcigarettes,regionlookup, by="State")
+
+rm(midwest, northeast, south, west, regionlookup)
+
+#cigarettesregion$Mormon <- ifelse(cigarettesregion$State == "UT", 1,0)
+
+#cigarettesregion$SinState <- ifelse(cigarettesregion$State == "NV", 1,0)
+
+#cigarettesregion$CrossBorder <- ifelse(cigarettesregion$State %in% c("KY","NH", "OR"),1,0)
+
+#cigarettesregion$LowPrice <- ifelse(cigarettesregion$Price < 35,1,0)
+
+```
+
+## Data Exploration and Data Transformation
+
+The cigarettes data set consists of five variables: State, Age, Income, Price, and Sales. ALl of these variables are continuous except for State which is categorical. Since there is one observation per state however, this is not useful for analysis. In order to test if there are any geographical effects in this data, I divided the states into the four major census regions: Northeast, Midwest, South, and West. With multiple observations of each factor, I can generate three dummy variables to see if region has any effect.
+
+First, I will look at a few boxplots to get a handle on the numerical variables:
+
+```{r, echo=FALSE}
+
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+d1 <- ggplot(cigarettes, aes(x=1, y=Sales)) + geom_boxplot() + theme_tufte()
+d2 <- ggplot(cigarettes, aes(x=1, y=Age)) + geom_boxplot() + theme_tufte()
+d3 <- ggplot(cigarettes, aes(x=1, y=Income)) + geom_boxplot() + theme_tufte()
+d4 <- ggplot(cigarettes, aes(x=1, y=Price)) + geom_boxplot() + theme_tufte()
+
+multiplot(d1, d2, d3, d4, cols=2)
+
+rm(d1, d2, d3, d4)
+
+d1 <- ggplot(cigarettesregion, aes(x=1, y=Sales, color=Region)) + 
+  geom_boxplot() + theme_tufte()
+d2 <- ggplot(cigarettesregion, aes(x=1, y=Age, color=Region)) + 
+  geom_boxplot() + theme_tufte()
+d3 <- ggplot(cigarettesregion, aes(x=1, y=Income, color=Region)) + 
+  geom_boxplot() + theme_tufte()
+d4 <- ggplot(cigarettesregion, aes(x=1, y=Price, color=Region)) + 
+  geom_boxplot() + theme_tufte()
+
+multiplot(d1, d2, d3, d4, cols=2)
+
+rm(d1, d2, d3, d4)
+
+```
+
+Sales looks to have the most outliers, and they appear to be spread out across multiple regions (suggesting these outliers aren't a regional effect.) Since this is the variable we're predicting, I'll analyze a few scatter plots of our predictor variables versus sales.
+
+```{r, echo=FALSE}
+g1 <- ggplot(cigarettes, aes(y = Sales, x = Age)) + geom_point() + 
+  geom_smooth(method = "lm") + theme_tufte()
+g2 <- ggplot(cigarettes, aes(y = Sales, x = Income)) + geom_point() + 
+  geom_smooth(method = "lm") + theme_tufte()
+g3 <- ggplot(cigarettes, aes(y = Sales, x = Price)) + geom_point() + 
+  geom_smooth(method = "lm") + theme_tufte()
+
+multiplot(g1, g2, g3, cols=2)
+
+rm(g1, g2, g3)
+
+```
+
+There seems to be no pattern in the outliers indicating non-linearity, so it might make sense to remove them. Below is a table of the outliers:
+
+```{r, echo=FALSE}
+
+kable(filter(cigarettes,Sales > 135 | Sales < 82))
+
+```
+
+A few of these can be explained as quirky examples. DC is a city, and is perhaps not comparable to other states. Utah has a strong Mormon influence which could explain their low Sales, and Nevada could be influenced by Las Vegas' 'Sin City' status. New Hampshire was the most perplexing, but looking at a table of the Northeast gives a potential solution:
+
+
+```{r, echo=FALSE}
+
+kable(filter(cigarettesregion, Region == "Northeast") %>% dplyr::select(-Region))
+
+```
+
+The Northeastern states are smaller, which mean more people can cross state borders to get goods for a lower price. New Hampshire cigarettes are substantially cheaper than those in Massachusetts, which has a comparatively higher population. Similar border effects could be occurring in Oregon and Kentucky (which also have comparatively lower prices.)
+
+I will revisit these outliers, but for now after removing them the scatter plots show clearer relationships:
+
+```{r, echo=FALSE}
+
+g1 <- ggplot(filteredcigarettes, aes(y = Sales, x = Age)) + geom_point() + 
+  geom_smooth(method = "lm") + theme_tufte()
+g2 <- ggplot(filteredcigarettes, aes(y = Sales, x = Income)) + geom_point() + 
+  geom_smooth(method = "lm") + theme_tufte()
+g3 <- ggplot(filteredcigarettes, aes(y = Sales, x = Price)) + geom_point() + 
+  geom_smooth(method = "lm") + theme_tufte()
+
+multiplot(g1, g2, g3, cols=2)
+
+rm(g1, g2, g3)
+
+# points(lstat, fitted(fit6), col="red", ch=20)
+
+# p + stat_smooth(method = "lm", formula = y ~ poly(x, 2), size = 1)
+
+
+```
+
+With these outliers removed, we can see some possible non-linearity in the Sales vs Income scatter plot.
+
+This makes intuitive sense. In a lower income range, higher incomes may lead to more cigarette sales simply because more people have disposable income to spend on cigarettes. As income increases past this threshold, the relationship may not be as strong (even if one is a heavy smoker, there is an upper limit to cigarette consumption.)
+
+To capture some of this, lets plot a best fit line for a model including Income and $Income^2$:
+
+```{r, echo=FALSE}
+
+ggplot(filteredcigarettes, aes(y = Sales, x = Income)) + geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ poly(x,2)) + theme_tufte()
+
+```
+
+This also gives us a better adjusted R-squared: 0.2488 vs 0.1678 when just looking at income.
+
+I'm making the choice to include both Income and $Income^2$. When I run a model with just poly(Income,2) and Sales, I get the following equation: $Sales = 119.95 + 73.551 \times Income - 8.964 \times Income^2$. In several test models, $Income^2$ shows low significance. To fit the justification above, both of these variables need to be included. Income's positive coefficient describes the effect of having more disposable income, while $Income^2$'s negative coefficient describes the tapering off of this effect (or potential negative corellation.)
+
+Lastly, I'll look at the correlation between my predictor variables.
+
+```{r, echo=FALSE}
+
+kable(cor(dplyr::select(filteredcigarettes, -State)))
+
+```
+
+Nothing seems abnormally correlated, but it might be worth it to keep an eye on Price and Age.
+
+Now that we have a base model, we can test the cook's distance of our outliers. Using poly(Income,2) to include both Income and $Income^2$, as well as Region as a categorical variable, I'll create a model to try to predict Sales.
+
+Below is a graph of the Cook's distances, and a table of the top 10 cook distances for this model:
+
+```{r echo=FALSE}
+
+model <- lm(Sales ~ Age + poly(Income,2) + Price + Region, 
+            data = cigarettesregion)
+
+plot(model,which=4)
+
+cigarettesregion$Cooks.Distance <- cooks.distance(model)
+
+rm(model)
+
+kable(head(arrange(cigarettesregion,desc(Cooks.Distance)),10))
+
+#summary(model)
+
+```
+
+The table and graph suggest removing the top 4 states: New Hampshire, Nevada, Wsashington DC, and Hawaii. This is interesting because Hawaii was within 1.5IQR in my first analysis of outliers, while other outliers such as Utah had less extreme Cook's Distances. This changes the relative Cook's Distances:
+
+```{r, echo=FALSE}
+
+filteredcigarettesregion <- 
+  filter(cigarettesregion, !(State %in% c("NH", "NV", "DC", "HI")))
+
+model <- lm(Sales ~ Age + poly(Income,2) + Price + Region, 
+            data = filteredcigarettesregion)
+
+filteredcigarettesregion$Cooks.Distance <- cooks.distance(model)
+
+kable(head(arrange(filteredcigarettesregion,desc(Cooks.Distance)),10))
+
+```
+
+Now Alaska is topping the list. However, Alaska sales are within the IQR of our set of cigarette sales. Since we have a smaller data set, I believe it's better to stick with the four outliers we removed based on our first analysis of Cook's Distance.
+
+Lastly, I'll run a Box-Cox on my model to see if I need to transform my dependent variable:
+
+```{r, echo=FALSE}
+
+boxcox(model, plotit=T)
+
+model <- lm(I(((Sales-1)^2)/2) ~ Age + poly(Income,2) + Price + Region, 
+            data = filteredcigarettesregion)
+
+model <- lm(log(Sales) ~ Age + poly(Income,2) + Price + Region, 
+            data = filteredcigarettesregion)
+
+rm(model)
+
+```
+
+We have a wide 95% confidence interval centered very close to 1, suggesting no transormation is needed. Because the interval included 0 and 2 however, I tested squaring and taking the natural logarithm of Sales. When I inserted $\frac{Sales^2 - 1}{2}$ as my dependent variable, I ended up with an adjusted R-squared of 0.481, with log(Sales) I ended up with an adjusted R-squared of 0.4711, which both failed to beat my base model's adjusted R-squared of 0.4869.
+
+To summarize, my base model, including all variables, is specified as:
+
+$$ Sales ~ Age + Income + Income^2 + Price + Region $$
+
+Region being a categorical variable, which is expressed through the dummies RegionMidwest, RegionSouth, and RegionWest (leaving out the Northeast.)
+
+## Build Models
+
+For the purposes of this section, I will remove the categorical variable Region from my model (according to the p-values I calculated, none of the Region dummy variables were significant anyway.) I will keep Income as a polynomial however, and either keep both Income and $Income^2$ or remove them both. In several test models, I have found that $Income^2$ has a low significance, while Income has a high significance. If I include only $Income^2$ however, I end up with a positive income coefficient. I'm treating these as a singular transformation to account for the behavior I described above.
+
+Below is a summary of my base model: 
+
+```{r, echo=FALSE}
+model <- lm(Sales ~ Age + poly(Income,2) + Price, data = filteredcigarettesregion)
+
+summary(model)
+
+```
+
+Accounting for my transformation of Income, all variables are highly significant, with p-values less than 0.01. It would still be helpful to compare the Adjusted R-squares of each of the 7 iterations of variable combinations:
+
+```{r, echo=FALSE}
+
+model1 <- lm(Sales ~ Age + poly(Income,2) + Price, data = filteredcigarettesregion)
+model2 <- lm(Sales ~ poly(Income,2) + Price, data = filteredcigarettesregion)
+model3 <- lm(Sales ~ Age + Price, data = filteredcigarettesregion)
+model4 <- lm(Sales ~ Age + poly(Income,2), data = filteredcigarettesregion)
+model5 <- lm(Sales ~ Age, data = filteredcigarettesregion)
+model6 <- lm(Sales ~ poly(Income,2), data = filteredcigarettesregion)
+model7 <- lm(Sales ~ Price, data = filteredcigarettesregion)
+
+AgeIncluded <- c(T,F,T,T,T,F,F)
+IncomeIncluded <- c(T,T,F,T,F,T,F)
+PriceIncluded <- c(T,T,T,F,F,F,T)
+Adj.R.Squared <- c(summary(model1)$adj.r.squared,summary(model2)$adj.r.squared,
+                   summary(model3)$adj.r.squared,summary(model4)$adj.r.squared,
+                   summary(model5)$adj.r.squared,summary(model6)$adj.r.squared,
+                   summary(model7)$adj.r.squared)
+modelsum <- data.frame(Age = AgeIncluded, Income = IncomeIncluded, 
+                       Price = PriceIncluded, Adjusted.R = Adj.R.Squared)
+
+kable(modelsum)
+
+```
+
+I checked for corellation earlier, but now that we have removed outliers, it would make sense to revisit our corellation matrix:
+
+```{r, echo=FALSE}
+
+kable(cor(dplyr::select(filteredcigarettes, -State)))
+
+
+```
+
+Now that I'm fairly convinced that the base model is best, I could calculate the variance inflation for each variable:
+
+```{r, echo=FALSE}
+
+kable(t(data.frame(vif(model))))
+
+```
+
+Using the rule of thumb cutoff of ~10, it's pretty clear I still don't have to worry about multi-collinearity issues.
+
+## Select Models
+
+I am basing my model selection mainly on the significance of my variables, and the Adjusted R-squared. Both of these measures seem to be in sync. My base model including all variables showed all variables as significant, and the systematic removal of variables resulted in reductions in my Adjusted R-squared. Models with two variables performed better than models with one variable.
+
+One last sanity check is to plot the residuals with our predicted values, to make sure there are no patterns in the data.
+
+Plotting the residuals versus the predicted values shows no clear pattern, suggesting a sound model choice.
+
+```{r, echo=FALSE}
+
+filteredcigarettesregion$Residuals <- model$residuals
+filteredcigarettesregion$Predicted.Values <- model$fitted.values
+
+ggplot(filteredcigarettesregion, aes(x=Residuals, y=Predicted.Values)) +
+  geom_point() + stat_smooth(method="lm") + theme_tufte()
+
+```
+
+However, when I plot the residuals versus the actual values, the outliers exert more "bad leverage" on the fit:
+
+```{r, echo=FALSE}
+
+ggplot(filteredcigarettesregion, aes(x=Residuals, y=Sales)) +
+  geom_point() + stat_smooth(method="lm") + 
+  geom_text(data = filter(filteredcigarettesregion, Residuals < -20 | 
+                            Residuals > 21), aes(label=State)) + 
+  theme_tufte()
+
+```
+
+It would appear that Kentucky and Utah, two outliers identified using my 1.5IQR cutoff, are causing this pattern. As predicted in my explanation above, Utah is being over estimated based on my theory that the high Mormon population causes a reduction in cigarette consumption, while Kentucky is being under estimated due to the population of neighboring states crossing borders to buy cigarettes.
+
+In order to improve this model, it would probably make sense to perform more research on these two effects. While Utah's Mormon character is truly unique, it might make sense to use church attendence, or other religious measures as something that can apply to all states. There could also be a measure of how a state's Price compares to neighboring states, and whether or not there is an anomaly.
