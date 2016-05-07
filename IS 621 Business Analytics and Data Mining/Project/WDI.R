@@ -9,6 +9,8 @@ datalist <- WDIcache()
 frame <- WDIsearch(string = "ODA", field = "name", short = TRUE, cache = NULL)
 frame <- WDIsearch(string = "Enrol", field = "name", short = TRUE, cache = NULL)
 frame <- WDIsearch(string = "tuberculosis", field = "name", short = TRUE, cache = NULL)
+frame <- WDIsearch(string = "literacy", field = "name", short = TRUE, cache = NULL)
+frame <- WDIsearch(string = "Mortality", field = "name", short = TRUE, cache = NULL)
 
 wb <- WDI(country="all", indicator=c("SE.XPD.TOTL.GB.ZS", "GC.DOD.TOTL.GD.ZS",
                                      "BN.CAB.XOKA.GD.ZS", "SP.POP.DPND", "AG.LND.TOTL.K2",
@@ -24,14 +26,18 @@ wb <- WDI(country="all", indicator=c("SE.XPD.TOTL.GB.ZS", "GC.DOD.TOTL.GD.ZS",
           extra=TRUE)
 
 wb <- WDI(country="all", indicator=c("SE.PRE.NENR","DT.ODA.ALLD.PC.ZS", "DT.ODA.ODAT.PC.ZS",
-                                     "SH.TBS.INCD"),
+                                     "SH.TBS.INCD", "SE.ADT.LITR.ZS", "SP.DYN.LE00.IN"),
           start=2005, end=2015, extra=TRUE)
 
 wb <- filter(wb, income == 'Low income') %>%
-  filter(!is.na(income)) %>%
-  filter(!(country %in% c('Somalia', 'Mozambique', 'Liberia', 'Afghanistan')))
+  filter(!is.na(income)) #%>%
+  #filter(!(country %in% c('Somalia', 'Mozambique', 'Liberia', 'Afghanistan')))
+
+wbcastMORT <- dcast(country ~ year, data=wb, value.var='SP.DYN.LE00.IN')
 
 wbcastTUB <- dcast(country ~ year, data=wb, value.var='SH.TBS.INCD')
+
+wbcastLIT <- dcast(country ~ year, data=wb, value.var='SE.ADT.LITR.ZS')
 
 wbcastODA <- dcast(country ~ year, data=wb, value.var = 'DT.ODA.ODAT.PC.ZS')
 

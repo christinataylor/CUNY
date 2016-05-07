@@ -9,9 +9,23 @@ output: ioslides_presentation
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Exploratory analysis of Tuberculosis Incidence
+## Panel Data Analysis
 
-- Facet plot of Rates for different countries over time:
+- Panel regression is different than the other methods studied in this class. 
+
+- Data is grouped in some way. In our case, we're looking at data across countries. 
+
+- The results of a panel regression speak more in terms of inference than prediction *Is this the right way to say this? I think so...*
+
+- Because of this, it is related to methods not commonly thought of in terms of regression, like ANOVA Part of the analysis is determining how much varience is occurring between groups versus how much varience is occurring within groups.
+
+## The World Bank Development Indicators
+
+- The World Bank puts out a series of development indicators, both economic and societal, compiled from officially-recognized international sources.
+
+- Data is presented on a global, regional, and national level. For the purposes of this project, we're looking at national level data.
+
+## Exploratory analysis of Tuberculosis Incidence
 
 ```{r facet, warning=FALSE, message=FALSE}
 
@@ -44,14 +58,64 @@ wbmodel <- wb %>%
   filter(year %in% 2005:2014) %>%
   dplyr::select(country, year, DT.ODA.ODAT.PC.ZS, SH.TBS.INCD)
 
-ggplot(wbmodel, aes(x=year, y=SH.TBS.INCD)) + geom_line() + 
-  facet_wrap( ~ country) + theme_tufte()
+colnames(wbmodel) <- c('Country', 'Year', 'AidPerCapita', 'IncidenceTuberculosis')
+
+ggplot(wbmodel, aes(x=Year, y=IncidenceTuberculosis)) + geom_line() + 
+  facet_wrap( ~ Country) + theme_tufte()
 
 ```
 
 ## Exploratory analysis of Tuberculosis Incidence
 
-- There appears to be low variation within most groups, but most 
+```{r together, warning=FALSE, message=FALSE}
+
+ggplot(wbmodel, aes(x=Year, y=IncidenceTuberculosis, group=Country)) + geom_line() + 
+  theme_tufte()
+
+```
+
+## Exploratory analysis of Tuberculosis Incidence
+
+- The plot faceted by country allows us to scan for patterns between countries.
+
+- Seeing everything together gives us a clearer idea of what sort of variation we have between groups.
+
+- Tuberculosis seems to have higher variance within countries rather than between them.
+
+## Modeling by Country
+
+- As a first step, we can just simply model Tuberculosis as a function of country. We can do this by using country as a categorical variable, and creating 49 dummy variables for our data.
+
+- This method on its own is the same as an analysis of variance (ANOVA). In ANOVA, the central question is whether or not the means of different group are significantly different from eachother. In a linear regression, we can look at p-values of each dummy variable to decide the significance
+
+## ICC
+
+- The ICC, or Intra-class correlation coefficient, is the ratio of the variance in y due to the fixed effects to the total variance in y. The ICC ($\rho$) is defined as:
+
+$$ \frac{\sigma^2_{\alpha}}{\sigma^2_{\alpha} + \sigma^2_{\epsilon}} $$
+
+```{r model, warning=FALSE, message=FALSE}
+
+mod1 <- lm(IncidenceTuberculosis ~ Country, data=wbmodel)
+
+mod1aov <- aov(IncidenceTuberculosis ~ Country, data=wbmodel)
+
+ICC1(mod1aov)
+
+```
+
+Having an ICC this close to 1 implies what we saw in our plots earlier: The variation between groups is accounting for most of the variation of this particular dataset.
+
+## Looking at Aid Per Capita
+
+- In looking at development indicators across low income countries, our main research question is how aid affects these outcomes.
+
+```{r plotAid, warning=FALSE, message=FALSE}
+
+ggplot(wbmodel, aes(x=AidPerCapita, y=IncidenceTuberculosis)) + geom_point() + 
+  facet_wrap( ~ Country) + theme_tufte() + stat_smooth(method='lm')
+
+```
 
 ## R Markdown
 

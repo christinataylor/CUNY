@@ -5,7 +5,8 @@ library(ggthemes)
 library(psychometric)
 library(plm)
 
-wb <- WDI(country="all", indicator=c("DT.ODA.ODAT.PC.ZS","SH.TBS.INCD"),
+wb <- WDI(country="all", indicator=c("DT.ODA.ODAT.PC.ZS","SH.TBS.INCD","SE.ADT.LITR.ZS",
+                                     "SP.DYN.LE00.IN"),
           start=2005, end=2015, extra=TRUE)
 wb <- filter(wb, income == 'Low income')
 
@@ -24,10 +25,14 @@ wb <- wb %>%
 
 wbmodel <- wb %>%
   filter(year %in% 2005:2014) %>%
-  dplyr::select(country, year, DT.ODA.ODAT.PC.ZS, SH.TBS.INCD)
+  dplyr::select(country, year, DT.ODA.ODAT.PC.ZS, SH.TBS.INCD, SE.ADT.LITR.ZS,
+                SP.DYN.LE00.IN)
 
-ggplot(wbmodel, aes(x=year, y=SH.TBS.INCD)) + geom_line() + 
-  facet_wrap( ~ country) + theme_tufte()
+colnames(wbmodel) <- c('Country', 'Year', 'AidPerCapita', 'IncidenceTuberculosis',
+                       'AdultLiteracy', 'LifeExpectancy')
+
+ggplot(wbmodel, aes(x=Year, y=LifeExpectancy)) + geom_line() + 
+  facet_wrap( ~ Country) + theme_tufte()
 
 ggplot(wbmodel, aes(x=year, y=SH.TBS.INCD, group=country)) + geom_line() + 
   theme_tufte()
