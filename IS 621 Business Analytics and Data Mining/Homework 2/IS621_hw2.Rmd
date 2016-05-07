@@ -1,0 +1,695 @@
+---
+title: "IS621_hw2"
+author: "Charley Ferrari"
+date: "February 16, 2016"
+output: pdf_document
+---
+
+```{r, echo=FALSE, include=FALSE}
+
+library(ggplot2)
+
+library(MASS)
+
+library(knitr)
+
+library(dplyr)
+
+library(faraway)
+
+library(ggthemes)
+
+library(gridExtra)
+
+setwd("/Users/Charley/Downloads/cuny/IS 621 Business Analytics and Data Mining/Homework 2")
+
+moneyball <- read.csv("moneyball-training-data.csv")
+
+
+
+```
+
+## Data Exploration
+
+The moneyball dataset includes 2276 observations of 17 variables. I will be looking at WINS as my dependent variable. Discounting the ID variable, I will be using the other 14 variables as possible independent variables.
+
+Below is a table describing the variables and expected effect on wins:
+
+```{r, echo=FALSE}
+
+
+moneyballvars <- read.csv("MoneyballVariables.csv")
+
+kable(moneyballvars)
+
+
+
+```
+
+With 2276 rows of 17 variables, one would expect to have 38692 records. However, some values are missing, leaving 35214 actual records.
+
+Below is a summary of the missing variables, starting with the Dependent variable TARGET_WINS:
+
+```{r, echo=FALSE}
+
+#kable(summary(moneyball[,c(8,9,10)])[7,])
+
+summary(moneyball[,c(8,9,10)])[7,]
+
+summary(moneyball[,c(11,15,17)])[7,]
+
+#kable(summary(moneyball[,6:9])[7,])
+
+#kable(summary(moneyball[,10:13])[7,])
+
+#kable(summary(moneyball[,14:17])[7,])
+
+#test <- summary(moneyball)
+
+```
+
+Out of 2276 total observations, there are 191 with at least one variable missing, or about 8.4% of the rows. I'll try versions of models with both the missing values excluded, and with means of the variables replacing missing values for comparison purposes. Because we haven't picked our model yet, I don't think it would make sense to run a regression to replace these missing values. If we had a model in mind already, it would make more sense.
+
+To summarize  the data I'll look at boxplots, and check out scatter plots of each variable versus the target variable. The (large number of) plots are presented in the Appendix, with the commentary below.
+
+Several variables appeared to have outliers. Looking at the original scatterplots, there were a few variables that seemed to have anomolous outliers, and a few more predictable outliers that suggested a variable transformation was needed. 
+
+## Data Preparation
+
+Number of errors and hits allowed, for example, had some outliers, but a histogram of the data shows that it follows a non-normal, very right skewed distribution:
+
+```{r, echo=FALSE}
+
+g1 <- ggplot(moneyball, aes(x=TEAM_FIELDING_E)) + geom_histogram(bins = 300) +
+  theme_tufte()
+
+g2 <- ggplot(moneyball, aes(x=TEAM_PITCHING_H)) + geom_histogram(bins=300) + 
+  theme_tufte()
+
+g3 <- ggplot(moneyball, aes(x=log(TEAM_FIELDING_E))) + geom_histogram(bins = 300) + 
+  theme_tufte()
+
+g4 <- ggplot(moneyball, aes(x=log(TEAM_PITCHING_H))) + geom_histogram(bins=300) + 
+  theme_tufte()
+
+
+grid.arrange(g1, g2, g3, g4, ncol=2)
+
+
+```
+
+These two variables look more normal when a log transformation is applied to them. Hits allowed, after a log transformation is performed, seems to still have outliers. For this variable, I'll also remove outliers.
+
+In addition, Walks and strikeouts by pitchers seemed to have outliers. I'll remove these by removing all values outside of 3 standard deviations.
+
+Based on the scatterplots of variables vs WINS, the residuals of Homeruns by batters, walks by batters, and homeruns allowed by pitchers seem potentially heteroskedastic. Right now I'll perform no transformation to correct for this, but will keep this in mind for variable selection.
+
+Now, lets take a look at a correlation matrix of our variables:
+
+```{r echo=FALSE}
+
+newmoneyball <- moneyball %>%
+  filter(TEAM_PITCHING_SO < mean(TEAM_PITCHING_SO, na.rm=TRUE) + 
+           3*sd(TEAM_PITCHING_SO, na.rm=TRUE)) %>%
+  filter(TEAM_PITCHING_BB < mean(TEAM_PITCHING_BB, na.rm=TRUE) + 
+           3*sd(TEAM_PITCHING_BB, na.rm=TRUE)) %>%
+  filter(TEAM_BATTING_SO != 0)
+
+newmoneyball$TEAM_PITCHING_H <- log(newmoneyball$TEAM_PITCHING_H)
+newmoneyball$TEAM_FIELDING_E <- log(newmoneyball$TEAM_FIELDING_E)
+
+newmoneyball <- newmoneyball %>%
+  filter(TEAM_PITCHING_H < mean(TEAM_PITCHING_H, na.rm=TRUE) + 
+           3*sd(TEAM_PITCHING_H, na.rm=TRUE))
+
+
+newmoneyballwithmeans <- newmoneyball
+
+cmeans <- apply(newmoneyballwithmeans, 2, mean, na.rm=T)
+
+for(i in 3:17) newmoneyballwithmeans[is.na(newmoneyballwithmeans[,i]),i] <- cmeans[i]
+
+#cormat <- cor(select(newmoneyballwithmeans, c(TEAM_BATTING_H,TEAM_BATTING_BB,
+#                                              TEAM_BASERUN_SB,TEAM_FIELDING_E,
+#                                              TEAM_FIELDING_DP)))
+
+cormat <- cor(select(newmoneyballwithmeans, -c(INDEX, TARGET_WINS)))
+
+rownames(cormat) <- 3:17
+
+colnames(cormat) <- rownames(cormat)
+
+
+kable(ifelse(cormat>0.5 | cormat< -0.5, 1, 0))
+
+cormat <- cor(select(newmoneyballwithmeans, c(TEAM_BATTING_H, TEAM_BATTING_BB, 
+                                              TEAM_BATTING_HR, TEAM_FIELDING_E,
+                                              TEAM_FIELDING_DP)))
+
+cor.test.p <- function(x){
+    FUN <- function(x, y) cor.test(x, y)[["p.value"]]
+    z <- outer(
+      colnames(x), 
+      colnames(x), 
+      Vectorize(function(i,j) FUN(x[,i], x[,j]))
+    )
+    dimnames(z) <- list(colnames(x), colnames(x))
+    z
+}
+
+```
+
+To display the entire matrix, I just used 1 if the correlation is greater than 0.5 or less than -0.5, and 0 otherwise. Some correlations make sense, the correlations between batters who hit versus the different types of bases for example. For the moment, I will use this as a rule of thumb of which variables to pick, and won't try to capture possible interaction effects.
+
+I'll also check to see whether the p-values are above 0.05:
+
+```{r, echo=FALSE}
+
+cormat <- cor.test.p(select(newmoneyballwithmeans, -c(INDEX, TARGET_WINS)))
+
+rownames(cormat) <- 3:17
+
+colnames(cormat) <- rownames(cormat)
+
+
+kable(ifelse(cormat>0.05, 1, 0))
+
+```
+
+
+
+Looking at single variable models, lets look at our adjusted r-squares with missing rows removed:
+
+
+```{r echo=FALSE, warning=FALSE}
+
+adjrsquared <- c()
+
+for(i in 3:17){
+  model <- lm(
+    as.formula(paste(colnames(newmoneyball)[2], "~", 
+                     colnames(newmoneyball)[i], sep = "")), data=newmoneyball
+  )
+  
+  
+  
+  adjrsquared <- c(adjrsquared, summary(model)$adj.r.squared)
+}
+
+adjrtable <- data.frame(variable = colnames(newmoneyball)[3:17],
+                        adj_r_squared = adjrsquared)
+
+kable(arrange(adjrtable, desc(adj_r_squared)))
+```
+
+And with missing values replaced with means:
+
+```{r echo=FALSE, warning=FALSE}
+adjrsquared <- c()
+
+for(i in 3:17){
+  model <- lm(
+    as.formula(paste(colnames(newmoneyballwithmeans)[2], "~", 
+                     colnames(newmoneyballwithmeans)[i], sep = "")), 
+    data=newmoneyballwithmeans
+  )
+  
+  
+  
+  adjrsquared <- c(adjrsquared, summary(model)$adj.r.squared)
+}
+
+adjrtable <- data.frame(variable = colnames(newmoneyballwithmeans)[3:17],
+                        adj_r_squared = adjrsquared)
+
+kable(arrange(adjrtable, desc(adj_r_squared)))
+
+```
+
+This table will give us an idea of which models to test in our variable selection phase.
+
+## Build Models
+
+For this assigmnent I'll use informal forward variable selection. I'll use this method to step through several models, but will use other criteria at times to inform my variable choices.
+
+There are a few common sense decisions I will make in terms of my selections. In particular, I will avoid having variables that are conceptually similar, which might suggest collinearity. For example, I will only use base hits by batters rather than individually pick singles, doubles, triples, or home runs.
+
+The highest variable in both cases (missing values removed and means added for missing values) is total base hits for batters, so this will be my first variable. Now, lets look at adjusted R-squares of a second variable. Here is the data with the missing variables removed:
+
+```{r echo=FALSE, warning=FALSE}
+
+adjrsquared <- c()
+
+for(i in 4:17){
+  model <- lm(
+    as.formula(paste(colnames(newmoneyball)[2], "~", colnames(newmoneyball)[3], "+",
+                     colnames(newmoneyball)[i], sep = "")), data=newmoneyball
+  )
+  
+  
+  
+  adjrsquared <- c(adjrsquared, summary(model)$adj.r.squared)
+}
+
+adjrtable <- data.frame(variable = colnames(newmoneyball)[4:17],
+                        adj_r_squared = adjrsquared)
+
+kable(arrange(adjrtable, desc(adj_r_squared)))
+```
+
+And with missing values replaced with means:
+
+```{r echo=FALSE, warning=FALSE}
+adjrsquared <- c()
+
+for(i in 4:17){
+  model <- lm(
+    as.formula(paste(colnames(newmoneyballwithmeans)[2], "~",  
+                     colnames(newmoneyballwithmeans)[3], "+",
+                     colnames(newmoneyballwithmeans)[i], sep = "")), 
+    data=newmoneyballwithmeans
+  )
+  
+  
+  
+  adjrsquared <- c(adjrsquared, summary(model)$adj.r.squared)
+}
+
+adjrtable <- data.frame(variable = colnames(newmoneyballwithmeans)[4:17],
+                        adj_r_squared = adjrsquared)
+
+kable(arrange(adjrtable, desc(adj_r_squared)))
+
+model <- lm(TARGET_WINS ~ TEAM_BATTING_H + TEAM_BATTING_BB, data=newmoneyball)
+
+```
+
+Batters hit by pitch seems to drastically change depending on our treatment of missing variables, so I'll remove it from consideration for now, meaning walks by batters is getting chosen as my next variable. Both of these variabes are significant, so I'll continue my forward selection.
+
+Once again, with missing values removed:
+
+```{r echo=FALSE, warning=FALSE}
+
+adjrsquared <- c()
+
+for(i in c(4:6,8:17)){
+  model <- lm(
+    as.formula(paste(colnames(newmoneyball)[2], "~", colnames(newmoneyball)[3], "+",
+                     colnames(newmoneyball)[7], "+", colnames(newmoneyball)[i], 
+                     sep = "")), data=newmoneyball
+  )
+  
+  
+  
+  adjrsquared <- c(adjrsquared, summary(model)$adj.r.squared)
+}
+
+adjrtable <- data.frame(variable = colnames(newmoneyball)[c(4:6,8:17)],
+                        adj_r_squared = adjrsquared)
+
+kable(arrange(adjrtable, desc(adj_r_squared)))
+```
+
+And missing values replaced by means:
+
+```{r echo=FALSE, warning=FALSE}
+adjrsquared <- c()
+
+for(i in c(4:6,8:17)){
+  model <- lm(
+    as.formula(paste(colnames(newmoneyballwithmeans)[2], "~",  
+                     colnames(newmoneyballwithmeans)[3], "+",
+                     colnames(newmoneyballwithmeans)[7], "+",
+                     colnames(newmoneyballwithmeans)[i], sep = "")), 
+    data=newmoneyballwithmeans
+  )
+  
+  
+  
+  adjrsquared <- c(adjrsquared, summary(model)$adj.r.squared)
+}
+
+adjrtable <- data.frame(variable = colnames(newmoneyballwithmeans)[c(4:6,8:17)],
+                        adj_r_squared = adjrsquared)
+
+kable(arrange(adjrtable, desc(adj_r_squared)))
+
+model <- lm(TARGET_WINS ~ TEAM_BATTING_H + TEAM_BATTING_BB + TEAM_FIELDING_DP,
+            data=newmoneyball)
+
+```
+
+Once again ignoring batters hit by pitches, Double Plays are now giving us the largest adjusted r-square. All variables are significant, so we'll continue with our additions.
+
+Missing values removed:
+
+```{r echo=FALSE, warning=FALSE}
+
+adjrsquared <- c()
+
+for(i in c(4:6,8:16)){
+  model <- lm(
+    as.formula(paste(colnames(newmoneyball)[2], "~", colnames(newmoneyball)[3], "+",
+                     colnames(newmoneyball)[7], "+", colnames(newmoneyball)[17], "+",
+                     colnames(newmoneyball)[i], sep = "")), data=newmoneyball
+  )
+  
+  
+  
+  adjrsquared <- c(adjrsquared, summary(model)$adj.r.squared)
+}
+
+adjrtable <- data.frame(variable = colnames(newmoneyball)[c(4:6,8:16)],
+                        adj_r_squared = adjrsquared)
+
+kable(arrange(adjrtable, desc(adj_r_squared)))
+```
+
+And missing values replaced by means:
+
+```{r echo=FALSE, warning=FALSE}
+adjrsquared <- c()
+
+for(i in c(4:6,8:16)){
+  model <- lm(
+    as.formula(paste(colnames(newmoneyballwithmeans)[2], "~",  
+                     colnames(newmoneyballwithmeans)[3], "+",
+                     colnames(newmoneyballwithmeans)[7], "+",
+                     colnames(newmoneyballwithmeans)[17], "+",
+                     colnames(newmoneyballwithmeans)[i], sep = "")), 
+    data=newmoneyballwithmeans
+  )
+  
+  
+  
+  adjrsquared <- c(adjrsquared, summary(model)$adj.r.squared)
+}
+
+adjrtable <- data.frame(variable = colnames(newmoneyballwithmeans)[c(4:6,8:16)],
+                        adj_r_squared = adjrsquared)
+
+kable(arrange(adjrtable, desc(adj_r_squared)))
+
+model <- lm(TARGET_WINS ~ TEAM_BATTING_H + TEAM_BATTING_BB + TEAM_FIELDING_DP + 
+              TEAM_FIELDING_E,data=newmoneyball)
+
+```
+
+Now, it looks like our variable orders are different depending on how we treat outliers. Before it seemed like  a clear choice to not consider batters hit by pitch since it was the sole variable that was changing position, but now that multiple variables are switching order I'll have to make a more nuanced choice. Errors appears to be the most stable, remaining just below hit by pitch when missing values are removed, and just being beaten out by home run hits when missing values are replaced by means. 
+
+Home runs are also not a good choice since we already have hits of any kind in our model, and home runs would be expected conceptually to have collinearity issues with total base hits. This effect isn't showing up in the collinearity matrix however, suggesting we might want to use more advanced methods to deal with different types of base hits.
+
+So, our choice will be errors for this model. Lets see what the next variable will be.
+
+Missing values removed:
+
+```{r echo=FALSE, warning=FALSE}
+
+adjrsquared <- c()
+
+for(i in c(4:6,8:15)){
+  model <- lm(
+    as.formula(paste(colnames(newmoneyball)[2], "~", colnames(newmoneyball)[3], "+",
+                     colnames(newmoneyball)[7], "+", colnames(newmoneyball)[17], "+",
+                     colnames(newmoneyball)[16], "+",
+                     colnames(newmoneyball)[i], sep = "")), data=newmoneyball
+  )
+  
+  
+  
+  adjrsquared <- c(adjrsquared, summary(model)$adj.r.squared)
+}
+
+adjrtable <- data.frame(variable = colnames(newmoneyball)[c(4:6,8:15)],
+                        adj_r_squared = adjrsquared)
+
+kable(arrange(adjrtable, desc(adj_r_squared)))
+```
+
+And missing values replaced by means:
+
+```{r echo=FALSE, warning=FALSE}
+adjrsquared <- c()
+
+for(i in c(4:6,8:15)){
+  model <- lm(
+    as.formula(paste(colnames(newmoneyballwithmeans)[2], "~",  
+                     colnames(newmoneyballwithmeans)[3], "+",
+                     colnames(newmoneyballwithmeans)[7], "+",
+                     colnames(newmoneyballwithmeans)[17], "+",
+                     colnames(newmoneyballwithmeans)[16], "+",
+                     colnames(newmoneyballwithmeans)[i], sep = "")), 
+    data=newmoneyballwithmeans
+  )
+  
+  
+  
+  adjrsquared <- c(adjrsquared, summary(model)$adj.r.squared)
+}
+
+adjrtable <- data.frame(variable = colnames(newmoneyballwithmeans)[c(4:6,8:15)],
+                        adj_r_squared = adjrsquared)
+
+kable(arrange(adjrtable, desc(adj_r_squared)))
+
+model <- lm(TARGET_WINS ~ TEAM_BATTING_H + TEAM_BATTING_BB + TEAM_FIELDING_DP + 
+              TEAM_FIELDING_E,data=newmoneyball)
+
+```
+
+Caught stealing is performing well, but looking back at my missing variables summary, I see that it has 772 records missing. I don't think it would be trustworthy to use this as a variable. Stolen bases is pretty stable near the top, but has a high correlation with errors, which are already in the model. Checking out a scatter plot shows that this relationship is problematic:
+
+```{r echo=FALSE, warning=FALSE}
+
+ggplot(moneyball, aes(x=TEAM_FIELDING_E, y=TEAM_BASERUN_SB)) + geom_point() +
+  geom_smooth(method = "lm") + theme_tufte()
+
+
+```
+
+
+There appear to be a few bad leverage points throwing off the overall relationship, meaning there could be a stronger relationship than the correlation matrix is giving us. For this reason, it's probably not a good idea to include stolen bases in my model.
+
+I'm beginning to get diverging results when comparing the method of handling outliers, so for the time being I'm going to stick with picking variables from excluding missing variables, and then taking the number of missing observations of each variables into consideration.
+
+Sticking to this rule, and ignoring variables that for conceptual reasons are correlated (doubles and triples), the best variable to choose is strikeouts by batters. Unfortunately, this variable too has a problematic relationship with errors:
+
+```{r, echo=FALSE, warning=FALSE}
+
+ggplot(moneyball, aes(x=TEAM_FIELDING_E, y=TEAM_BATTING_SO)) + geom_point() +
+  stat_smooth(method="lm") + theme_tufte()
+
+```
+
+Once again, it looks like we might have groupings of points in this scatterplot. In this case, it suggests we may have multiple relationships, a clear relationship for low error games, and other effects happening when errors are high.
+
+Conceptually, both stolen bases and strikeouts can be seen as types of errors in baseball. It might be more parsimonious to include just errors, in a similar way to just including the number of base hits rather than also including doubles, triples, and homeruns.
+
+I ended up with high correlations for the rest of the variables (mostly with errors.) I tested a few models adding these variables and, while I ended up with p-values less than 0.05, they were in the order of magnitude of 0.01, while the previous p-values were orders of magnitude smaller. This suggests that we were appraoching the end of this algorithm anyway.
+
+## Select Model
+
+This means that our final model is:
+
+```{r, echo=FALSE, warning=FALSE}
+
+model <- lm(TARGET_WINS ~ TEAM_BATTING_H + TEAM_BATTING_BB + TEAM_FIELDING_DP + 
+              TEAM_FIELDING_E,data=newmoneyball)
+
+summary(model)
+
+```
+
+In the above model, errors is the only variable that has been transformed so far. I took its natural log. All of our variables are highly significant, and we have a very low p-value on our f-statistic. This does suggest we could add more variables from our dataset, but there are a lot of conceptual and observed relationships between these variables. This model, while sparse, appropriately brings in enough unique information to be parsimonious.
+
+Now that I've arrived at my model choice, I'll check a box-cox plot to see if I should perform a transformation on my dependent variable:
+
+
+```{r, echo=FALSE, warning=FALSE}
+
+boxcox(model, plotit=T)
+
+```
+
+While the 95% confidence interval doesn't include $\lambda = 1$, It's entirely between 1 and 1.5. I think in this case, rather than trying out a few values between 1 and 1.5, I'll stick with no box cox transformation, assuming 1 is close enough.
+
+Next, lets check the residuals versus the fitted values.
+
+```{r, echo=FALSE, warning=FALSE}
+
+moneyballmiss <- newmoneyball %>% mutate(missingvalues = 
+  is.na(TARGET_WINS) | is.na(TEAM_BATTING_H) | is.na(TEAM_BATTING_2B) |
+    is.na(TEAM_BATTING_3B) | is.na(TEAM_BATTING_HR) | is.na(TEAM_BATTING_BB) |
+    is.na(TEAM_BATTING_SO) | is.na(TEAM_BASERUN_SB) | is.na(TEAM_BASERUN_CS) |
+    is.na(TEAM_BATTING_HBP) | is.na(TEAM_PITCHING_H) | is.na(TEAM_PITCHING_HR) |
+    is.na(TEAM_PITCHING_BB) | is.na(TEAM_PITCHING_SO) | is.na(TEAM_FIELDING_E) |
+    is.na(TEAM_FIELDING_DP)
+)
+
+moneyballmiss <- newmoneyball %>% filter(!(is.na(TARGET_WINS) | is.na(TEAM_BATTING_H) |
+                                           is.na(TEAM_BATTING_BB) |
+                                           is.na(TEAM_FIELDING_DP) | 
+                                           is.na(TEAM_FIELDING_E)))
+
+
+moneyballmiss$Residuals <- model$residuals
+moneyballmiss$Predicted.Values <- model$fitted.values
+
+ggplot(moneyballmiss, aes(x=Residuals, y=Predicted.Values)) +
+  geom_point() + stat_smooth(method="lm") + theme_tufte()
+
+```
+
+This scatter plot of our predicted values versus residuals seems to suggest no underlying relationship.
+
+## Conclusions
+
+This model would benefit from more conceptual analysis of what these measures mean, and more analysis of how this compares to the observed relationships between the variables.
+
+It's pretty clear that there should be relationships betweeen base hits, singles, doubles, triples, and home runs, but looking at pairwise correlation, only some pairs showed correlation. There's no clear reason why base hits should be correlated to doubles, but not triples or home runs for example.
+
+I'd also like to dig into the definition of errors, and research more about the relationships between measures that appeared in both pitcher and batter. It would appear some of these should be negatively correlated, but I'd be interested to learn more about what sorts of differences might be present in these measures. If they're exactly 1-1, I could try to eliminate one side or the other.
+
+```{r, echo=FALSE, warning=FALSE, eval=FALSE}
+
+ggplot(moneyballmiss, aes(x=Residuals, y=TARGET_WINS)) +
+  geom_point() + stat_smooth(method="lm") + theme_tufte()
+
+```
+
+```{r, echo=FALSE, warning=FALSE, eval=FALSE}
+
+lm(
+    as.formula(paste(colnames(mydata)[2], "~",
+        paste(colnames(moneyball)[3:17], collapse = "+"),
+        sep = ""
+    )),
+    data=mydata
+)
+
+```
+
+## Appendex
+
+## Boxplots of original data
+
+```{r, echo=FALSE, warning=FALSE}
+
+boxplotlist <- list()
+
+for(i in 2:17){
+  boxplotlist[[i-1]] <- ggplot(moneyball, aes_string(1, colnames(moneyball)[i])) +
+    geom_boxplot() + theme_tufte()
+}
+
+do.call("grid.arrange", c(boxplotlist[1:9], ncol=3))
+
+do.call("grid.arrange", c(boxplotlist[10:16], ncol=3))
+
+```
+
+## Scatterplots of original data: variable vs WINS
+
+
+```{r, echo = FALSE, warning=FALSE}
+
+scatterlist <- list()
+
+for(i in 3:17){
+  scatterlist[[i-2]] <- 
+    ggplot(moneyball,
+           aes_string(colnames(moneyball)[i],colnames(moneyball)[2])) + 
+    geom_point() + stat_smooth(method="lm")
+}
+
+do.call("grid.arrange", c(scatterlist[1:9], ncol=3))
+
+do.call("grid.arrange", c(scatterlist[10:15], ncol=3))
+
+
+```
+
+## Boxplots of data with transformations applied
+
+```{r, echo=FALSE, warning=FALSE}
+
+boxplotlist <- list()
+
+for(i in 2:17){
+  boxplotlist[[i-1]] <- ggplot(newmoneyball, aes_string(1, colnames(newmoneyball)[i])) +
+    geom_boxplot() + theme_tufte()
+}
+
+do.call("grid.arrange", c(boxplotlist[1:9], ncol=3))
+
+do.call("grid.arrange", c(boxplotlist[10:16], ncol=3))
+
+```
+
+## Scatterplots of data with transformations applied, variable vs WINS
+
+
+```{r, echo = FALSE, warning=FALSE}
+
+scatterlist <- list()
+
+for(i in 3:17){
+  scatterlist[[i-2]] <- 
+    ggplot(newmoneyball,
+           aes_string(colnames(newmoneyball)[i],colnames(newmoneyball)[2])) + 
+    geom_point() + stat_smooth(method="lm")
+}
+
+do.call("grid.arrange", c(scatterlist[1:9], ncol=3))
+
+do.call("grid.arrange", c(scatterlist[10:15], ncol=3))
+
+
+```
+
+```{r, echo = FALSE, warning=FALSE}
+
+moneyballmiss <- moneyball %>% mutate(missingvalues = 
+  is.na(TARGET_WINS) | is.na(TEAM_BATTING_H) | is.na(TEAM_BATTING_2B) |
+    is.na(TEAM_BATTING_3B) | is.na(TEAM_BATTING_HR) | is.na(TEAM_BATTING_BB) |
+    is.na(TEAM_BATTING_SO) | is.na(TEAM_BASERUN_SB) | is.na(TEAM_BASERUN_CS) |
+    is.na(TEAM_BATTING_HBP) | is.na(TEAM_PITCHING_H) | is.na(TEAM_PITCHING_HR) |
+    is.na(TEAM_PITCHING_BB) | is.na(TEAM_PITCHING_SO) | is.na(TEAM_FIELDING_E) |
+    is.na(TEAM_FIELDING_DP)
+)
+
+
+```
+
+
+```{r, echo=FALSE, eval=FALSE}
+
+g1 <- ggplot(moneyball, aes(x=TEAM_FIELDING_E)) + geom_histogram(binwidth = 10) +
+  theme_tufte()
+g2 <- ggplot(moneyball, aes(x=log(TEAM_FIELDING_E))) + geom_histogram(binwidth = 0.02) +
+  theme_tufte()
+
+g3 <- ggplot(moneyball, aes(x=TEAM_PITCHING_SO)) + geom_histogram()
+
+summary(moneyball$TEAM_PITCHING_SO[!is.na(moneyball$TEAM_BATTING_SO)])
+
+test <- moneyball$TEAM_PITCHING_SO[!is.na(moneyball$TEAM_BATTING_SO)]
+
+length(test[test>1500])
+
+length(moneyball$TEAM_BATTING_SO)
+
+grid.arrange(g1, g2, ncol=2)
+
+#######################################
+
+chmiss <- chmiss
+cmeans <- apply (chmiss, 2, mean, na.rm=T)
+
+mchm <- chmiss
+
+for (i in c (1, 2, 3, 4, 6) ) mchm[is.na(chmiss[,i]),i] <- cmeans[i]
+
+#######################################
+
+```

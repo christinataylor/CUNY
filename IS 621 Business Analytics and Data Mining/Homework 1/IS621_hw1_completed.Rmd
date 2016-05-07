@@ -59,7 +59,7 @@ rm(midwest, northeast, south, west, regionlookup)
 
 ## Data Exploration and Data Transformation
 
-The cigarettes data set consists of five variables: State, Age, Income, Price, and Sales. ALl of these variables are continuous except for State which is categorical. Since there is one observation per state however, this is not useful for analysis. In order to test if there are any geographical effects in this data, I divided the states into the four major census regions: Northeast, Midwest, South, and West. With multiple observations of each factor, I can generate three dummy variables to see if region has any effect.
+The cigarettes data set consists of five variables: State, Age, Income, Price, and Sales. All of these variables except for State are continuous. Since there is one categorical observation per state however, this is not useful for analysis. In order to test if there are any geographical effects in this data, I divided the states into the four major census regions: Northeast, Midwest, South, and West. With multiple observations of each factor, I can generate three dummy variables to see if region has any effect.
 
 First, I will look at a few boxplots to get a handle on the numerical variables:
 
@@ -278,9 +278,9 @@ We have a wide 95% confidence interval centered very close to 1, suggesting no t
 
 To summarize, my base model, including all variables, is specified as:
 
-$$ Sales ~ Age + Income + Income^2 + Price + Region $$
+$$ Sales \~ Age + Income + Income^2 + Price + Region $$
 
-Region being a categorical variable, which is expressed through the dummies RegionMidwest, RegionSouth, and RegionWest (leaving out the Northeast.)
+Region is a categorical variable, which is expressed through the dummies RegionMidwest, RegionSouth, and RegionWest (leaving out the Northeast.)
 
 ## Build Models
 
@@ -346,7 +346,7 @@ I am basing my model selection mainly on the significance of my variables, and t
 
 One last sanity check is to plot the residuals with our predicted values, to make sure there are no patterns in the data.
 
-Plotting the residuals versus the predicted values shows no clear pattern, suggesting a sound model choice.
+The plot shows no clear pattern, suggesting a sound model choice.
 
 ```{r, echo=FALSE}
 

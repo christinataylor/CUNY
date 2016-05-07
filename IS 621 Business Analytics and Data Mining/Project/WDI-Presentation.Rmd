@@ -1,0 +1,79 @@
+---
+title: "Panel Data World Bank"
+author: "Charley Ferrari"
+date: "May 6, 2016"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Exploratory analysis of Tuberculosis Incidence
+
+- Facet plot of Rates for different countries over time:
+
+```{r facet, warning=FALSE, message=FALSE}
+
+library(WDI)
+library(reshape2)
+library(ggplot2)
+library(ggthemes)
+library(psychometric)
+library(plm)
+library(dplyr)
+
+wb <- WDI(country="all", indicator=c("DT.ODA.ODAT.PC.ZS","SH.TBS.INCD"),
+          start=2005, end=2015, extra=TRUE)
+wb <- filter(wb, income == 'Low income')
+
+wbcastODA <- dcast(country ~ year, data=wb, value.var = 'DT.ODA.ODAT.PC.ZS')
+
+wbcastODA <- wbcastODA[!is.na(wbcastODA[,'2005']),]
+
+wbcastODA$country <- factor(wbcastODA$country)
+
+countrylist <- levels(wbcastODA$country)
+
+wbcastTUB <- dcast(country ~ year, data=wb, value.var='SH.TBS.INCD')
+
+wb <- wb %>%
+  filter(country %in% countrylist)
+
+wbmodel <- wb %>%
+  filter(year %in% 2005:2014) %>%
+  dplyr::select(country, year, DT.ODA.ODAT.PC.ZS, SH.TBS.INCD)
+
+ggplot(wbmodel, aes(x=year, y=SH.TBS.INCD)) + geom_line() + 
+  facet_wrap( ~ country) + theme_tufte()
+
+```
+
+## Exploratory analysis of Tuberculosis Incidence
+
+- There appears to be low variation within most groups, but most 
+
+## R Markdown
+
+This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+## Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+## Slide with R Output
+
+```{r cars, echo = TRUE}
+summary(cars)
+```
+
+## Slide with Plot
+
+```{r pressure}
+plot(pressure)
+```
+

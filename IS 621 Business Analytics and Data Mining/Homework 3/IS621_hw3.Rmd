@@ -1,0 +1,312 @@
+---
+title: "IS621_hw3"
+author: "Charley Ferrari"
+date: "March 7, 2016"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Question 2
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+library(dplyr)
+
+library(knitr)
+
+library(caret)
+
+library(pROC)
+
+library(grid)
+
+setwd("/Users/Charley/Downloads/cuny/IS 621 Business Analytics and Data Mining/Homework 3")
+
+classification <- read.csv("classification-output-data.csv")
+
+actual <- "class"
+
+predicted <- "scored.class"
+
+probability <- "scored.probability"
+
+confusion <- table(select(classification, scored.class, class))
+
+kable(confusion)
+
+```
+
+Class and scored.class have levels 0 and 1. I'm going to assume 0 is negative, and 1 is positive. Scored.class is the predicted class, and is represented horizontally. Class is the actual class, and is represented vertically. This means I can label the cells of the table as seen below:
+
+|   |         0     |          1    |
+|:--|:--------------|:--------------|
+|0  |True Negative  |False Positive |
+|1  |False Negative |True Positive  |
+
+Lets write a few helper functions to help us evaluate the success of this classification model.
+
+### Question 3
+
+This function will take in a data frame, with the actual and predicted classification columns identified, and will return the accuracy of the predictions.
+
+$$ Accuracy = \frac{TP + TN}{TP + FP + TN + FN} $$
+
+```{r}
+
+accuracy.calc <- function(classification, actual, predicted){
+  confusion <- table(select(classification, get(actual), get(predicted)))
+  accuracy <- (confusion[1,1] + confusion[2,2])/sum(confusion)
+  return(accuracy)
+}
+
+accuracy.calc(classification, actual, predicted)
+
+```
+
+### Question 4
+
+This function will take in a data frame, with the actual and predicted classification columns identified, and will return the classification error rate of the predictions.
+
+$$ Classification Error Rate = \frac{FP + FN}{TP + FP + TN + FN} $$
+
+```{r}
+
+cer.calc <- function(classification, actual, predicted){
+  confusion <- table(select(classification, get(actual), get(predicted)))
+  cer <- (confusion[1,2] + confusion[2,1])/sum(confusion)
+  return(cer)
+}
+
+cer.calc(classification, actual, predicted)
+
+```
+
+Lets verify that the accuracy and the error rate sum to one:
+
+```{r}
+
+actualcol <- "class"
+predictedcol <- "scored.class"
+
+accuracy.calc(classification, actualcol, predictedcol) + 
+  cer.calc(classification, actualcol, predictedcol)
+
+```
+
+It checks out!
+
+### Question 5
+
+This function will take in a data frame, with the actual and predicted classification columns identified, and will return the precision of the predictions.
+
+$$ Precision = \frac{TP}{TP + FP} $$
+
+```{r}
+
+precision.calc <- function(classification, actual, predicted){
+  confusion <- table(select(classification, get(actual), get(predicted)))
+  precision <- confusion[2,2]/(confusion[1,2] + confusion[2,2])
+  return(precision)
+}
+
+precision.calc(classification, actual, predicted)
+
+```
+
+### Question 6
+
+This function will take in a data frame, with the actual and predicted classification columns identified, and will return the sensitivity of the predictions.
+
+For sensitivity and specificity, I'm adding some logic that checks if all observations get classified as 1 or 0. This was necessary due to the ROC curve calculation, which tests a wide range of possible filters, including those that may result in predicted values being all positive or all negative.
+
+$$ Sensitivity = \frac{TP}{TP + FN} $$
+
+```{r}
+
+sensitivity.calc <- function(classification, actual, predicted){
+  confusion <- table(select(classification, get(actual), get(predicted)))
+  if(dim(confusion)[2] == 1){
+    if(colnames(confusion) == 0){
+      sensitivity <- 0
+    } else{
+      sensitivity <- 1
+    }
+  } else{
+      sensitivity <- confusion[2,2]/(confusion[2,1] + confusion[2,2])
+  }
+  
+  return(sensitivity)
+}
+
+sensitivity.calc(classification, actual, predicted)
+
+```
+
+### Question 7
+
+This function will take in a data frame, with the actual and predicted classification columns identified, and will return the specificity of the predictions.
+
+$$ Specificity = \frac{TN}{TN + FP} $$
+
+```{r}
+
+specificity.calc <- function(classification, actual, predicted){
+  confusion <- table(select(classification, get(actual), get(predicted)))
+  if(dim(confusion)[2] == 1){
+    if(colnames(confusion) == 0){
+      specificity <- 1
+    } else{
+      specificity <- 0
+    }
+  } else{
+    specificity <- confusion[1,1]/(confusion[1,1] + confusion[1,2])
+  }
+  return(specificity)
+}
+
+specificity.calc(classification, actual, predicted)
+
+```
+
+### Question 8
+
+This function will take in a data frame, with the acutal and predicted classification columns identified, and will return the F1 score of the predictions (drawing on my previous functions)
+
+$$ F1 Score = \frac{2 \times Precision \times Sensitivity}{Precision + Sensitivity} $$
+
+```{r}
+
+f1.calc <- function(classification, actual, predicted){
+  precision <- precision.calc(classification, actual, predicted)
+  sensitivity <- sensitivity.calc(classification, actual, predicted)
+  f1 <- (2 * precision * sensitivity)/(precision + sensitivity)
+  return(f1)
+}
+
+f1.calc(classification, actual, predicted)
+
+```
+
+### Question 9
+
+The F1 score is indeed bound by 0 and 1. Both the Precision and the Sensitivity are bound by 0 and 1 because they are of the form $\frac{a}{a+b}$, with a and b guarenteed to be positive (and one of them can be 0.) 
+
+Rewriting the F1 score, with precision as p and sensitivity as s, we have:
+
+$$ \frac{ps + ps}{p + s} $$
+
+Since both p and s are bound by 0 and 1, ps < p and ps < s. This means that we can be sure that ps + ps < p + s, which means that the F1 score is also bound by 0 and 1.
+
+### Question 10 
+
+Now to write a funciton that generates an ROC curve from a given data set, with true classification columns and probability columns identified. I'll return a list that includes the plot of the ROC curve and a vector that contains the calculated area under the curve (AUC.)
+
+Write a funciton that generates an ROC curve from a data set with a true classification column (class in our example) and a probability column (scored.probability in our example.) Your function should return a list that includes the plot of the ROC curve and a vector that contains the calculated area under the curve (AUC.)
+
+Before I start I'll note that the scored.class variable seems to be "tuned" based on a threshold of 0.5. If the scored.probability is greater than 0.5, the scored.class is recorded as 1. Otherwise, the scored.class is recorded as 0.
+
+I'll build this function to create versions of scored.class based on 0.01 increments in this threshold.
+
+To calculate the AUC, I will just subtract the 1-specificity value from each sensitivity value (to get the difference between the ROC curve and a straight y=x line at that point) and multiply each value by my step, 0.01.
+
+```{r}
+
+roc.gen <- function(classification, actual, probability){
+  
+  sensitivityvec <- c()
+  specificityvec <- c()
+  
+  
+  for(i in seq(0,1,by=0.01)){
+    
+    classification$new.scored.calc <- 
+      ifelse(classification$scored.probability < i, 0, 1)
+    
+    sensitivityvec <- 
+      c(sensitivityvec, sensitivity.calc(classification, "class", "new.scored.calc"))
+    
+    specificityvec <- 
+      c(specificityvec, specificity.calc(classification, "class", "new.scored.calc"))
+    
+    classification <- select(classification, -new.scored.calc)
+    
+  }
+  
+  rocdata <- data.frame(threshold = seq(0,1,by=0.01),
+                        sensitivity = sensitivityvec,
+                        specificity = specificityvec)
+  
+  auc <- cumsum(rocdata$sensitivity - (1-rocdata$specificity))*0.01
+  
+  g <- ggplot(rocdata, aes(x=1-specificity, y=sensitivity)) + geom_line() + 
+    ggtitle("ROC Curve")
+  
+  return(list(auc = auc, g = g))
+  
+}
+
+roc.results <- roc.gen(classification, "class", "scored.probability")
+
+roc.results$g
+
+roc.results$auc
+
+ggplot(data.frame(x=seq(0,1,by=0.01), area=roc.results$auc), aes(x=x,y=area)) + 
+  geom_line()
+
+
+```
+
+### Question 11
+
+I displayed my results as I created each function.
+
+### Question 12
+
+confusionMatrix, sensitivity, specificity, and lift in the caret package
+
+```{r}
+
+confusionMatrix(classification$scored.class, classification$class, positive = "1")
+
+sensitivity(factor(classification$scored.class), 
+            factor(classification$class), positive = "1")
+
+specificity(factor(classification$scored.class), 
+            factor(classification$class), positive = "1")
+
+```
+
+These measures check out. I had to specify what the success was in this confusion matrix to make sure the measures matched. Sensitivity and Specificity are the same as what I calculated. lets check out the lift function:
+
+```{r}
+
+lift0 <- lift(factor(class) ~ scored.probability, data=classification)
+
+plot(lift0, plot = "gain")
+
+plot(lift0, plot = "lift")
+
+
+```
+
+The gain seems to be related to the ROC curve, while the lift curve shows how much more successful we would be in picking certain percentages of the group and wind up with successes (intuitively it makes sense that as we pick higher proportions, we'll get closer to zero lift.) I'm not positive what could be causing the spike around 0.9...
+
+### Question 13
+
+```{r}
+
+?pROC
+
+?roc
+
+roc0 <- roc(factor(class) ~ scored.probability, data=classification)
+
+plot(roc0)
+
+```
+
+It does look similar to my ROC plot. The shape seems to be influenced by the same factors, but the calculated ROC plot takes steps at each point where an observation passes through a filter, while my line chart just connects points with regular intervals. Having steps allows more precision in evaluating model behavior.

@@ -1,0 +1,588 @@
+---
+title: "IS621_hw6"
+author: "Charley Ferrari"
+date: "April 21, 2016"
+output: pdf_document
+---
+
+```{r ,echo=FALSE, warning=FALSE, message=FALSE}
+
+library(plyr)
+library(ggplot2)
+library(MASS)
+library(knitr)
+library(dplyr)
+library(faraway)
+library(ggthemes)
+library(gridExtra)
+library(leaps)
+library(bestglm)
+library(caret)
+library(pROC)
+library(grid)
+library(reshape2)
+library(vcd)
+library(glmnet)
+library(Amelia)
+
+setwd("/Users/Charley/Downloads/cuny/IS 621 Business Analytics and Data Mining/Homework 6")
+
+wine <- read.csv("wine-training-data.csv")
+
+```
+
+```{r, echo=FALSE, include=FALSE, eval=FALSE}
+
+
+
+winetest <- select(wine, -c(INDEX, STARS, AcidIndex, LabelAppeal))
+
+winetest <- select(wine, TARGET, AcidIndex, LabelAppeal, )
+
+for(i in tail(colnames(winetest), -1)){
+  print(ggplot(winetest, aes(x=log(get(i)))) + geom_histogram(bins = 100) + 
+          xlab(i))
+    
+}
+
+for(i in tail(colnames(winetest), -1)){
+  print(ggplot(winetest, aes(x=get(i), y=TARGET)) + geom_point() +
+          xlab(i))
+}
+
+ggplot(winetest, aes(x=Sulphates)) + geom_histogram(bins=100)
+
+missmap(wine, main = "Missing values vs observed")
+
+winemod <- glm(TARGET ~ ., data=winetest, family=poisson, na.action = na.omit)
+
+plot(winemod)
+
+summary(winemod)
+
+wine$ResidualSugar_missing <- factor(ifelse(is.na(wine$ResidualSugar),0,1))
+wine$Chlorides_missing <- factor(ifelse(is.na(wine$Chlorides), 0, 1))
+wine$FreeSulfurDioxide_missing <- factor(ifelse(is.na(wine$FreeSulfurDioxide), 0, 1))
+wine$TotalSulfurDioxide_missing <- factor(ifelse(is.na(wine$TotalSulfurDioxide), 0, 1))
+wine$pH_missing <- factor(ifelse(is.na(wine$pH), 0, 1))
+wine$Sulphates_missing <- factor(ifelse(is.na(wine$Sulphates), 0, 1))
+wine$Alcohol_missing <- factor(ifelse(is.na(wine$Alcohol), 0, 1))
+wine$STARS_missing <- factor(ifelse(is.na(wine$STARS),0,1))
+wine$TARGET_bin <- factor(ifelse(wine$TARGET == 0, 0, 1))
+
+ggplot(wine, aes(x=TARGET)) + geom_histogram()
+
+for(i in c(colnames(wine)[17:24])){
+  print(ggplot(wine, aes(x=get(i), y=TARGET)) + geom_violin() + 
+          xlab(i) + theme_tufte())
+}
+
+for(i in c(colnames(wine)[17:24])){
+  formu <- paste(' ~ ', i, ' + TARGET_bin', sep='')
+  print(mosaic(as.formula(formu), data=wine))
+}
+
+winetest <- wine %>%
+  select(-c(ResidualSugar, Chlorides, FreeSulfurDioxide, TotalSulfurDioxide, 
+            pH, Sulphates, Alcohol, STARS, INDEX))
+
+model <- glm(TARGET ~ ., data=winetest, family = poisson)
+
+mosaic(~ ResidualSugar_missing + Chlorides_missing + FreeSulfurDioxide_missing + 
+         TotalSulfurDioxide_missing + Alcohol_missing,data=wine)
+
+winetest <- wine %>%
+#  filter(Chlorides_missing == 0 | ResidualSugar_missing == 0 | 
+#           FreeSulfurDioxide_missing == 0 | TotalSulfurDioxide_missing == 0 | 
+#           pH_missing == 0 | Sulphates_missing == 0 | Alcohol_missing == 0 | 
+#           STARS_missing == 0)
+filter(Chlorides_missing == 0 | ResidualSugar_missing == 0)
+mosaic(~ ResidualSugar_missing + Chlorides_missing, data=winetest)
+
+structest <- structable( ~ ResidualSugar_missing + Chlorides_missing + 
+                           FreeSulfurDioxide_missing + TotalSulfurDioxide_missing + 
+                           pH_missing + Sulphates_missing + Alcohol_missing + 
+                           STARS_missing, data=winetest)
+
+pairs(structest)
+
+variablelist <- c('ResidualSugar_missing', 'Chlorides_missing',
+                  'FreeSulfurDioxide_missing',  'TotalSulfurDioxide_missing',
+                  'pH_missing', 'Sulphates_missing', 'Alcohol_missing', 'STARS_missing')
+
+for(i in variablelist){
+  for(j in variablelist){
+    if(i != j){
+      winetest <- wine[wine[,i] == 0 | wine[,j] == 0,]
+      if(dim(winetest)[1] != 0){
+        mosaic( as.formula(paste(' ~ ',i,' + ',j,sep='')), data=winetest)
+      }
+    }
+  }
+}
+
+#ResidualSugar ~ Chlorides, FreeSulfurDioxide, Total Sul
+
+winetest <- wine %>%
+  filter(as.formula(paste(i,' == 0', sep='')))
+
+i <- variablelist[1]
+j <- variablelist[2]
+
+winetest <- wine %>%
+  filter_('ResidualSugar_missing' == 0)
+
+mosaic(as.formula(' ~ ResidualSugar_missing + Chlorides_missing'), data=winetest)
+
+```
+
+## Data Exploration
+
+The wine dataset includes 12795 observations of 16 variables (one of which is the INDEX.) There are a substantial number of NA values, as seen in the table below:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+winetest <- select(wine, -INDEX)
+
+natable <- data.frame(variable = colnames(winetest), NAs =
+                        c(0,0,0,0,616,638,647,682,0,395,1210,653,0,0,3359))
+
+kable(natable)
+
+rm(winetest)
+rm(natable)
+
+```
+
+The high number of NA values deserve further investigation. First, lets check out a matrix of the NAs to visualize any patterns in the missing values:
+
+```{r, echo=FALSE, warning=FALSE}
+
+missmap(wine, main = "Missing values vs observed")
+
+```
+
+There seem to be no overarching patterns with the NA values. The STARS variable has the highest number of missing values. It looks like there might be some shared NA values between FreeSulfurDioxide and TotalSulfurDioxide, so I'll look out for multicollinearity between these two variables.
+
+As a last analysis of missing values, I'll see how NAs affect the TARGET variable of number of cases sold. I'll divide the dataset between NA and present for each variable, and plot a violin plot for each case:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+winemissing <- wine
+
+winemissing$ResidualSugar_missing <- factor(ifelse(is.na(wine$ResidualSugar),0,1))
+winemissing$Chlorides_missing <- factor(ifelse(is.na(wine$Chlorides), 0, 1))
+winemissing$FreeSulfurDioxide_missing <- 
+  factor(ifelse(is.na(wine$FreeSulfurDioxide), 0, 1))
+winemissing$TotalSulfurDioxide_missing <- 
+  factor(ifelse(is.na(wine$TotalSulfurDioxide), 0, 1))
+winemissing$pH_missing <- factor(ifelse(is.na(wine$pH), 0, 1))
+winemissing$Sulphates_missing <- factor(ifelse(is.na(wine$Sulphates), 0, 1))
+winemissing$Alcohol_missing <- factor(ifelse(is.na(wine$Alcohol), 0, 1))
+winemissing$STARS_missing <- factor(ifelse(is.na(wine$STARS),0,1))
+
+winemelt <- melt(winemissing, id.vars=colnames(winemissing)[1:16], 
+                 variable.name = 'Measure')
+
+winemelt$value <- factor(winemelt$value)
+
+ggplot(winemelt, aes(x=value, y=TARGET)) + geom_violin() + 
+  facet_wrap( ~ Measure, scales = 'free') + theme_tufte()
+
+```
+
+These plots will give us an idea if the NAs change the distribution of our TARGET count or if the presence of NA values can be predictive of our count. In most cases, the distribution looks very similar whether or not the selected variable contains NAs (it looks spikier in the non-NA cases due to higher overall counts.) It would appear however that an NA for STARS leads to a different distribution. Looking at violin plots of each number of stars further proves this: 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+ggplot(wine, aes(x=factor(STARS), y=TARGET)) + geom_violin() + theme_tufte()
+
+```
+
+We will deal with this issue in the data transformation phase.
+
+To continue our data exploration, lets examine the types of variables we have. Our target variable, number of cases, is a count variable, with a distribution described in the histogram below:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+ggplot(wine, aes(x=TARGET)) + geom_histogram() + theme_tufte()
+
+```
+
+This distribution looks close to a Poisson distribution, but with a large number of zero values. One would think that this could imply hidden NA values. However, I can think of real world reasons for large number of zero values. One could imagine a threshold under which wines won't get stocked in stores, and thus zero cases will be sold.
+
+Next, I'd like to look at the mean and variance of the TARGET variable. If this is indeed a Poisson distribution, I would expect them to be equal. My mean turns out to be 3.029074, while my variance is 3.710895. This would suggest overdispersion. The fact that we have a zero inflation complicates the matter, it would tend to both bring down the mean and the variance, but it's not clear whether it would ultimately lead to over or under dispersion.
+
+Along with STARS, LabelAppeal and AcidIndex are ordinal variables. For purposes of prediction, I will treat them as categorical variables.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+winecatmelt <- melt(wine, id.vars=colnames(wine)[1:13])
+
+ggplot(winecatmelt, aes(x=value)) + geom_histogram() + 
+  facet_wrap( ~ variable, scales='free') + theme_tufte()
+
+```
+
+AcidIndex seems more classically shaped like a poisson distribution. LabelAppeal and STARS seem a bit more categorical with no particular distribution. Next, lets analyze the rest of the variables, which are numeric:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+winenummelt <- melt(wine, id.vars=colnames(wine)[c(1,2,14:16)])
+
+ggplot(winenummelt, aes(x=value)) + geom_histogram(bins=100) + 
+  facet_wrap( ~ variable, scales='free') + theme_tufte()
+
+```
+
+These variables all appear to be normally distributed, in some cases with high kurtosis. If I chose to transform any of these variables, it would be best to normalize them in some way to prevent additional skews being added. For the time being however, I will leave these variables as is. 
+
+## Data Transformation
+
+The first data transformation I'll need to perform involves the STARS data. As we mentioned above, this data will be treated as categorical, and the NA values seem to result in a substantially different distribution of TARGET number of cases sold. This suggests that we can treat NA values as a separate category. For the purposes of this model, I will call NA values of stars 0.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+wine$STARS <- as.character(wine$STARS)
+
+wine[is.na(wine$STARS),'STARS'] <- 0
+
+wine$STARS <- factor(wine$STARS)
+
+```
+
+After dealing with the STARS variable's NAs, if we omit observations with NAs, we'll end up with 8675 observations out of 12795. Because we have high kurtosis in many of our numeric variables, and because we have enough variables excluding NAs to build a sensible model, I will choose to omit my NAs.
+
+## Build Models
+
+I will consider a few different model types for this assignment: Poisson, Negative Binomial, and Linear models. This data is obviously count data, but seems to be overdispersed. This suggests that a negative binomial model might lead to a best fit.
+
+In testing out a few models, I noticed a mixture of p-values when using AcidIndex as a categorical variable. It does seem to be shaped as a Poisson distribution, but that results in a large number of dummy variables. Because of this, I will build models with AcidIndex as a categorical variable and with AcidIndex as a numerical variable, and see how they compare.
+
+I'm more interested in comparing different types of models using the same variables for this exercize. For this reason, for each classification of the AcidIndex variable, I will perform a backwards stepwise algorithm from a full model using the Akaike Information Criterion. 
+
+I will end up with a total of six models: Three with AcidIndex treated as numeric and three with AcidIndex treated as categorical. Each of these groups will have the same variable selection for comparability.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+wineAINum <- na.omit(wine) %>% select(-INDEX)
+wineAICat <- na.omit(wine) %>% select(-INDEX)
+wineAICat$AcidIndex <- factor(wineAICat$AcidIndex)
+
+fullpoismod1 <- glm(TARGET ~ ., data=wineAINum, family=poisson)
+backpoismod1 <- step(fullpoismod1, trace=0)
+
+fullpoismod2 <- glm(TARGET ~ ., data=wineAICat, family=poisson)
+backpoismod2 <- step(fullpoismod2, trace=0)
+
+#with(backNBmod1, cbind(res.deviance = deviance, df = df.residual,
+#  p = pchisq(deviance, df.residual, lower.tail=FALSE)))
+
+backNBmod1 <- glm.nb(formula(backpoismod1), data=wineAINum)
+backNBmod2 <- glm.nb(formula(backpoismod2), data=wineAICat)
+
+backlinmod1 <- lm(formula(backpoismod1), data=wineAINum)
+backlinmod2 <- lm(formula(backpoismod2), data=wineAICat)
+
+modelList <- c('backpoismod1', 'backpoismod2', 'backNBmod1', 'backNBmod2',
+               'backlinmod1', 'backlinmod2')
+
+coefdiag <- data.frame(Variable = character(0), Estimate = numeric(0),
+                       StdError = numeric(0), t.value = numeric(0),
+                       Pr.t = numeric(0), Model = character(0))
+
+for(mod in modelList){
+  moddf <- data.frame(summary(get(mod))$coefficients)
+  moddf <- data.frame(row.names(moddf), moddf, row.names=NULL)
+  moddf$model <- mod
+  colnames(moddf) <- c('Variable', 'Estimate', 'StdError', 't.value', 'Pr.t', 'Model')
+  coefdiag <- rbind(coefdiag, moddf)
+}
+
+coefdiag <- melt(coefdiag, id.vars = c('Variable', 'Model'), 
+                 variable.name = 'Measure', value.name = 'Value')
+
+coefdiag$Model <- factor(coefdiag$Model)
+
+modelDic <- data.frame(Model = modelList, 
+                       ModelName = c('Poisson Model Numeric','Poisson Model Categorical', 
+                                     'Negative Binomial Model Numeric',
+                                     'Negative Binomial Model Categorical', 
+                                     'Linear Model Numeric', 'Linear Model Categorical'))
+
+coefdiag <- merge(coefdiag, modelDic, by='Model')
+
+estimates1 <- filter(coefdiag, Measure == 'Estimate') %>%
+  filter(Model %in% c('backlinmod1', 'backNBmod1', 'backpoismod1')) %>%
+  select(-c(Measure, Model))
+
+estimates1 <- dcast(estimates1, Variable ~ ModelName, value.var = 'Value')
+
+estimates2 <- filter(coefdiag, Measure == 'Estimate') %>%
+  filter(Model %in% c('backlinmod2', 'backNBmod2', 'backpoismod2')) %>%
+  select(-c(Measure, Model))
+
+estimates2 <- dcast(estimates2, Variable ~ ModelName, value.var = 'Value')
+
+MSEList <- c(
+  mean((wineAINum$TARGET - exp(predict(backpoismod1)))^2),
+  mean((wineAINum$TARGET - exp(predict(backNBmod1)))^2),
+  mean((wineAINum$TARGET - predict(backlinmod1))^2),
+  mean((wineAICat$TARGET - exp(predict(backpoismod2)))^2),
+  mean((wineAICat$TARGET - exp(predict(backNBmod2)))^2),
+  mean((wineAICat$TARGET - predict(backlinmod2))^2)
+)
+
+SEList <- c(
+  sd((wineAINum$TARGET - exp(predict(backpoismod1)))^2)/sqrt(length(wineAINum$TARGET)),
+  sd((wineAINum$TARGET - exp(predict(backNBmod1)))^2)/sqrt(length(wineAINum$TARGET)),
+  sd((wineAINum$TARGET - predict(backlinmod1))^2)/sqrt(length(wineAINum$TARGET)),
+  sd((wineAICat$TARGET - exp(predict(backpoismod2)))^2)/sqrt(length(wineAINum$TARGET)),
+  sd((wineAICat$TARGET - exp(predict(backNBmod2)))^2)/sqrt(length(wineAINum$TARGET)),
+  sd((wineAICat$TARGET - predict(backlinmod1))^2)/sqrt(length(wineAICat$TARGET))
+)
+
+modelDiag <- data.frame(Model = modelList, MSE = MSEList, SE = SEList)
+modelDiag <- merge(modelDiag, modelDic, by='Model')
+modelDiag <- select(modelDiag, -Model)
+modelDiag <- select(modelDiag, ModelName, MSE, SE)
+
+```
+
+The estimates for my coefficients are described below:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+kable(estimates1)
+
+kable(estimates2)
+
+```
+
+The coefficients of the linear models cannot be compared directly compared to the Poisson and Negative Binomial models. The latter two models have log-link functions. While linear models are in the form:
+
+$$ Y = \beta_0 + \beta_1 \times x_1 + \beta_2 \times x_2 + ... $$
+
+Negative Binomial and Poisson models are in the form:
+
+$$ log(Y) = \beta_0 + \beta_1 \times x_1 + \beta_2 \times x_2 + ...$$
+
+This is another way of saying entire right side of the equation is exponentiated.
+
+This has ramifications for the interpretations of the coefficients. For linear regression, a unit change in a variable $x_n$ results in a $\beta_n \times x_n$ change in the response variable. For Poisson and Negative Binomial, the original $Y$ would be multiplied by $\beta_n$.
+
+## Select Models
+
+Lets take a look at the p-scores of our variables for each of the models:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+pvalues1 <- filter(coefdiag, Measure == 'Pr.t') %>%
+  filter(Model %in% c('backlinmod1', 'backNBmod1', 'backpoismod1')) %>%
+  select(-c(Measure, Model))
+
+pvalues1 <- dcast(pvalues1, Variable ~ ModelName, value.var = 'Value')
+
+pvalues2 <- filter(coefdiag, Measure == 'Pr.t') %>%
+  filter(Model %in% c('backlinmod2', 'backNBmod2', 'backpoismod2')) %>%
+  select(-c(Measure, Model))
+
+pvalues2 <- dcast(pvalues2, Variable ~ ModelName, value.var = 'Value')
+
+kable(pvalues1)
+
+kable(pvalues2)
+
+```
+
+There are a few p-values above a 0.05 threshold, which make me question using the AIC as my selection criterion. Once again, my results for the Poisson and Negative Binomial models are very similar. One other problem this brings up is the treatment of categorical variables. For a variable like AcidIndex, with a high number of categories, there's more of a chance that some of them are not significant. Because of this it might be better to use the AcidIndex as a numeric variable.
+
+Because we're comparing different model types, it's tough to find a common measure for them. The Mean squared error, however, should still be comparable: 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+kable(modelDiag)
+
+```
+
+These results deviate from the pattern we were seeing before. It seems like the Negative Binomial model is less comparable to the Poisson. In fact, depending on our choice of treatment for the AcidIndex variable, the MSE is either the highest of the six or the lowest.
+
+Based on the raw results, this would suggest that we treat AcidIndex as a categorical variable, and run a Negative Binomial Model. The overdispersion supports this choice, since Poisson models imply that the mean and variance are equal. Although, the variability in my MSE suggests that the results will be highly dependent on your variable choices. If you don't optimize your model, you might be better off with a Linear model for example.
+
+For further research, I would look into performing a zero-inflated model for this data. It was obvious that there was a high number of zero counts, and imagineable that these results are natural (and not hidden NAs). One thing I noticed was that there is a pretty high corellation between NA values in STARS and 0 counts, which might suggest a two step model combining Logistic and Poisson or Negative Binomial models.
+
+## Appendix
+
+NA Table Creation:
+
+```{r, eval=FALSE}
+
+winetest <- select(wine, -INDEX)
+
+natable <- data.frame(variable = colnames(winetest), NAs =
+                        c(0,0,0,0,616,638,647,682,0,395,1210,653,0,0,3359))
+
+kable(natable)
+
+missmap(wine, main = "Missing values vs observed")
+
+```
+
+Violin Plots comparing NAs:
+
+```{r, eval=FALSE}
+
+winemissing <- wine
+
+winemissing$ResidualSugar_missing <- factor(ifelse(is.na(wine$ResidualSugar),0,1))
+winemissing$Chlorides_missing <- factor(ifelse(is.na(wine$Chlorides), 0, 1))
+winemissing$FreeSulfurDioxide_missing <- 
+  factor(ifelse(is.na(wine$FreeSulfurDioxide), 0, 1))
+winemissing$TotalSulfurDioxide_missing <- 
+  factor(ifelse(is.na(wine$TotalSulfurDioxide), 0, 1))
+winemissing$pH_missing <- factor(ifelse(is.na(wine$pH), 0, 1))
+winemissing$Sulphates_missing <- factor(ifelse(is.na(wine$Sulphates), 0, 1))
+winemissing$Alcohol_missing <- factor(ifelse(is.na(wine$Alcohol), 0, 1))
+winemissing$STARS_missing <- factor(ifelse(is.na(wine$STARS),0,1))
+
+winemelt <- melt(winemissing, id.vars=colnames(winemissing)[1:16], 
+                 variable.name = 'Measure')
+
+winemelt$value <- factor(winemelt$value)
+
+ggplot(winemelt, aes(x=value, y=TARGET)) + geom_violin() + 
+  facet_wrap( ~ Measure, scales = 'free') + theme_tufte()
+
+ggplot(wine, aes(x=factor(STARS), y=TARGET)) + geom_violin() + theme_tufte()
+
+```
+
+Distribution of Variables:
+
+```{r, eval=FALSE}
+
+ggplot(wine, aes(x=TARGET)) + geom_histogram() + theme_tufte()
+
+winecatmelt <- melt(wine, id.vars=colnames(wine)[1:13])
+
+ggplot(winecatmelt, aes(x=value)) + geom_histogram() + 
+  facet_wrap( ~ variable, scales='free') + theme_tufte()
+
+winenummelt <- melt(wine, id.vars=colnames(wine)[c(1,2,14:16)])
+
+ggplot(winenummelt, aes(x=value)) + geom_histogram(bins=100) + 
+  facet_wrap( ~ variable, scales='free') + theme_tufte()
+
+```
+
+Data Transformation:
+
+```{r, eval=FALSE}
+
+wine$STARS <- as.character(wine$STARS)
+
+wine[is.na(wine$STARS),'STARS'] <- 0
+
+wine$STARS <- factor(wine$STARS)
+
+```
+
+Diagnostic Table Creation:
+
+```{r, eval=FALSE}
+
+wineAINum <- na.omit(wine) %>% select(-INDEX)
+wineAICat <- na.omit(wine) %>% select(-INDEX)
+wineAICat$AcidIndex <- factor(wineAICat$AcidIndex)
+
+fullpoismod1 <- glm(TARGET ~ ., data=wineAINum, family=poisson)
+backpoismod1 <- step(fullpoismod1, trace=0)
+
+fullpoismod2 <- glm(TARGET ~ ., data=wineAICat, family=poisson)
+backpoismod2 <- step(fullpoismod2, trace=0)
+
+#with(backNBmod1, cbind(res.deviance = deviance, df = df.residual,
+#  p = pchisq(deviance, df.residual, lower.tail=FALSE)))
+
+backNBmod1 <- glm.nb(formula(backpoismod1), data=wineAINum)
+backNBmod2 <- glm.nb(formula(backpoismod2), data=wineAICat)
+
+backlinmod1 <- lm(formula(backpoismod1), data=wineAINum)
+backlinmod2 <- lm(formula(backpoismod2), data=wineAICat)
+
+modelList <- c('backpoismod1', 'backpoismod2', 'backNBmod1', 'backNBmod2',
+               'backlinmod1', 'backlinmod2')
+
+coefdiag <- data.frame(Variable = character(0), Estimate = numeric(0),
+                       StdError = numeric(0), t.value = numeric(0),
+                       Pr.t = numeric(0), Model = character(0))
+
+for(mod in modelList){
+  moddf <- data.frame(summary(get(mod))$coefficients)
+  moddf <- data.frame(row.names(moddf), moddf, row.names=NULL)
+  moddf$model <- mod
+  colnames(moddf) <- c('Variable', 'Estimate', 'StdError', 't.value', 'Pr.t', 'Model')
+  coefdiag <- rbind(coefdiag, moddf)
+}
+
+coefdiag <- melt(coefdiag, id.vars = c('Variable', 'Model'), 
+                 variable.name = 'Measure', value.name = 'Value')
+
+coefdiag$Model <- factor(coefdiag$Model)
+
+modelDic <- data.frame(Model = modelList, 
+                       ModelName = c('Poisson Model Numeric','Poisson Model Categorical', 
+                                     'Negative Binomial Model Numeric',
+                                     'Negative Binomial Model Categorical', 
+                                     'Linear Model Numeric', 'Linear Model Categorical'))
+
+coefdiag <- merge(coefdiag, modelDic, by='Model')
+
+estimates1 <- filter(coefdiag, Measure == 'Estimate') %>%
+  filter(Model %in% c('backlinmod1', 'backNBmod1', 'backpoismod1')) %>%
+  select(-c(Measure, Model))
+
+estimates1 <- dcast(estimates1, Variable ~ ModelName, value.var = 'Value')
+
+estimates2 <- filter(coefdiag, Measure == 'Estimate') %>%
+  filter(Model %in% c('backlinmod2', 'backNBmod2', 'backpoismod2')) %>%
+  select(-c(Measure, Model))
+
+estimates2 <- dcast(estimates2, Variable ~ ModelName, value.var = 'Value')
+
+MSEList <- c(
+  mean((wineAINum$TARGET - exp(predict(backpoismod1)))^2),
+  mean((wineAINum$TARGET - exp(predict(backNBmod1)))^2),
+  mean((wineAINum$TARGET - predict(backlinmod1))^2),
+  mean((wineAICat$TARGET - exp(predict(backpoismod2)))^2),
+  mean((wineAICat$TARGET - exp(predict(backNBmod2)))^2),
+  mean((wineAICat$TARGET - predict(backlinmod2))^2)
+)
+
+SEList <- c(
+  sd((wineAINum$TARGET - exp(predict(backpoismod1)))^2)/sqrt(length(wineAINum$TARGET)),
+  sd((wineAINum$TARGET - exp(predict(backNBmod1)))^2)/sqrt(length(wineAINum$TARGET)),
+  sd((wineAINum$TARGET - predict(backlinmod1))^2)/sqrt(length(wineAINum$TARGET)),
+  sd((wineAICat$TARGET - exp(predict(backpoismod2)))^2)/sqrt(length(wineAINum$TARGET)),
+  sd((wineAICat$TARGET - exp(predict(backNBmod2)))^2)/sqrt(length(wineAINum$TARGET)),
+  sd((wineAICat$TARGET - predict(backlinmod1))^2)/sqrt(length(wineAICat$TARGET))
+)
+
+modelDiag <- data.frame(Model = modelList, MSE = MSEList, SE = SEList)
+modelDiag <- merge(modelDiag, modelDic, by='Model')
+modelDiag <- select(modelDiag, -Model)
+modelDiag <- select(modelDiag, ModelName, MSE, SE)
+
+pvalues1 <- filter(coefdiag, Measure == 'Pr.t') %>%
+  filter(Model %in% c('backlinmod1', 'backNBmod1', 'backpoismod1')) %>%
+  select(-c(Measure, Model))
+
+pvalues1 <- dcast(pvalues1, Variable ~ ModelName, value.var = 'Value')
+
+pvalues2 <- filter(coefdiag, Measure == 'Pr.t') %>%
+  filter(Model %in% c('backlinmod2', 'backNBmod2', 'backpoismod2')) %>%
+  select(-c(Measure, Model))
+
+pvalues2 <- dcast(pvalues2, Variable ~ ModelName, value.var = 'Value')
+
+```
