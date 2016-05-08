@@ -38,7 +38,6 @@ data = WDI(country="all", indicator = c(
 'NY.GDP.PCAP.PP.KD'
 ), start = 2005, end=2015, extra = TRUE)
 
-
 tech = data[!is.na(data$IT.NET.USER.P2), ]
 sapply(tech,function(x) sum(is.na(x)))
 
@@ -62,5 +61,47 @@ ylab="Internet Users/100 Ppl",
 type="l")
 )
 
+#within group variance
 within = lm(IT.NET.USER.P2 ~ as.factor(country), data = plot)
 summary(within)$r.squared
+
+#between group correlation coefficient
+anova = aov(IT.NET.USER.P2 ~ country, data = plot)
+summary(anova)
+ICC1(anova)
+ICC1.lme(IT.NET.USER.P2, country,plot)
+
+#within country variance
+print(xyplot(IT.NET.USER.P2 ~ NY.GDP.PCAP.KD.ZG | country,
+data=plot,
+panel=function(x,y,...){
+panel.xyplot(x,y,...)
+panel.lmline(x,y,...)
+},
+scales=list(y=list(cex=.35),x=list(cex=.35)),
+strip=strip.custom(par.strip.text=list(cex=.5)),
+xlab="Year",
+ylab="Internet Users/100 Ppl")
+)
+
+#effect of gdp
+ICC1.lme(NY.GDP.PCAP.KD.ZG,country,plot)
+test = lm(IT.NET.USER.P2 ~ NY.GDP.PCAP.KD.ZG, plot)
+summary(test)
+
+plot(IT.NET.USER.P2 ~ NY.GDP.PCAP.KD.ZG,
+las=1,
+data=plot)
+abline(lm(IT.NET.USER.P2 ~ NY.GDP.PCAP.KD.ZG,data=plot))
+
+plm_data =plm.data(plot,index=c("country", "year"))
+m_pl = plm(IT.NET.USER.P2 ~ NY.GDP.PCAP.KD.ZG, data = plm_data, method = "within")
+summary(m_pl)
+
+#random vs. fixed effects
+summary(lm(IT.NET.USER.P2~NY.GDP.PCAP.KD.ZG+country,data=plot))$r.squared
+
+m_rand = plm(IT.NET.USER.P2 ~ NY.GDP.PCAP.KD.ZG, data = plm_data, model = "random")
+summary(m_rand)
+
+phtest(IT.NET.USER.P2 ~ NY.GDP.PCAP.KD.ZG, data = plm_data)
